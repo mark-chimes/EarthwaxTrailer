@@ -4,10 +4,8 @@ const speed = 80
 const movement_back = 500
 var end_x 
 
-var is_left = false
-
 enum State { 
-	IDLE, WALK
+	IDLE, WALK, FARM
 }
 
 var state = State.IDLE
@@ -21,22 +19,19 @@ func _process(delta):
 		walk_process(delta)
 
 func walk_process(delta): 
-	if is_left: 
-		position.x -= speed * delta
-	else:
-		if position.x < end_x:
-			position.x += speed * delta
-		else: 
-			begin_idle()
-
-func go_left(): 
-	$AnimatedSprite.flip_h = true
-	is_left = true
+	if position.x < end_x:
+		position.x += speed * delta
+	else: 
+		begin_farming()
 
 func begin_walking(): 
-	$AnimatedSprite.play("walk")
+	$AnimatedSprite.play("sprint")
 	state = State.WALK
 		
 func begin_idle(): 
 	state = State.IDLE
 	$AnimatedSprite.play("idle")
+	
+func begin_farming(): 
+	state = State.FARM
+	$AnimatedSprite.play("farm")

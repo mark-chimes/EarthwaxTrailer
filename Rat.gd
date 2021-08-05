@@ -32,9 +32,10 @@ func go_left():
 func go_right(): 
 	$AnimatedSprite.flip_h = true
 	is_left = false
-
-func _on_Rabbits_shoot_arrows():
+	
+func _on_TimingsController_shoot_arrows():
 	start_hurrying()
 
-func _on_Rabbits_people_enter():
+func _on_TimingsController_people_enter():
 	go_right()
+
