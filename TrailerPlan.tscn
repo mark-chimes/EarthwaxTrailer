@@ -1,13 +1,12 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=14 format=2]
 
-[ext_resource path="res://background/mountain_with_grass.png" type="Texture" id=1]
-[ext_resource path="res://plants/Tree.tscn" type="PackedScene" id=2]
-[ext_resource path="res://plants/bush_repeating.png" type="Texture" id=3]
+[ext_resource path="res://Trailer/BackgroundStuff.tscn" type="PackedScene" id=1]
 [ext_resource path="res://animals/Rabbit.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Rabbits.gd" type="Script" id=5]
 [ext_resource path="res://animals/rat_walk.png" type="Texture" id=6]
 [ext_resource path="res://Rat.gd" type="Script" id=7]
 [ext_resource path="res://weapons/Arrow.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Trailer/People.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Arrows.gd" type="Script" id=10]
 
 [sub_resource type="AtlasTexture" id=1]
@@ -35,54 +34,6 @@ animations = [ {
 } ]
 
 [node name="TrailerPlan" type="Node2D"]
-
-[node name="Camera2D" type="Camera2D" parent="."]
-anchor_mode = 0
-current = true
-zoom = Vector2( 0.25, 0.25 )
-
-[node name="Background" type="Node2D" parent="."]
-z_index = -10
-
-[node name="mountain_with_grass" type="Sprite" parent="Background"]
-position = Vector2( 240, 136 )
-z_index = -10
-texture = ExtResource( 1 )
-
-[node name="Trees" type="Node2D" parent="."]
-
-[node name="Tree" parent="Trees" instance=ExtResource( 2 )]
-position = Vector2( -56, 88 )
-
-[node name="Tree2" parent="Trees" instance=ExtResource( 2 )]
-position = Vector2( 40, 88 )
-
-[node name="Tree3" parent="Trees" instance=ExtResource( 2 )]
-position = Vector2( 104, 96 )
-
-[node name="Tree4" parent="Trees" instance=ExtResource( 2 )]
-position = Vector2( 168, 88 )
-
-[node name="Tree5" parent="Trees" instance=ExtResource( 2 )]
-position = Vector2( 272, 96 )
-
-[node name="Tree6" parent="Trees" instance=ExtResource( 2 )]
-position = Vector2( 320, 88 )
-
-[node name="Tree7" parent="Trees" instance=ExtResource( 2 )]
-position = Vector2( 384, 88 )
-
-[node name="Tree8" parent="Trees" instance=ExtResource( 2 )]
-position = Vector2( 424, 88 )
-
-[node name="Bushes" type="Node2D" parent="."]
-
-[node name="Sprite" type="Sprite" parent="Bushes"]
-position = Vector2( 24, 128 )
-z_index = -1
-texture = ExtResource( 3 )
-region_enabled = true
-region_rect = Rect2( 0, 0, 12000, 32 )
 
 [node name="Arrows" type="Node2D" parent="."]
 script = ExtResource( 10 )
@@ -148,13 +99,13 @@ position = Vector2( 256, 208 )
 position = Vector2( 192, 192 )
 
 [node name="Arrow21" parent="Arrows" instance=ExtResource( 8 )]
-position = Vector2( 224, 232 )
+position = Vector2( 232, 224 )
 
 [node name="Arrow22" parent="Arrows" instance=ExtResource( 8 )]
 position = Vector2( 272, 184 )
 
 [node name="Arrow23" parent="Arrows" instance=ExtResource( 8 )]
-position = Vector2( 256, 232 )
+position = Vector2( 256, 224 )
 
 [node name="Arrow24" parent="Arrows" instance=ExtResource( 8 )]
 position = Vector2( 296, 216 )
@@ -218,17 +169,24 @@ z_index = 1
 sprint_speed = 45
 
 [node name="Rat" type="Node2D" parent="."]
-position = Vector2( 112, 0 )
+position = Vector2( 112, -16 )
 script = ExtResource( 7 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Rat"]
 position = Vector2( 336, 240 )
 frames = SubResource( 5 )
 animation = "walk"
-frame = 2
+frame = 1
 speed_scale = 3.0
 playing = true
 
-[connection signal="shoot_arrows" from="Rabbits" to="Arrows" method="_on_Rabbits_shoot_arrows"]
+[node name="People" parent="." instance=ExtResource( 9 )]
+
+[node name="BackgroundStuff" parent="." instance=ExtResource( 1 )]
+z_index = -1
+
+[connection signal="people_enter" from="Rabbits" to="Rat" method="_on_Rabbits_people_enter"]
+[connection signal="people_enter" from="Rabbits" to="People" method="_on_Rabbits_people_enter"]
 [connection signal="shoot_arrows" from="Rabbits" to="Rat" method="_on_Rabbits_shoot_arrows"]
+[connection signal="shoot_arrows" from="Rabbits" to="Arrows" method="_on_Rabbits_shoot_arrows"]
 [connection signal="shoot_first_arrow" from="Rabbits" to="Arrows" method="_on_Rabbits_shoot_first_arrow"]

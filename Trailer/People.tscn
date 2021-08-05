@@ -1,0 +1,80 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://people/generic_man_walk.png" type="Texture" id=2]
+[ext_resource path="res://people/generic_man_talk.png" type="Texture" id=3]
+[ext_resource path="res://fonts/OpenSans-Regular.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://Temp/Commander.gd" type="Script" id=5]
+[ext_resource path="res://Temp/People.gd" type="Script" id=6]
+[ext_resource path="res://Trailer/Spearman.tscn" type="PackedScene" id=7]
+
+[sub_resource type="AtlasTexture" id=1]
+atlas = ExtResource( 3 )
+region = Rect2( 0, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=2]
+atlas = ExtResource( 3 )
+region = Rect2( 64, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = ExtResource( 3 )
+region = Rect2( 128, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=4]
+atlas = ExtResource( 3 )
+region = Rect2( 192, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=5]
+atlas = ExtResource( 3 )
+region = Rect2( 256, 0, 64, 64 )
+
+[sub_resource type="SpriteFrames" id=6]
+animations = [ {
+"frames": [ ExtResource( 2 ) ],
+"loop": true,
+"name": "walk",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ) ],
+"loop": true,
+"name": "talk",
+"speed": 5.0
+} ]
+
+[sub_resource type="DynamicFont" id=7]
+size = 12
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 4 )
+
+[node name="People" type="Node2D"]
+script = ExtResource( 6 )
+
+[node name="Commander" type="Node2D" parent="."]
+position = Vector2( -8, 200 )
+z_index = 10
+script = ExtResource( 5 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="Commander"]
+frames = SubResource( 6 )
+animation = "talk"
+
+[node name="Label" type="Label" parent="Commander"]
+visible = false
+margin_left = -56.0
+margin_top = -80.0
+margin_right = 43.0
+margin_bottom = -18.0
+custom_fonts/font = SubResource( 7 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "This is test text"
+align = 1
+valign = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Spearman1" parent="." instance=ExtResource( 7 )]
+position = Vector2( -248, 0 )
+
+[node name="Spearman2" parent="." instance=ExtResource( 7 )]
+position = Vector2( 0, 0 )

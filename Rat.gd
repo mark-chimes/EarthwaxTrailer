@@ -4,19 +4,37 @@ export var scurry_speed = 20
 export var hurry_speed = 50
 
 var is_hurrying = false
+var is_left = true
 
 func _ready():
 	pass
 
 func _process(delta):
 	if is_hurrying:
-		position.x -= delta*hurry_speed
+		if is_left:
+			position.x -= delta*hurry_speed
+		else: 
+			position.x += delta*hurry_speed
 	else: 
-		position.x -= delta*scurry_speed
+		if is_left:
+			position.x -= delta*scurry_speed
+		else: 
+			position.x += delta*scurry_speed
 
 func start_hurrying(): 
 	is_hurrying = true
 	$AnimatedSprite.speed_scale *= 2
 
+func go_left(): 
+	$AnimatedSprite.flip_h = false
+	is_left = true
+
+func go_right(): 
+	$AnimatedSprite.flip_h = true
+	is_left = false
+
 func _on_Rabbits_shoot_arrows():
 	start_hurrying()
+
+func _on_Rabbits_people_enter():
+	go_right()

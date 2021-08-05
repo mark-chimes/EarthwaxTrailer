@@ -6,6 +6,7 @@ var switch = 1
 
 signal shoot_first_arrow
 signal shoot_arrows
+signal people_enter
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -17,6 +18,7 @@ func _ready():
 func _process(delta):
 	timer += delta
 	if timer >= 1 and switch == 1:
+		# emit_signal("people_enter") #DEBUG
 		switch += 1
 		$Rabbit3.start_idling()
 	if timer >= 2 and switch == 2:
@@ -56,3 +58,7 @@ func _process(delta):
 		$Rabbit2.start_dying()	
 		$Rabbit3.start_dying()	
 		$Rabbit4.start_dying()	
+	if timer >= 11 and switch == 11:
+		emit_signal("people_enter")
+		switch += 1
+		# pass
