@@ -1,7 +1,8 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://Trailer/BackgroundStuff.tscn" type="PackedScene" id=1]
 [ext_resource path="res://TimingsController.gd" type="Script" id=2]
+[ext_resource path="res://GeneralMountainScene.gd" type="Script" id=3]
 [ext_resource path="res://animals/Rabbit.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Rabbits.gd" type="Script" id=5]
 [ext_resource path="res://animals/rat_walk.png" type="Texture" id=6]
@@ -9,6 +10,8 @@
 [ext_resource path="res://weapons/Arrow.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Trailer/People.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Arrows.gd" type="Script" id=10]
+[ext_resource path="res://plants/bush_repeating.png" type="Texture" id=11]
+[ext_resource path="res://people/generic_man_idle_alert.png" type="Texture" id=12]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 6 )
@@ -36,147 +39,150 @@ animations = [ {
 
 [node name="TrailerPlan" type="Node2D"]
 
-[node name="TimingsController" type="Node2D" parent="."]
+[node name="GeneralMountainScene" type="Node2D" parent="."]
+script = ExtResource( 3 )
+
+[node name="TimingsController" type="Node2D" parent="GeneralMountainScene"]
 script = ExtResource( 2 )
 
-[node name="Rabbits" type="Node2D" parent="TimingsController"]
+[node name="Rabbits" type="Node2D" parent="GeneralMountainScene/TimingsController"]
 script = ExtResource( 5 )
 
-[node name="Rabbit1" parent="TimingsController/Rabbits" instance=ExtResource( 4 )]
+[node name="Rabbit1" parent="GeneralMountainScene/TimingsController/Rabbits" instance=ExtResource( 4 )]
 position = Vector2( 72, 208 )
 z_index = 4
 
-[node name="Rabbit2" parent="TimingsController/Rabbits" instance=ExtResource( 4 )]
+[node name="Rabbit2" parent="GeneralMountainScene/TimingsController/Rabbits" instance=ExtResource( 4 )]
 position = Vector2( 192, 200 )
 z_index = 3
 sprint_speed = 60
 
-[node name="Rabbit3" parent="TimingsController/Rabbits" instance=ExtResource( 4 )]
+[node name="Rabbit3" parent="GeneralMountainScene/TimingsController/Rabbits" instance=ExtResource( 4 )]
 position = Vector2( 120, 176 )
 z_index = 2
 sprint_speed = 70
 
-[node name="Rabbit4" parent="TimingsController/Rabbits" instance=ExtResource( 4 )]
+[node name="Rabbit4" parent="GeneralMountainScene/TimingsController/Rabbits" instance=ExtResource( 4 )]
 position = Vector2( 248, 168 )
 z_index = 1
 sprint_speed = 45
 
-[node name="Arrows" type="Node2D" parent="TimingsController"]
+[node name="Arrows" type="Node2D" parent="GeneralMountainScene/TimingsController"]
 script = ExtResource( 10 )
 
-[node name="Arrow1" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow1" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 256, 200 )
 
-[node name="Arrow2" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow2" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 240, 208 )
 
-[node name="Arrow3" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow3" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 312, 200 )
 
-[node name="Arrow4" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow4" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 248, 184 )
 
-[node name="Arrow5" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow5" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 280, 224 )
 
-[node name="Arrow6" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow6" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 328, 176 )
 
-[node name="Arrow7" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow7" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 312, 224 )
 
-[node name="Arrow8" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow8" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 352, 208 )
 
-[node name="Arrow9" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow9" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 248, 184 )
 
-[node name="Arrow10" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow10" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 216, 192 )
 
-[node name="Arrow11" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow11" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 288, 184 )
 
-[node name="Arrow12" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow12" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 224, 168 )
 
-[node name="Arrow13" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow13" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 256, 208 )
 
-[node name="Arrow14" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow14" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 304, 176 )
 
-[node name="Arrow15" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow15" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 288, 206 )
 
-[node name="Arrow16" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow16" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 328, 192 )
 
-[node name="Arrow17" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow17" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 216, 208 )
 
-[node name="Arrow18" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow18" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 184, 216 )
 
-[node name="Arrow19" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow19" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 256, 208 )
 
-[node name="Arrow20" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow20" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 192, 192 )
 
-[node name="Arrow21" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow21" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 232, 224 )
 
-[node name="Arrow22" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow22" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 272, 184 )
 
-[node name="Arrow23" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow23" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 256, 224 )
 
-[node name="Arrow24" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow24" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 296, 216 )
 
-[node name="Arrow25" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow25" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 192, 192 )
 
-[node name="Arrow26" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow26" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 160, 200 )
 
-[node name="Arrow27" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow27" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 232, 192 )
 
-[node name="Arrow28" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow28" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 168, 176 )
 
-[node name="Arrow29" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow29" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 200, 216 )
 
-[node name="Arrow30" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow30" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 248, 184 )
 
-[node name="Arrow31" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow31" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 232, 214 )
 
-[node name="Arrow32" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="Arrow32" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 272, 200 )
 
-[node name="RabbitArrow4" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="RabbitArrow4" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 301, 176 )
 
-[node name="RabbitArrow3" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="RabbitArrow3" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 218, 184 )
 
-[node name="RabbitArrow2" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="RabbitArrow2" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 339, 207 )
 
-[node name="RabbitArrow1" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
+[node name="RabbitArrow1" parent="GeneralMountainScene/TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 190, 215 )
 
-[node name="Rat" type="Node2D" parent="TimingsController"]
+[node name="Rat" type="Node2D" parent="GeneralMountainScene/TimingsController"]
 position = Vector2( 112, -16 )
 script = ExtResource( 7 )
 
-[node name="AnimatedSprite" type="AnimatedSprite" parent="TimingsController/Rat"]
+[node name="AnimatedSprite" type="AnimatedSprite" parent="GeneralMountainScene/TimingsController/Rat"]
 position = Vector2( 336, 240 )
 frames = SubResource( 5 )
 animation = "walk"
@@ -184,19 +190,33 @@ frame = 3
 speed_scale = 3.0
 playing = true
 
-[node name="People" parent="TimingsController" instance=ExtResource( 9 )]
+[node name="People" parent="GeneralMountainScene/TimingsController" instance=ExtResource( 9 )]
 z_index = 2
 
-[node name="BackgroundStuff" parent="." instance=ExtResource( 1 )]
+[node name="FarmsScene" type="Node2D" parent="GeneralMountainScene"]
+
+[node name="farmland" type="Sprite" parent="GeneralMountainScene/FarmsScene"]
+modulate = Color( 1, 0.623762, 0, 1 )
+position = Vector2( 256, 200 )
+texture = ExtResource( 11 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 128, 32 )
+
+[node name="generic_man_idle_alert" type="Sprite" parent="GeneralMountainScene/FarmsScene"]
+position = Vector2( 256, 176 )
+texture = ExtResource( 12 )
+
+[node name="BackgroundStuff" parent="GeneralMountainScene" instance=ExtResource( 1 )]
 z_index = -1
 
-[connection signal="people_enter" from="TimingsController" to="TimingsController/Rat" method="_on_TimingsController_people_enter"]
-[connection signal="people_enter" from="TimingsController" to="TimingsController/People" method="_on_TimingsController_people_enter"]
-[connection signal="shoot_arrows" from="TimingsController" to="TimingsController/Arrows" method="_on_TimingsController_shoot_arrows"]
-[connection signal="shoot_arrows" from="TimingsController" to="TimingsController/Rat" method="_on_TimingsController_shoot_arrows"]
-[connection signal="shoot_first_arrow" from="TimingsController" to="TimingsController/Arrows" method="_on_TimingsController_shoot_first_arrow"]
-[connection signal="people_enter" from="TimingsController/Rabbits" to="TimingsController/Rat" method="_on_Rabbits_people_enter"]
-[connection signal="people_enter" from="TimingsController/Rabbits" to="TimingsController/People" method="_on_Rabbits_people_enter"]
-[connection signal="shoot_arrows" from="TimingsController/Rabbits" to="TimingsController/Arrows" method="_on_Rabbits_shoot_arrows"]
-[connection signal="shoot_arrows" from="TimingsController/Rabbits" to="TimingsController/Rat" method="_on_Rabbits_shoot_arrows"]
-[connection signal="shoot_first_arrow" from="TimingsController/Rabbits" to="TimingsController/Arrows" method="_on_Rabbits_shoot_first_arrow"]
+[connection signal="people_enter" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/Rat" method="_on_TimingsController_people_enter"]
+[connection signal="people_enter" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/People" method="_on_TimingsController_people_enter"]
+[connection signal="shoot_arrows" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/Rat" method="_on_TimingsController_shoot_arrows"]
+[connection signal="shoot_arrows" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/Arrows" method="_on_TimingsController_shoot_arrows"]
+[connection signal="shoot_first_arrow" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/Arrows" method="_on_TimingsController_shoot_first_arrow"]
+[connection signal="people_enter" from="GeneralMountainScene/TimingsController/Rabbits" to="GeneralMountainScene/TimingsController/Rat" method="_on_Rabbits_people_enter"]
+[connection signal="people_enter" from="GeneralMountainScene/TimingsController/Rabbits" to="GeneralMountainScene/TimingsController/People" method="_on_Rabbits_people_enter"]
+[connection signal="shoot_arrows" from="GeneralMountainScene/TimingsController/Rabbits" to="GeneralMountainScene/TimingsController/Rat" method="_on_Rabbits_shoot_arrows"]
+[connection signal="shoot_arrows" from="GeneralMountainScene/TimingsController/Rabbits" to="GeneralMountainScene/TimingsController/Arrows" method="_on_Rabbits_shoot_arrows"]
+[connection signal="shoot_first_arrow" from="GeneralMountainScene/TimingsController/Rabbits" to="GeneralMountainScene/TimingsController/Arrows" method="_on_Rabbits_shoot_first_arrow"]
+[connection signal="end_scene" from="GeneralMountainScene/TimingsController/People" to="GeneralMountainScene" method="_on_People_end_scene"]

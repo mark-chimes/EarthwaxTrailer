@@ -1,5 +1,7 @@
 extends Node2D
 
+signal end_scene
+
 var timer = 0
 var switch = 0
 var has_started = false
@@ -39,7 +41,9 @@ func _process(delta):
 	if timer >= 14 and switch == 14: 
 		$Spearman1.go_left()
 		$Spearman1.begin_walking()
-
+		switch = 17
+	if timer >= 17 and switch == 17: 
+		emit_signal("end_scene")
 		
 func people_enter():
 	visible = true
