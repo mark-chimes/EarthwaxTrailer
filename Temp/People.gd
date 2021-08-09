@@ -19,22 +19,27 @@ func _process(delta):
 	timer += delta
 	if timer >= 0 and switch == 0:
 		people_enter()
-		switch = 2
-	if timer >= 2 and switch == 2:
+		switch = 3
+	if timer >= 3 and switch == 3:
 		$Farmer2.begin_walking()
 		switch += 1
-	if timer >= 3 and switch == 3:
+	if timer >= 4 and switch == 4: 
 		$Farmer1.begin_walking()
-		switch = 10
-	if timer >= 10 and switch == 10: 
-		$Commander.go_left()
-		$Commander.begin_walking()
+		$Commander.say("Ah, these fertile lands will be perfect for our new farms!", 4)
+		switch = 9
+	if timer >= 9 and switch == 9: 
+		$Commander.say("Farmers, get to work!", 3)
 		switch = 13
 	if timer >= 13 and switch == 13: 
-		$Spearman1.go_left()
+		$Commander.go_left()
+		$Commander.begin_walking()
 		$Spearman2.go_left()
-		$Spearman1.begin_walking()
 		$Spearman2.begin_walking()
+		switch = 14
+	if timer >= 14 and switch == 14: 
+		$Spearman1.go_left()
+		$Spearman1.begin_walking()
+
 		
 func people_enter():
 	visible = true

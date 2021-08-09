@@ -36,167 +36,167 @@ animations = [ {
 
 [node name="TrailerPlan" type="Node2D"]
 
-[node name="Rabbits" type="Node2D" parent="."]
+[node name="TimingsController" type="Node2D" parent="."]
+script = ExtResource( 2 )
+
+[node name="Rabbits" type="Node2D" parent="TimingsController"]
 script = ExtResource( 5 )
 
-[node name="Rabbit1" parent="Rabbits" instance=ExtResource( 4 )]
+[node name="Rabbit1" parent="TimingsController/Rabbits" instance=ExtResource( 4 )]
 position = Vector2( 72, 208 )
 z_index = 4
 
-[node name="Rabbit2" parent="Rabbits" instance=ExtResource( 4 )]
+[node name="Rabbit2" parent="TimingsController/Rabbits" instance=ExtResource( 4 )]
 position = Vector2( 192, 200 )
 z_index = 3
 sprint_speed = 60
 
-[node name="Rabbit3" parent="Rabbits" instance=ExtResource( 4 )]
+[node name="Rabbit3" parent="TimingsController/Rabbits" instance=ExtResource( 4 )]
 position = Vector2( 120, 176 )
 z_index = 2
 sprint_speed = 70
 
-[node name="Rabbit4" parent="Rabbits" instance=ExtResource( 4 )]
+[node name="Rabbit4" parent="TimingsController/Rabbits" instance=ExtResource( 4 )]
 position = Vector2( 248, 168 )
 z_index = 1
 sprint_speed = 45
 
-[node name="Arrows" type="Node2D" parent="."]
+[node name="Arrows" type="Node2D" parent="TimingsController"]
 script = ExtResource( 10 )
 
-[node name="Arrow1" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow1" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 256, 200 )
 
-[node name="Arrow2" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow2" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 240, 208 )
 
-[node name="Arrow3" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow3" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 312, 200 )
 
-[node name="Arrow4" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow4" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 248, 184 )
 
-[node name="Arrow5" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow5" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 280, 224 )
 
-[node name="Arrow6" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow6" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 328, 176 )
 
-[node name="Arrow7" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow7" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 312, 224 )
 
-[node name="Arrow8" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow8" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 352, 208 )
 
-[node name="Arrow9" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow9" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 248, 184 )
 
-[node name="Arrow10" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow10" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 216, 192 )
 
-[node name="Arrow11" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow11" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 288, 184 )
 
-[node name="Arrow12" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow12" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 224, 168 )
 
-[node name="Arrow13" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow13" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 256, 208 )
 
-[node name="Arrow14" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow14" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 304, 176 )
 
-[node name="Arrow15" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow15" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 288, 206 )
 
-[node name="Arrow16" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow16" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 328, 192 )
 
-[node name="Arrow17" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow17" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 216, 208 )
 
-[node name="Arrow18" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow18" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 184, 216 )
 
-[node name="Arrow19" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow19" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 256, 208 )
 
-[node name="Arrow20" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow20" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 192, 192 )
 
-[node name="Arrow21" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow21" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 232, 224 )
 
-[node name="Arrow22" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow22" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 272, 184 )
 
-[node name="Arrow23" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow23" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 256, 224 )
 
-[node name="Arrow24" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow24" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 296, 216 )
 
-[node name="Arrow25" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow25" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 192, 192 )
 
-[node name="Arrow26" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow26" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 160, 200 )
 
-[node name="Arrow27" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow27" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 232, 192 )
 
-[node name="Arrow28" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow28" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 168, 176 )
 
-[node name="Arrow29" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow29" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 200, 216 )
 
-[node name="Arrow30" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow30" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 248, 184 )
 
-[node name="Arrow31" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow31" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 232, 214 )
 
-[node name="Arrow32" parent="Arrows" instance=ExtResource( 8 )]
+[node name="Arrow32" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 272, 200 )
 
-[node name="RabbitArrow4" parent="Arrows" instance=ExtResource( 8 )]
+[node name="RabbitArrow4" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 301, 176 )
 
-[node name="RabbitArrow3" parent="Arrows" instance=ExtResource( 8 )]
+[node name="RabbitArrow3" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 218, 184 )
 
-[node name="RabbitArrow2" parent="Arrows" instance=ExtResource( 8 )]
+[node name="RabbitArrow2" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 339, 207 )
 
-[node name="RabbitArrow1" parent="Arrows" instance=ExtResource( 8 )]
+[node name="RabbitArrow1" parent="TimingsController/Arrows" instance=ExtResource( 8 )]
 position = Vector2( 190, 215 )
 
-[node name="TimingsController" type="Node2D" parent="."]
-script = ExtResource( 2 )
-
-[node name="Rat" type="Node2D" parent="."]
+[node name="Rat" type="Node2D" parent="TimingsController"]
 position = Vector2( 112, -16 )
 script = ExtResource( 7 )
 
-[node name="AnimatedSprite" type="AnimatedSprite" parent="Rat"]
+[node name="AnimatedSprite" type="AnimatedSprite" parent="TimingsController/Rat"]
 position = Vector2( 336, 240 )
 frames = SubResource( 5 )
 animation = "walk"
-frame = 2
+frame = 3
 speed_scale = 3.0
 playing = true
 
-[node name="People" parent="." instance=ExtResource( 9 )]
+[node name="People" parent="TimingsController" instance=ExtResource( 9 )]
 z_index = 2
 
 [node name="BackgroundStuff" parent="." instance=ExtResource( 1 )]
 z_index = -1
 
-[connection signal="people_enter" from="Rabbits" to="Rat" method="_on_Rabbits_people_enter"]
-[connection signal="people_enter" from="Rabbits" to="People" method="_on_Rabbits_people_enter"]
-[connection signal="shoot_arrows" from="Rabbits" to="Arrows" method="_on_Rabbits_shoot_arrows"]
-[connection signal="shoot_arrows" from="Rabbits" to="Rat" method="_on_Rabbits_shoot_arrows"]
-[connection signal="shoot_first_arrow" from="Rabbits" to="Arrows" method="_on_Rabbits_shoot_first_arrow"]
-[connection signal="people_enter" from="TimingsController" to="Rat" method="_on_TimingsController_people_enter"]
-[connection signal="people_enter" from="TimingsController" to="People" method="_on_TimingsController_people_enter"]
-[connection signal="shoot_arrows" from="TimingsController" to="Arrows" method="_on_TimingsController_shoot_arrows"]
-[connection signal="shoot_arrows" from="TimingsController" to="Rat" method="_on_TimingsController_shoot_arrows"]
-[connection signal="shoot_first_arrow" from="TimingsController" to="Arrows" method="_on_TimingsController_shoot_first_arrow"]
+[connection signal="people_enter" from="TimingsController" to="TimingsController/Rat" method="_on_TimingsController_people_enter"]
+[connection signal="people_enter" from="TimingsController" to="TimingsController/People" method="_on_TimingsController_people_enter"]
+[connection signal="shoot_arrows" from="TimingsController" to="TimingsController/Arrows" method="_on_TimingsController_shoot_arrows"]
+[connection signal="shoot_arrows" from="TimingsController" to="TimingsController/Rat" method="_on_TimingsController_shoot_arrows"]
+[connection signal="shoot_first_arrow" from="TimingsController" to="TimingsController/Arrows" method="_on_TimingsController_shoot_first_arrow"]
+[connection signal="people_enter" from="TimingsController/Rabbits" to="TimingsController/Rat" method="_on_Rabbits_people_enter"]
+[connection signal="people_enter" from="TimingsController/Rabbits" to="TimingsController/People" method="_on_Rabbits_people_enter"]
+[connection signal="shoot_arrows" from="TimingsController/Rabbits" to="TimingsController/Arrows" method="_on_Rabbits_shoot_arrows"]
+[connection signal="shoot_arrows" from="TimingsController/Rabbits" to="TimingsController/Rat" method="_on_Rabbits_shoot_arrows"]
+[connection signal="shoot_first_arrow" from="TimingsController/Rabbits" to="TimingsController/Arrows" method="_on_Rabbits_shoot_first_arrow"]

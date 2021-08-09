@@ -31,7 +31,8 @@ func walk_process(delta):
 		if position.x < 256:
 			position.x += speed * delta
 		else: 
-			begin_talking()
+			begin_idling()
+
 
 func begin_walking(): 
 	# $AnimatedSprite.play("walk")
@@ -46,13 +47,16 @@ func go_right():
 func go_left(): 
 	is_left = true
 	$AnimatedSprite.flip_h = true
-	
+
+func say(message, time): 
+	$Label.text = message
+	talk_timer = time
+	begin_talking()
+
 func begin_talking(): 
 	state = State.TALK
 	$AnimatedSprite.play("talk")
 	$Label.visible = true
-	$Label.text = "This will be \n an excellent place \n to start a farm!"
-	talk_timer = 4
 
 func begin_idling(): 
 	state = State.IDLE
