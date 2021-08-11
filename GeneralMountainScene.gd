@@ -8,4 +8,9 @@ func _ready():
 
 func _on_People_end_scene():
 	$TimingsController.visible = false
+
 	$FarmsScene.visible = true
+
+
+func _on_People_start_fading():
+	$fade.start_fading()

@@ -1,6 +1,7 @@
 extends Node2D
 
 signal end_scene
+signal start_fading
 
 var timer = 0
 var switch = 0
@@ -41,6 +42,9 @@ func _process(delta):
 	if timer >= 14 and switch == 14: 
 		$Spearman1.go_left()
 		$Spearman1.begin_walking()
+		switch = 16
+	if timer >= 16 and switch == 16:
+		emit_signal("start_fading")
 		switch = 17
 	if timer >= 17 and switch == 17: 
 		emit_signal("end_scene")
