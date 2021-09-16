@@ -40,7 +40,6 @@ func start_alert():
 	state = State.ALERT
 	$AnimatedSprite.play("alert")
 	var frame_offset = floor(rand_range(0, 29))
-	print("Frame offset: ", frame_offset)
 	$AnimatedSprite.set_frame(frame_offset)
 
 func start_grazing(): 
@@ -61,8 +60,6 @@ func start_sprinting():
 func start_dying(): 
 	state = State.DIE
 	$AnimatedSprite.play("die")
-	print("X: " + str(position.x))
-	print("Y: " + str(position.y))
 	
 func idle_process(_delta): 
 	pass
@@ -87,7 +84,6 @@ func hop_process(delta):
 
 		
 	if hop_time >= 3:
-		print(str(hop_calc))
 		position.y = start_y -HOP_HEIGHT + hop_calc * HOP_HEIGHT
 		position.x += delta*HOP_SPEED
 	else: 

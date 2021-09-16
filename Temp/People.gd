@@ -47,6 +47,7 @@ func _process(delta):
 		emit_signal("start_fading")
 		switch = 17
 	if timer >= 17 and switch == 17: 
+		switch = 18
 		emit_signal("end_scene")
 		
 func people_enter():

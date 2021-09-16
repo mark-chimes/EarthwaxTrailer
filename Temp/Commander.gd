@@ -14,7 +14,8 @@ var state = State.IDLE
 
 func _ready(): 
 	$AnimatedSprite.play("walk")
-
+	$AnimatedSprite2.play("walk")
+	
 func _process(delta):
 	if state == State.WALK:
 		walk_process(delta)
@@ -37,17 +38,25 @@ func walk_process(delta):
 func begin_walking(): 
 	# $AnimatedSprite.play("walk")
 	$AnimatedSprite.play("walk")
+	$AnimatedSprite2.play("walk")
 	$Label.visible = false
 	state = State.WALK
 
 func go_right(): 
 	is_left = false
-	$AnimatedSprite.flip_h = false
 	
+	$AnimatedSprite.scale.x = -1
+	$AnimatedSprite2.scale.x = -1
+#	$AnimatedSprite.flip_h = false
+#	$AnimatedSprite2.flip_h = false
+		
 func go_left(): 
 	is_left = true
-	$AnimatedSprite.flip_h = true
-
+	$AnimatedSprite.scale.x = 1
+	$AnimatedSprite2.scale.x = 1
+#	$AnimatedSprite.flip_h = true
+#	$AnimatedSprite2.flip_h = true
+	
 func say(message, time): 
 	$Label.text = message
 	talk_timer = time
@@ -56,10 +65,12 @@ func say(message, time):
 func begin_talking(): 
 	state = State.TALK
 	$AnimatedSprite.play("talk")
+	$AnimatedSprite2.play("talk")
 	$Label.visible = true
 
 func begin_idling(): 
 	state = State.IDLE
 	$AnimatedSprite.play("idle")
+	$AnimatedSprite2.play("idle")
 	$Label.visible = false
 	
