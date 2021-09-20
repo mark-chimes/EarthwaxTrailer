@@ -5,11 +5,17 @@ export var hurry_speed = 50
 
 var is_hurrying = false
 var is_left = true
+var has_scene_started = false
 
 func _ready():
 	pass
 
+func start_scene(): 
+	has_scene_started = true
+
 func _process(delta):
+	if not has_scene_started: 
+		return
 	if is_hurrying:
 		if is_left:
 			position.x -= delta*hurry_speed

@@ -8,6 +8,8 @@ var has_started = false
 func _process(delta):
 	if not has_started: 
 		return
+	print(" STARTED")
+	# TODO  THIS
 	timer += delta
 	if timer >= 1 and switch == 1:
 		$Gremlins.start_gremlins()
@@ -37,12 +39,17 @@ func _process(delta):
 		switch = 14
 	if timer >= 14 and switch == 14:
 		$FarmerGremlins.quiet()
-		switch = 16
-	if timer >= 16 and switch == 16:
-		emit_signal("end_scene")
+		switch = 18
+	if timer >= 18 and switch == 18:
 		switch += 1
+		end_scene()
+
+func end_scene(): 
+	emit_signal("end_scene")
+	# $Gremlins.destroy()
 
 func start_farm_scene(): 
+	print(" start_farm_scene")
 	timer = -1
 	switch = 1
 	has_started = true

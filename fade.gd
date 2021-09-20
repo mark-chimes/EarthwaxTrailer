@@ -1,5 +1,5 @@
 extends Sprite
-
+signal half_fade
 
 # Declare member variables here. Examples:
 # var a = 2
@@ -24,6 +24,7 @@ func _process(delta):
 		else: 
 			alpha = 1
 			increase_alpha = false
+			half_fade()
 	else: 
 		if alpha > 0: 
 			alpha = alpha - delta
@@ -31,7 +32,14 @@ func _process(delta):
 		else:
 			alpha = 0
 			increase_alpha = true
-			is_fading = false
+			stop_fading()
+
+func half_fade(): 
+	emit_signal("half_fade")
+
+func stop_fading(): 
+	is_fading = false
+	
 
 func start_fading(): 
 	is_fading = true
