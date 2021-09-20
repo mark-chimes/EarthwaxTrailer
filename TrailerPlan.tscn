@@ -384,7 +384,6 @@ script = ExtResource( 7 )
 position = Vector2( 336, 240 )
 frames = SubResource( 5 )
 animation = "walk"
-frame = 2
 speed_scale = 3.0
 playing = true
 

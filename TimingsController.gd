@@ -5,9 +5,8 @@ var FunctionTimerScript = load("res://FunctionTimer.gd")
 signal shoot_first_arrow
 signal shoot_arrows
 signal people_enter
+
 var has_scene_started = false
-var timed_functions 
-var next_timed_function
 var has_ended = false
 
 var function_timer
