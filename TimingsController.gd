@@ -15,7 +15,7 @@ var function_timer
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	function_timer = FunctionTimerScript.new()
-	function_timer.add_function_at_time(6, funcref(self, 'shoot_first_arrow'))
+	function_timer.add_function_after(6, funcref(self, 'shoot_first_arrow'))
 	function_timer.add_function_after(3, funcref(self, 'shoot_arrows'))
 	function_timer.add_function_after(2, funcref(self, 'people_enter'))
 	

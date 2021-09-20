@@ -6,18 +6,19 @@ class Timed_Function:
 	
 var timed_functions = []
 var next_timed_function = null
+var greatest_time = 0
 var timer = 0
 
-# TODO auto-sort if new active time is earlier than latest
-func add_function_at_time(active_time, func_to_activate): 
+func _add_function_at_time(active_time, func_to_activate): 
 	timed_functions.push_back(function_timer_for(active_time, func_to_activate))
 	
 func add_function_after(extra_time, func_to_activate):
 	if timed_functions.empty():
-		add_function_at_time(extra_time, func_to_activate)
+		_add_function_at_time(extra_time, func_to_activate)
 		return
 	var last_time = timed_functions.back().active_time
-	add_function_at_time(last_time + extra_time, func_to_activate)
+	_add_function_at_time(last_time + extra_time, func_to_activate)
+	greatest_time = last_time + extra_time
 
 static func function_timer_for(active_time, to_activate): 
 	var timed_func = Timed_Function.new()
