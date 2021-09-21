@@ -4,6 +4,5 @@ extends Node2D
 func _ready():
 	$People._on_TimingsController_people_enter()
 
-
 func _on_People_end_scene():
 	$People.visible = false

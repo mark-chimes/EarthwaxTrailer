@@ -12,8 +12,7 @@ func huh():
 func quiet(): 
 	#$AnimatedSprite.play("alert")
 	$Speechbox.visible = false
-
-
+	
 func scared_cry(): 
 	# $AnimatedSprite.play("alert")
 	$Speechbox.visible = true

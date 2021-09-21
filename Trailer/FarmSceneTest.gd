@@ -2,8 +2,9 @@ extends Node2D
 
 func _ready():
 	#visible = false
-	start_scene()
+	$FarmsScene.start_farm_scene()
 	
 func start_scene(): 
 	visible = true
-	$SadBattlefield.start_battlefield_scene()
+	
+	# $SadBattlefield.start_battlefield_scene()

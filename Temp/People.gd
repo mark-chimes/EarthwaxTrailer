@@ -1,55 +1,70 @@
 extends Node2D
 
+var FunctionTimerScript = load("res://FunctionTimer.gd")
+
 signal end_scene
 signal start_fading
 
 var timer = 0
 var switch = 0
 var has_started = false
+var has_ended = false
+
+var function_timer
 
 func _ready(): 
+	function_timer = FunctionTimerScript.new()
 	$Commander.visible = false
 	$Spearman1.visible = false
-	$Spearman2.visible = false	
+	$Spearman2.visible = false
+	
+	function_timer.add_function_after(0, funcref(self, 'people_enter'))
+	function_timer.add_function_after(3, funcref($Farmer2, 'begin_walking'))
+	function_timer.add_function_after(1, funcref(self, 'commander_admires_land'))
+	function_timer.add_function_after(5, funcref(self, 'commander_says_get_to_work'))
+	function_timer.add_function_after(4, funcref(self, 'commander_and_spearmen_leave'))
+	function_timer.add_function_after(2, funcref(self, 'spearman_leaves'))
+	function_timer.add_function_after(2, funcref(self, 'start_fading'))
+	function_timer.add_function_after(1, funcref(self, 'end_scene'))
+	
+#	switch = 16
 	# TODO Farmer visibility
+
+func commander_admires_land(): 
+	$Farmer1.begin_walking()
+	$Commander.say("Ah, these fertile lands will be perfect for our new farms!", 4)
+	print("COMMANDER SPEAKS")
+	
+func commander_says_get_to_work(): 
+	$Commander.say("Farmers, get to work!", 3)
+	
+func commander_and_spearmen_leave(): 
+	$Commander.go_left()
+	$Commander.begin_walking()
+	$Spearman2.go_left()
+	$Spearman2.begin_walking()
+
+func spearman_leaves(): 
+	$Spearman1.go_left()
+	$Spearman1.begin_walking()
+
+func start_fading(): 
+	emit_signal("start_fading")
+
+func end_scene(): 
+	print("END PEOPLE SCENE")
+	emit_signal("end_scene")
 
 func _on_TimingsController_people_enter():
 	has_started = true
 
 func _process(delta):
-	if not has_started: 
+	if has_ended or not has_started: 
 		return
-	timer += delta
-	if timer >= 0 and switch == 0:
-		people_enter()
-		switch = 3
-	if timer >= 3 and switch == 3:
-		$Farmer2.begin_walking()
-		switch += 1
-	if timer >= 4 and switch == 4: 
-		$Farmer1.begin_walking()
-		$Commander.say("Ah, these fertile lands will be perfect for our new farms!", 4)
-		switch = 9
-	if timer >= 9 and switch == 9: 
-		$Commander.say("Farmers, get to work!", 3)
-		switch = 13
-	if timer >= 13 and switch == 13: 
-		$Commander.go_left()
-		$Commander.begin_walking()
-		$Spearman2.go_left()
-		$Spearman2.begin_walking()
-		switch = 14
-	if timer >= 14 and switch == 14: 
-		$Spearman1.go_left()
-		$Spearman1.begin_walking()
-		switch = 16
-	if timer >= 16 and switch == 16:
-		emit_signal("start_fading")
-		switch = 17
-	if timer >= 17 and switch == 17: 
-		switch = 18
-		emit_signal("end_scene")
-		
+
+	var could_perform_action = function_timer.tick_process(delta)
+	has_ended = not could_perform_action
+	
 func people_enter():
 	visible = true
 	$Commander.visible = true

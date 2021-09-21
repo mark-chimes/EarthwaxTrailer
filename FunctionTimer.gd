@@ -31,7 +31,7 @@ func tick_process(delta):
 	return perform_action_at_time(timer)
 
 func perform_action_at_time(timer): 
-	print("PERFORM ACTION AT TIME: " + str(timer))
+	# print("PERFORM ACTION AT TIME: " + str(timer))
 	if next_timed_function == null: 
 		if timed_functions.empty():
 			return false
@@ -39,6 +39,7 @@ func perform_action_at_time(timer):
 	if timer >= next_timed_function.active_time: 
 		next_timed_function.to_activate.call_func()
 		if timed_functions.empty():
+			next_timed_function = null
 			return false
 		next_timed_function = timed_functions.pop_front()
 	return true
