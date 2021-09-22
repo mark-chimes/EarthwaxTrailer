@@ -5,9 +5,19 @@ func start_gremlins():
 	$Gremlin2.begin_walk()
 	$Gremlin3.begin_walk()
 	$Gremlin4.begin_walk()
-
+	
+	$Gremlin5.begin_walk()
+	$Gremlin6.begin_walk()
+	
 func chase(): 
 	$Gremlin1.ready_chase()
 	$Gremlin2.ready_chase()
 	$Gremlin3.ready_chase()
 	$Gremlin4.ready_chase()
+	$Gremlin5.ready_idle()
+	$Gremlin6.ready_idle()
+	
+func second_chase():
+	$Gremlin5.begin_chase()
+	$Gremlin6.begin_chase()
+
