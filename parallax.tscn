@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://bushes.gd" type="Script" id=1]
 [ext_resource path="res://Grass_parallax.gd" type="Script" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://mountain_with_grass.png" type="Texture" id=8]
 [ext_resource path="res://photo_resized_1.png" type="Texture" id=9]
 [ext_resource path="res://bush_1.png" type="Texture" id=10]
+[ext_resource path="res://enemies/warrior_large_naked_fists.png" type="Texture" id=11]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 7 )
@@ -64,7 +65,7 @@ texture = ExtResource( 9 )
 centered = false
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2( 72, 40 )
+position = Vector2( 64, 48 )
 anchor_mode = 0
 current = true
 zoom = Vector2( 0.25, 0.25 )
@@ -731,6 +732,43 @@ start_shift = -600
 position = Vector2( 0, 40 )
 x_speed = 1.2
 start_shift = -600
+
+[node name="spearmen_special" type="Node2D" parent="."]
+position = Vector2( 256, 152 )
+
+[node name="spearman" parent="spearmen_special" instance=ExtResource( 5 )]
+position = Vector2( -148, 12 )
+script = null
+
+[node name="spearman2" parent="spearmen_special" instance=ExtResource( 5 )]
+position = Vector2( -160, 28 )
+script = null
+
+[node name="warrior_large_naked_fists2" type="Sprite" parent="spearmen_special"]
+position = Vector2( -148, 40 )
+scale = Vector2( -1, 1 )
+texture = ExtResource( 11 )
+
+[node name="spearman3" parent="spearmen_special" instance=ExtResource( 5 )]
+position = Vector2( -172, 44 )
+script = null
+
+[node name="spearman4" parent="spearmen_special" instance=ExtResource( 5 )]
+position = Vector2( 140, 16 )
+script = null
+
+[node name="spearman5" parent="spearmen_special" instance=ExtResource( 5 )]
+position = Vector2( 148, 32 )
+script = null
+
+[node name="warrior_large_naked_fists" type="Sprite" parent="spearmen_special"]
+position = Vector2( 176, 36 )
+scale = Vector2( -1, 1 )
+texture = ExtResource( 11 )
+
+[node name="spearman6" parent="spearmen_special" instance=ExtResource( 5 )]
+position = Vector2( 156, 44 )
+script = null
 
 [node name="Grass" type="Node2D" parent="."]
 position = Vector2( -328, 0 )

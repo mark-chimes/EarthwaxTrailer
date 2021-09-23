@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=2]
+[gd_scene load_steps=43 format=2]
 
 [ext_resource path="res://plants/bush_repeating.png" type="Texture" id=1]
 [ext_resource path="res://people/generic_man_idle_alert.png" type="Texture" id=2]
@@ -15,6 +15,8 @@
 [ext_resource path="res://plants/wheat_tile_mid.png" type="Texture" id=13]
 [ext_resource path="res://enemies/GremlinOtherSide.gd" type="Script" id=14]
 [ext_resource path="res://plants/wheat_tile_sand.png" type="Texture" id=15]
+[ext_resource path="res://enemies/warrior_large_naked_fists.png" type="Texture" id=16]
+[ext_resource path="res://Trailer/GlutWarrior.gd" type="Script" id=17]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 12 )
@@ -195,12 +197,45 @@ script = ExtResource( 14 )
 pos_offset = 80
 speed_offset = 8
 
+[node name="GlutWarrior" type="Node2D" parent="Gremlins"]
+position = Vector2( 188, -8 )
+z_index = 7
+script = ExtResource( 17 )
+
+[node name="warrior_large_naked_fists" type="Sprite" parent="Gremlins/GlutWarrior"]
+position = Vector2( 368, 196 )
+rotation = 3.14159
+scale = Vector2( 1, -1 )
+texture = ExtResource( 16 )
+
+[node name="GlutWarrior2" type="Node2D" parent="Gremlins"]
+position = Vector2( 648, 248 )
+z_index = 23
+script = ExtResource( 17 )
+
+[node name="warrior_large_naked_fists" type="Sprite" parent="Gremlins/GlutWarrior2"]
+rotation = 3.14159
+scale = Vector2( 1, -1 )
+texture = ExtResource( 16 )
+
+[node name="GlutWarrior3" type="Node2D" parent="Gremlins"]
+position = Vector2( 648, 304 )
+scale = Vector2( 1, -1 )
+z_index = -10
+script = ExtResource( 17 )
+
+[node name="warrior_large_naked_fists" type="Sprite" parent="Gremlins/GlutWarrior3"]
+rotation = 3.14159
+scale = Vector2( 1, -1 )
+texture = ExtResource( 16 )
+
 [node name="Tent" type="Node2D" parent="."]
-position = Vector2( 48, 128 )
+position = Vector2( 48, 160 )
 z_index = -2
 
 [node name="Sprite" type="Sprite" parent="Tent"]
 texture = ExtResource( 3 )
+offset = Vector2( 0, -44 )
 
 [node name="FarmerGremlins" type="Node2D" parent="."]
 position = Vector2( 256, 192 )
