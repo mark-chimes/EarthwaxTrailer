@@ -49,3 +49,6 @@ func run_away():
 	is_running = true
 	$AnimatedSprite.flip_h = true
 	$AnimatedSprite.play("run")
+
+func idle_rest(): 
+	$AnimatedSprite.play("rest")

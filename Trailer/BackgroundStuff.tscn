@@ -1,8 +1,7 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://mountain.png" type="Texture" id=1]
 [ext_resource path="res://plants/bush_repeating.png" type="Texture" id=2]
-[ext_resource path="res://plants/Tree.tscn" type="PackedScene" id=3]
 [ext_resource path="res://plants/grass.png" type="Texture" id=4]
 [ext_resource path="res://plants/water.png" type="Texture" id=5]
 [ext_resource path="res://plants/sand.png" type="Texture" id=6]
@@ -376,33 +375,6 @@ texture = ExtResource( 1 )
 position = Vector2( 296, 200 )
 z_index = -9
 texture = ExtResource( 7 )
-
-[node name="Trees" type="Node2D" parent="."]
-z_index = -9
-
-[node name="Tree" parent="Trees" instance=ExtResource( 3 )]
-position = Vector2( -56, 88 )
-
-[node name="Tree2" parent="Trees" instance=ExtResource( 3 )]
-position = Vector2( 40, 88 )
-
-[node name="Tree3" parent="Trees" instance=ExtResource( 3 )]
-position = Vector2( 104, 96 )
-
-[node name="Tree4" parent="Trees" instance=ExtResource( 3 )]
-position = Vector2( 168, 88 )
-
-[node name="Tree5" parent="Trees" instance=ExtResource( 3 )]
-position = Vector2( 272, 96 )
-
-[node name="Tree6" parent="Trees" instance=ExtResource( 3 )]
-position = Vector2( 320, 88 )
-
-[node name="Tree7" parent="Trees" instance=ExtResource( 3 )]
-position = Vector2( 384, 88 )
-
-[node name="Tree8" parent="Trees" instance=ExtResource( 3 )]
-position = Vector2( 424, 88 )
 
 [node name="Bushes" type="Node2D" parent="."]
 z_index = -9

@@ -20,3 +20,4 @@ position = Vector2( 304, 176 )
 [node name="Farmer2" parent="." instance=ExtResource( 8 )]
 
 [node name="Commander" parent="." instance=ExtResource( 1 )]
+position = Vector2( -160, 232 )

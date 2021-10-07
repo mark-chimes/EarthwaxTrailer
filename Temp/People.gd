@@ -19,12 +19,12 @@ func _ready():
 	$Spearman2.visible = false
 	
 	function_timer.add_function_after(0, funcref(self, 'people_enter'))
-	function_timer.add_function_after(3, funcref($Farmer2, 'begin_walking'))
+	function_timer.add_function_after(5, funcref($Farmer2, 'begin_walking'))
 	function_timer.add_function_after(1, funcref(self, 'commander_admires_land'))
 	function_timer.add_function_after(5, funcref(self, 'commander_says_get_to_work'))
-	function_timer.add_function_after(4, funcref(self, 'commander_and_spearmen_leave'))
+	function_timer.add_function_after(5, funcref(self, 'commander_and_spearmen_leave'))
 	function_timer.add_function_after(2, funcref(self, 'spearman_leaves'))
-	function_timer.add_function_after(2, funcref(self, 'start_fading'))
+	function_timer.add_function_after(4, funcref(self, 'start_fading'))
 	function_timer.add_function_after(1, funcref(self, 'end_scene'))
 	
 #	switch = 16

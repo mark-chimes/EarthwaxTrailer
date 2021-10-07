@@ -10,6 +10,7 @@ var function_timer
 
 func _ready(): 
 	function_timer = FunctionTimerScript.new()
+	function_timer.add_function_after(0.0, funcref($FarmerGremlins, 'idle_rest'))
 	function_timer.add_function_after(2.0, funcref($Gremlins, 'start_gremlins'))
 	function_timer.add_function_after(3.0, funcref($FarmerGremlins, 'huh'))
 	function_timer.add_function_after(1.0, funcref($FarmerGremlins, 'point'))
@@ -22,7 +23,7 @@ func _ready():
 	function_timer.add_function_after(0.0, funcref($Gremlins, 'chase'))
 	function_timer.add_function_after(0.6, funcref($Gremlins, 'second_chase'))
 	function_timer.add_function_after(1.4, funcref($FarmerGremlins, 'quiet'))
-	function_timer.add_function_after(4.0, funcref(self, 'end_scene'))
+	function_timer.add_function_after(5.0, funcref(self, 'end_scene'))
 		
 func _process(delta):
 	if has_ended or not has_started: 

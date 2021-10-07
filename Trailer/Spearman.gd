@@ -1,7 +1,7 @@
 extends Node2D
 
 const speed = 80
-const movement_back = 500
+const movement_back = 700
 var end_x 
 
 var is_left = false

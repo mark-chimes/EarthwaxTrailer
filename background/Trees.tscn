@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://plants/Tree.tscn" type="PackedScene" id=1]
+
+[node name="Trees" type="Node2D"]
+z_index = -9
+
+[node name="Tree" parent="." instance=ExtResource( 1 )]
+position = Vector2( -56, 88 )
+
+[node name="Tree2" parent="." instance=ExtResource( 1 )]
+position = Vector2( 40, 88 )
+
+[node name="Tree3" parent="." instance=ExtResource( 1 )]
+position = Vector2( 104, 96 )
+
+[node name="Tree4" parent="." instance=ExtResource( 1 )]
+position = Vector2( 168, 88 )
+
+[node name="Tree5" parent="." instance=ExtResource( 1 )]
+position = Vector2( 272, 96 )
+
+[node name="Tree6" parent="." instance=ExtResource( 1 )]
+position = Vector2( 320, 88 )
+
+[node name="Tree7" parent="." instance=ExtResource( 1 )]
+position = Vector2( 384, 88 )
+
+[node name="Tree8" parent="." instance=ExtResource( 1 )]
+position = Vector2( 424, 88 )
