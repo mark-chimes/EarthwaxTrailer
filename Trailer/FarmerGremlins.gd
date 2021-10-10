@@ -34,6 +34,11 @@ func attack_prep():
 	$AnimatedSprite.play("attack")
 	$AnimatedSprite.speed_scale = 0
 	$AnimatedSprite.flip_h = false
+
+func die(): 
+	$AnimatedSprite.play("die")
+	$AnimatedSprite.speed_scale = 1
+	# $AnimatedSprite.speed_scale = 1
 	
 func attack(): 
 	$AnimatedSprite.play("attack")
@@ -52,3 +57,7 @@ func run_away():
 
 func idle_rest(): 
 	$AnimatedSprite.play("rest")
+
+func _on_AnimatedSprite_animation_finished():
+	if $AnimatedSprite.animation == "die": 
+		$AnimatedSprite.play("dead")

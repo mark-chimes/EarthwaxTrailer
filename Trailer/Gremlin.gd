@@ -21,7 +21,7 @@ func _ready():
 	#print("speed_offset: " + str(speed_offset)) 
 	
 enum State { 
-	IDLE, WALK, ATTACK, CHASE
+	IDLE, WALK, ATTACK, CHASE, DIE, DEAD
 }
 
 var state = State.IDLE
@@ -63,8 +63,18 @@ func begin_chase():
 func begin_attack(): 
 	state = State.ATTACK
 	$AnimatedSprite.play("attack")
+	
+func begin_dying(): 
+	state = State.DIE
+	$AnimatedSprite.play("die")
+
+func dead(): 
+	state = State.DEAD
+	$AnimatedSprite.play("dead")
 
 func _on_AnimatedSprite_animation_finished():
 	if is_readying_chase and state == State.ATTACK: 
 		begin_chase()
 		is_readying_chase = false
+	if state == State.DIE: 
+		dead()
