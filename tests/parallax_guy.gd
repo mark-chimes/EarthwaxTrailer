@@ -14,6 +14,7 @@ func _ready():
 	z_index = -distance
 	
 func _process(delta):
+	camera_height = 10000
 	position.y = display_height_offset + camera_height/distance
 	var out_speed = screendist * move_speed / distance
 	position.x += delta*out_speed

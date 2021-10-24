@@ -387,7 +387,7 @@ script = ExtResource( 7 )
 position = Vector2( 336, 240 )
 frames = SubResource( 5 )
 animation = "walk"
-frame = 3
+frame = 2
 speed_scale = 3.0
 playing = true
 
@@ -455,15 +455,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[connection signal="people_enter" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/People" method="_on_TimingsController_people_enter"]
 [connection signal="people_enter" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/Rat" method="_on_TimingsController_people_enter"]
-[connection signal="shoot_arrows" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/Arrows2" method="_on_TimingsController_shoot_arrows"]
+[connection signal="people_enter" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/People" method="_on_TimingsController_people_enter"]
 [connection signal="shoot_arrows" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/Arrows" method="_on_TimingsController_shoot_arrows"]
+[connection signal="shoot_arrows" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/Arrows2" method="_on_TimingsController_shoot_arrows"]
 [connection signal="shoot_arrows" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/Rat" method="_on_TimingsController_shoot_arrows"]
-[connection signal="shoot_first_arrow" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/Arrows2" method="_on_TimingsController_shoot_first_arrow"]
 [connection signal="shoot_first_arrow" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/Arrows" method="_on_TimingsController_shoot_first_arrow"]
-[connection signal="people_enter" from="GeneralMountainScene/TimingsController/Rabbits" to="GeneralMountainScene/TimingsController/People" method="_on_Rabbits_people_enter"]
+[connection signal="shoot_first_arrow" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/Arrows2" method="_on_TimingsController_shoot_first_arrow"]
 [connection signal="people_enter" from="GeneralMountainScene/TimingsController/Rabbits" to="GeneralMountainScene/TimingsController/Rat" method="_on_Rabbits_people_enter"]
+[connection signal="people_enter" from="GeneralMountainScene/TimingsController/Rabbits" to="GeneralMountainScene/TimingsController/People" method="_on_Rabbits_people_enter"]
 [connection signal="shoot_arrows" from="GeneralMountainScene/TimingsController/Rabbits" to="GeneralMountainScene/TimingsController/Arrows" method="_on_Rabbits_shoot_arrows"]
 [connection signal="shoot_arrows" from="GeneralMountainScene/TimingsController/Rabbits" to="GeneralMountainScene/TimingsController/Rat" method="_on_Rabbits_shoot_arrows"]
 [connection signal="shoot_first_arrow" from="GeneralMountainScene/TimingsController/Rabbits" to="GeneralMountainScene/TimingsController/Arrows" method="_on_Rabbits_shoot_first_arrow"]
