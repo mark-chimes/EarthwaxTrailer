@@ -1,7 +1,8 @@
-[gd_scene load_steps=100 format=2]
+[gd_scene load_steps=101 format=2]
 
 [ext_resource path="res://heroes/hero_knight_mounted_sword_trot.png" type="Texture" id=1]
 [ext_resource path="res://heroes/hero_knight_mounted_sword_idle_alert.png" type="Texture" id=2]
+[ext_resource path="res://heroes/hero_knight_mounted_shadow.png" type="Texture" id=3]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 2 )
@@ -402,10 +403,17 @@ animations = [ {
 
 [node name="HeroParallax" type="Node2D"]
 
+[node name="Shadow" type="Sprite" parent="."]
+modulate = Color( 1, 1, 1, 0.447059 )
+position = Vector2( -2, 5 )
+scale = Vector2( 2, 3 )
+texture = ExtResource( 3 )
+offset = Vector2( -60, -27 )
+
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 2, 2 )
 frames = SubResource( 97 )
 animation = "walk"
-frame = 4
+frame = 35
 playing = true
 offset = Vector2( -60, -27 )

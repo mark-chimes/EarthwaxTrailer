@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/spekboom_small.png-bc98ed187c075841b43118c4549fa790.stex"
+path="res://.import/spekboom_small.png-dc45ce4bdaa875b4626e5f78b4d3f278.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://plants/spekboom_small.png"
-dest_files=[ "res://.import/spekboom_small.png-bc98ed187c075841b43118c4549fa790.stex" ]
+source_file="res://plants/assets_unfiltered/spekboom_small.png"
+dest_files=[ "res://.import/spekboom_small.png-dc45ce4bdaa875b4626e5f78b4d3f278.stex" ]
 
 [params]
 
@@ -20,7 +20,7 @@ compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
-flags/filter=true
+flags/filter=false
 flags/mipmaps=false
 flags/anisotropic=false
 flags/srgb=2

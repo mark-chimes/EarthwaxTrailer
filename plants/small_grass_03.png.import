@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/spekboom_small.png-bc98ed187c075841b43118c4549fa790.stex"
+path="res://.import/small_grass_03.png-d712399c67f7b53224acdf0833502960.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://plants/spekboom_small.png"
-dest_files=[ "res://.import/spekboom_small.png-bc98ed187c075841b43118c4549fa790.stex" ]
+source_file="res://plants/small_grass_03.png"
+dest_files=[ "res://.import/small_grass_03.png-d712399c67f7b53224acdf0833502960.stex" ]
 
 [params]
 

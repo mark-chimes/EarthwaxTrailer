@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/spekboom_small.png-bc98ed187c075841b43118c4549fa790.stex"
+path="res://.import/small_flowers_03_purple.png-6f50d84c99f6cfabfcdb9f251995b014.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://plants/spekboom_small.png"
-dest_files=[ "res://.import/spekboom_small.png-bc98ed187c075841b43118c4549fa790.stex" ]
+source_file="res://plants/small_flowers_03_purple.png"
+dest_files=[ "res://.import/small_flowers_03_purple.png-6f50d84c99f6cfabfcdb9f251995b014.stex" ]
 
 [params]
 
