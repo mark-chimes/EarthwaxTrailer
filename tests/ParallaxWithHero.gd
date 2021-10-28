@@ -12,7 +12,7 @@ const SPEED_MOD = 25
 var Spearman = preload("res://tests/ParallaxMan.tscn")
 var Chicken = preload("res://tests/ParallaxChicken.tscn")
 var Grass = preload("res://plants/Grasses.tscn")
-var Tree = preload("res://tests/DistantForestTile.tscn")
+var DistantForestTile = preload("res://tests/DistantForestTile.tscn")
 var Flower = preload("res://plants/Flowers.tscn")
 var Wave = preload("res://tests/ParallaxWave.tscn")
 var BuildingFront = preload("res://buildings/BuildingFront.tscn")
@@ -48,10 +48,10 @@ func _ready():
 	var dist_x = -300
 	for x in range(num_trees):
 		dist_x += 34
-		var tree = Tree.instance()
+		var tree = DistantForestTile.instance()
 		add_child(tree)
-		tree.real_pos_x = dist_x
-		tree.real_pos_z = dist_z
+		tree.real_pos.x = dist_x
+		tree.real_pos.z = dist_z
 		all_parallax_objects.push_front(tree)
 
 	dist_z = 0
@@ -60,8 +60,8 @@ func _ready():
 		for j in range(num_chickens):
 			var chicken = Chicken.instance()
 			add_child(chicken)
-			chicken.real_pos_x = dist_x * 1.5 + randf()
-			chicken.real_pos_z = dist_z * 1.5 + randf()
+			chicken.real_pos.x = dist_x * 1.5 + randf()
+			chicken.real_pos.z = dist_z * 1.5 + randf()
 			all_parallax_objects.push_front(chicken)
 			dist_x += 1
 		dist_z += 1
@@ -73,8 +73,8 @@ func _ready():
 		for j in range(num_waves):
 			var wave = Wave.instance()
 			add_child(wave)
-			wave.real_pos_x = dist_x * 1.5 + randf()
-			wave.real_pos_z = dist_z  + randf()
+			wave.real_pos.x = dist_x * 1.5 + randf()
+			wave.real_pos.z = dist_z  + randf()
 			all_parallax_objects.push_front(wave)
 			waves.append(wave)
 			dist_x += 1
@@ -86,28 +86,28 @@ func _ready():
 		for j in range(num_spearmen): 
 			var spearman = Spearman.instance()
 			add_child(spearman)
-			spearman.real_pos_x = dist_x
-			spearman.real_pos_z = dist_z
+			spearman.real_pos.x = dist_x
+			spearman.real_pos.z = dist_z
 			all_parallax_objects.push_front(spearman)
 			dist_x += 1.5
 		dist_z += 1.5
 		
 	var building_back = BuildingBack.instance()
 	add_child(building_back)
-	building_back.real_pos_x = -20
-	building_back.real_pos_z = 72
+	building_back.real_pos.x = -20
+	building_back.real_pos.z = 72
 	all_parallax_objects.push_front(building_back)		
 
 	var building_front = BuildingFront.instance()
 	add_child(building_front)
-	building_front.real_pos_x = -20
-	building_front.real_pos_z = 70
+	building_front.real_pos.x = -20
+	building_front.real_pos.z = 70
 	all_parallax_objects.push_front(building_front)
 
 	var building_wheel = BuildingWheel.instance()
 	add_child(building_wheel)
-	building_wheel.real_pos_x = -20
-	building_wheel.real_pos_z = 68
+	building_wheel.real_pos.x = -20
+	building_wheel.real_pos.z = 68
 	all_parallax_objects.push_front(building_wheel)
 	my_func(num_grass, grass_x_off, grass_z_off, grass_x_mult - 1, grass_z_mult - 1)
 	my_func(num_grass/2, grass_x_off, grass_z_off+6, grass_x_mult - 1, grass_z_mult - 1)
@@ -162,12 +162,12 @@ func _process(delta):
 			is_hero_in_row_1 = true
 	
 	for wave in waves: 
-		wave.real_pos_x += delta
+		wave.real_pos.x += delta
 	for parallax_obj in all_parallax_objects:
-		parallax_obj.real_pos_x += delta * dir * SPEED_MOD
-		parallax_obj.position.x = z_and_x_to_x_converter(parallax_obj.real_pos_z, parallax_obj.real_pos_x)
-		parallax_obj.position.y = z_and_x_to_y_converter(parallax_obj.real_pos_z, parallax_obj.real_pos_x)
-		parallax_obj.z_index = -parallax_obj.real_pos_z * 10
+		parallax_obj.real_pos.x += delta * dir * SPEED_MOD
+		parallax_obj.position.x = z_and_x_to_x_converter(parallax_obj.real_pos.z, parallax_obj.real_pos.x)
+		parallax_obj.position.y = z_and_x_to_y_converter(parallax_obj.real_pos.z, parallax_obj.real_pos.x)
+		parallax_obj.z_index = -parallax_obj.real_pos.z * 10
 #		if not has_printed: 
 #			print("Name: ", parallax_obj.name)
 			
@@ -179,27 +179,27 @@ func _process(delta):
 				the_name = "ParallaxMan"
 			if parallax_obj.name == the_name:
 				if is_hero_in_row_1 and parallax_obj.position.x > 832 and parallax_obj.position.x < 1088:
-					if parallax_obj.real_pos_z > -1:
-						parallax_obj.real_pos_z -= 4*delta
+					if parallax_obj.real_pos.z > -1:
+						parallax_obj.real_pos.z -= 4*delta
 				else: 
-					if parallax_obj.real_pos_z < 0:
-						parallax_obj.real_pos_z += 1*delta
+					if parallax_obj.real_pos.z < 0:
+						parallax_obj.real_pos.z += 1*delta
 		
 		for i in range(41, 65):
 			var the_name = "@ParallaxMan@" + str(i)
 			if parallax_obj.name == the_name:
 				if parallax_obj.position.x > 832 and parallax_obj.position.x < 1088:
 					if not is_hero_in_row_1:
-						if parallax_obj.real_pos_z > 0.5:
-							parallax_obj.real_pos_z -= 4*delta
+						if parallax_obj.real_pos.z > 0.5:
+							parallax_obj.real_pos.z -= 4*delta
 					else: #is_hero_in_row_1
-						if parallax_obj.real_pos_z < 2.5:
-							parallax_obj.real_pos_z += 1*delta
+						if parallax_obj.real_pos.z < 2.5:
+							parallax_obj.real_pos.z += 1*delta
 				else: 
-					if parallax_obj.real_pos_z > 1.498:
-						parallax_obj.real_pos_z -= 1*delta
-					if  parallax_obj.real_pos_z < 1.502:
-						parallax_obj.real_pos_z += 1*delta
+					if parallax_obj.real_pos.z > 1.498:
+						parallax_obj.real_pos.z -= 1*delta
+					if  parallax_obj.real_pos.z < 1.502:
+						parallax_obj.real_pos.z += 1*delta
 						
 				# print("Z INDEX: ", parallax_obj.z_index)
 	has_printed = true
@@ -211,10 +211,10 @@ func _process(delta):
 #		elif grass.is_grass:
 #			grass.get_node("AnimatedSprite").animation = "filtered"
 #			grass.get_node("AnimatedSprite").frame = grass.plant_num
-		grass.real_pos_x += delta * dir * SPEED_MOD
-		grass.position.x = z_and_x_to_x_converter(grass.real_pos_z, grass.real_pos_x)
-		grass.position.y = z_and_x_to_y_converter(grass.real_pos_z, grass.real_pos_x)
-		grass.z_index = -grass.real_pos_z * 10
+		grass.real_pos.x += delta * dir * SPEED_MOD
+		grass.position.x = z_and_x_to_x_converter(grass.real_pos.z, grass.real_pos.x)
+		grass.position.y = z_and_x_to_y_converter(grass.real_pos.z, grass.real_pos.x)
+		grass.z_index = -grass.real_pos.z * 10
 		
 
 
@@ -275,17 +275,17 @@ func add_grass(x, z):
 	grass.plant_num = num
 
 	add_child(grass)
-	grass.real_pos_x = x
-	grass.real_pos_z = z
+	grass.real_pos.x = x
+	grass.real_pos.z = z
 	
 
 	
-	if grass.real_pos_z > 20: 
+	if grass.real_pos.z > 20: 
 		grass.get_node("AnimatedSprite2").visible = true
 		grass.get_node("AnimatedSprite").visible = false
 		grass.get_node("AnimatedSprite2").animation = "filtered"
 		grass.get_node("AnimatedSprite2").frame = grass.plant_num	
-	elif grass.real_pos_z > 15 and grass.real_pos_z <= 20:
+	elif grass.real_pos.z > 15 and grass.real_pos.z <= 20:
 		var is_close = rng.randi_range(0,4)
 		if is_close == 0:
 			grass.get_node("AnimatedSprite").visible = true

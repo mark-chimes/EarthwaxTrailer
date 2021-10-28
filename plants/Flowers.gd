@@ -1,7 +1,4 @@
-extends Node2D
+extends "res://parallax/ParallaxObject.gd"
 
-var real_pos_x = 0
-var real_pos_y = 0
-var real_pos_z = 0
 var plant_num = 0
 var is_grass = false
