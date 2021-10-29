@@ -18,6 +18,7 @@ var Wave = preload("res://tests/ParallaxWave.tscn")
 var BuildingFront = preload("res://buildings/BuildingFront.tscn")
 var BuildingBack = preload("res://buildings/BuildingBack.tscn")
 var BuildingWheel = preload("res://buildings/BuildingWheel.tscn")
+var PosGenerator = preload("res://parallax/RandomPositionGenerator.gd")
 var num_chickens_x = 4
 var num_chickens_z = 4
 var num_waves = 10
@@ -66,7 +67,7 @@ func _ready():
 			
 	create_building([BuildingBack, BuildingFront, BuildingWheel], -20, 72) 
 
-	create_grass() 
+	generate_lawn() 
 	
 	for parallax_obj in parallax_objects:
 		parallax_obj.position.y = z_to_y_converter(parallax_obj.real_pos.z)
@@ -157,10 +158,10 @@ func create_building(building_parts, x, far_z):
 		parallax_objects.push_front(building)
 		z -= 2	
 			
-func create_grass(): 
-	my_func(num_grass, grass_x_off, grass_z_off, grass_x_mult - 1, grass_z_mult - 1)
-	my_func(num_grass/2, grass_x_off, grass_z_off+6, grass_x_mult - 1, grass_z_mult - 1)
-	my_func(num_grass/2, grass_x_off, grass_z_off+12, grass_x_mult - 1, grass_z_mult*2 - 1)
+func generate_lawn(): 
+	create_plants(num_grass, grass_x_off, grass_z_off, grass_x_mult - 1, grass_z_mult - 1)
+	create_plants(num_grass/2, grass_x_off, grass_z_off+6, grass_x_mult - 1, grass_z_mult - 1)
+	create_plants(num_grass/2, grass_x_off, grass_z_off+12, grass_x_mult - 1, grass_z_mult*2 - 1)
 #	my_func(num_grass/4, grass_x_off, grass_z_off+16, grass_x_mult - 1, grass_z_mult*2 - 1)	
 
 	for grass in lawn:
@@ -183,30 +184,15 @@ func z_and_x_to_x_converter(hero_x_pos, z_pos, x_pos):
 	z_pos = z_pos * Z_UNIT + 1
 	return SCREEN_MID_X + x_pos / z_pos
 
-func my_func(n, x_off, y_off, x_mult, y_mult): 
-	var g = gamma(2)
-	var my_seed = 0.5
-	
-	var alpha_x = fmod(pow(1/g, 1), 1.0)
-	var alpha_y = fmod(pow(1/g, 2), 1.0)
-	
-	var xs = []
-	var ys = []
-	
-	var x_cur = my_seed
-	var y_cur = my_seed 
-	
 
-	for i in range(n): 
-		x_cur = fmod(x_cur + alpha_x, 1)
-		y_cur = fmod(y_cur + alpha_y, 1)
-		xs.push_back(x_off + x_cur*x_mult)
-		ys.push_back(y_off + y_cur*y_mult)
-	
-	for i in range(n):
-		add_grass(xs[i] + randf(), ys[i])
 
-func add_grass(x, z): 
+	
+func create_plants(n, x_off, y_off, x_mult, y_mult): 
+	var positions = PosGenerator.generate_random_positions(n, x_off, y_off, x_mult, y_mult)
+	for pos in positions: 
+		add_random_plant_to_lawn_at(pos[0] + randf(), pos[1])
+		
+func add_random_plant_to_lawn_at(x, z): 
 	var flowerng = rng.randi_range(0, 40)
 	var grass
 	var num
@@ -247,10 +233,3 @@ func add_grass(x, z):
 		grass.get_node("AnimatedSprite").frame = grass.plant_num
 	
 	lawn.push_front(grass)
-
-
-func gamma(dim): 
-	var x=1.0000
-	for i in range(20):
-		x = x-(pow(x,dim+1)-x-1)/((dim+1)*pow(x,dim)-1)
-	return x
