@@ -36,7 +36,7 @@ var rng = RandomNumberGenerator.new()
 
 var lawn = []
 var waves = []
-var all_parallax_objects = []
+var parallax_objects = []
 var spearmen = []
 var chickens = []
 
@@ -62,13 +62,13 @@ func _ready():
 		-num_waves/2, -4.8, 1.5, 1, true, waves)
 			
 	create_objects_in_rectangle(Spearman, num_spearmen_x, num_spearmen_z, 
-		0, 0, 1.5, 1.5, false, spearmen)
+		100, 0, 1.5, 1.5, false, spearmen)
 			
 	create_building([BuildingBack, BuildingFront, BuildingWheel], -20, 72) 
 
 	create_grass() 
 	
-	for parallax_obj in all_parallax_objects:
+	for parallax_obj in parallax_objects:
 		parallax_obj.position.y = z_to_y_converter(parallax_obj.real_pos.z)
 		parallax_obj.z_index = -parallax_obj.real_pos.z * 10
 
@@ -79,9 +79,9 @@ func _process(delta):
 
 func position_stuff_on_screen(delta): 
 	for grass in lawn:
-		grass.position.x = z_and_x_to_x_converter(grass.real_pos.z, grass.real_pos.x)
-	for parallax_obj in all_parallax_objects:
-		parallax_obj.position.x = z_and_x_to_x_converter(parallax_obj.real_pos.z, parallax_obj.real_pos.x)
+		grass.position.x = z_and_x_to_x_converter(player_real_pos_x, grass.real_pos.z, grass.real_pos.x)
+	for parallax_obj in parallax_objects:
+		parallax_obj.position.x = z_and_x_to_x_converter(player_real_pos_x, parallax_obj.real_pos.z, parallax_obj.real_pos.x)
 
 func wave_movement(delta): 	
 	for wave in waves: 
@@ -129,11 +129,7 @@ func hero_world_movement(delta):
 			$HeroParallax2.z_index = -1
 			is_hero_in_row_1 = true
 
-	for grass in lawn:
-		grass.real_pos.x += delta * dir * SPEED_MOD
-
-	for parallax_obj in all_parallax_objects:
-		parallax_obj.real_pos.x += delta * dir * SPEED_MOD
+	player_real_pos_x = player_real_pos_x + (delta * dir * SPEED_MOD)
 
 func create_objects_in_rectangle(object_type, num_x, num_z, x_offset, z_offset,
 	x_distance, z_distance, should_randomize, custom_array): 
@@ -147,7 +143,7 @@ func create_objects_in_rectangle(object_type, num_x, num_z, x_offset, z_offset,
 			if should_randomize: 
 				obj.real_pos.x += randf() - 0.5
 				obj.real_pos.z += randf() - 0.5
-			all_parallax_objects.append(obj)
+			parallax_objects.append(obj)
 			if custom_array != null: 
 				custom_array.append(obj)
 
@@ -158,7 +154,7 @@ func create_building(building_parts, x, far_z):
 		add_child(building)
 		building.real_pos.x = -20
 		building.real_pos.z = z
-		all_parallax_objects.push_front(building)
+		parallax_objects.push_front(building)
 		z -= 2	
 			
 func create_grass(): 
@@ -182,8 +178,8 @@ func z_to_y_converter(z_pos):
 	z_pos = z_pos * Z_UNIT + 1
 	return HORIZON + HORIZON_HEIGHT / z_pos
 	
-func z_and_x_to_x_converter(z_pos, x_pos):
-	x_pos = x_pos * X_UNIT * 1.0
+func z_and_x_to_x_converter(hero_x_pos, z_pos, x_pos):
+	x_pos = (x_pos + hero_x_pos) * X_UNIT * 1.0
 	z_pos = z_pos * Z_UNIT + 1
 	return SCREEN_MID_X + x_pos / z_pos
 
