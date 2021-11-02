@@ -25,7 +25,7 @@ var num_chickens_x = 4
 var num_chickens_z = 0#4
 var num_waves = 0# 10
 var num_spearmen_x = 12
-var num_spearmen_z = 9
+var num_spearmen_z = 8
 var num_trees = 32
 
 var is_grassing = true
@@ -72,10 +72,10 @@ func _ready():
 		-80, 2, 30, 1, true, grass_strips)	
 			
 	create_objects_in_rectangle(Spearman, num_spearmen_x, num_spearmen_z, 
-		0, 3, 1.5, 1.5, false, spearmen)
+		0, 1.5, 1.5, 1.5, false, spearmen)
 		
-	create_objects_in_rectangle(Spearman, 1, 1, 
-		0, 40, 1, 1, false, spearmen)
+#	create_objects_in_rectangle(Spearman, 1, 1, 
+#		0, 40, 1, 1, false, spearmen)
 		
 #	var scale_factor = 20
 #	for spearman in spearmen: 

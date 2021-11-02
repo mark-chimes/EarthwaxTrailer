@@ -92,6 +92,7 @@ __meta__ = {
 }
 
 [node name="spearman_idle_rest_on_pole_small" type="Sprite" parent="."]
+visible = false
 position = Vector2( 912, 432 )
 scale = Vector2( 2, 2 )
 texture = ExtResource( 10 )
@@ -102,9 +103,11 @@ position = Vector2( 952, 408 )
 texture = ExtResource( 11 )
 
 [node name="spearman_idle_rest_on_pole2" type="Sprite" parent="."]
+visible = false
 position = Vector2( 888, 432 )
 texture = ExtResource( 11 )
 
 [node name="spearman_idle_rest_on_pole_small2" type="Sprite" parent="."]
+visible = false
 position = Vector2( 864, 440 )
 texture = ExtResource( 10 )
