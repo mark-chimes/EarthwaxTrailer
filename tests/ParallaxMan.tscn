@@ -7,6 +7,14 @@
 script = ExtResource( 2 )
 
 [node name="spearman_idle_rest_on_pole" type="Sprite" parent="."]
+position = Vector2( -448, -168 )
 scale = Vector2( 2, 2 )
 texture = ExtResource( 1 )
-offset = Vector2( 0, -26 )
+offset = Vector2( 224, 58 )
+
+[node name="spearman_idle_rest_on_pole2" type="Sprite" parent="."]
+position = Vector2( -448, -64 )
+scale = Vector2( 2, 2 )
+texture = ExtResource( 1 )
+offset = Vector2( 224, 58 )
+flip_v = true

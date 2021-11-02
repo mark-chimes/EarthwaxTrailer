@@ -1,15 +1,16 @@
 extends Node2D
-const HORIZON_ACTUAL = 390
+const HORIZON_ACTUAL = 420#390
 const HORIZON = HORIZON_ACTUAL - 50
 const SCREEN_MAX_X = 1920
-const SCREEN_MAX_Y = 1080
+const SCREEN_MAX_Y = 800#1080
 const SCREEN_MID_X = SCREEN_MAX_X / 2
 const Z_ORIGIN_Y_OFFSET = SCREEN_MAX_Y - 178
 const HORIZON_HEIGHT = Z_ORIGIN_Y_OFFSET - HORIZON 
 const X_UNIT = 32.0
 const Z_UNIT = 0.05
-const SPEED_MOD = 25
+const SPEED_MOD = 5
 var Spearman = preload("res://tests/ParallaxMan.tscn")
+var Knight = preload("res://tests/ParallaxKnight.tscn")
 var Chicken = preload("res://tests/ParallaxChicken.tscn")
 var Grass = preload("res://plants/Grasses.tscn")
 var DistantForestTile = preload("res://tests/DistantForestTile.tscn")
@@ -19,17 +20,20 @@ var BuildingFront = preload("res://buildings/BuildingFront.tscn")
 var BuildingBack = preload("res://buildings/BuildingBack.tscn")
 var BuildingWheel = preload("res://buildings/BuildingWheel.tscn")
 var PosGenerator = preload("res://parallax/RandomPositionGenerator.gd")
+var GrassStrip = preload("res://plants/GrassStrip.tscn")
 var num_chickens_x = 4
-var num_chickens_z = 4
-var num_waves = 10
-var num_spearmen_x = 0#24
-var num_spearmen_z = 0#24
-var num_trees = 16
+var num_chickens_z = 0#4
+var num_waves = 0# 10
+var num_spearmen_x = 12
+var num_spearmen_z = 9
+var num_trees = 32
 
-var num_grass = 3000
-var grass_x_off = -20 
+var is_grassing = true
+
+var num_grass = 300
+var grass_x_off = -160 
 var grass_z_off = -1
-var grass_x_mult = 80
+var grass_x_mult = 320
 var grass_z_mult = 16
 
 var player_real_pos_x = 0
@@ -39,7 +43,9 @@ var lawn = []
 var waves = []
 var parallax_objects = []
 var spearmen = []
+var knights = []
 var chickens = []
+var grass_strips = []
 
 enum Dir {
 	LEFT = 1,
@@ -61,11 +67,36 @@ func _ready():
 	
 	create_objects_in_rectangle(Wave, 3, num_waves, 
 		-num_waves/2, -4.8, 1.5, 1, true, waves)
+		
+	create_objects_in_rectangle(GrassStrip, 10, 14, 
+		-80, 2, 30, 1, true, grass_strips)	
 			
 	create_objects_in_rectangle(Spearman, num_spearmen_x, num_spearmen_z, 
-		100, 0, 1.5, 1.5, false, spearmen)
-			
-	create_building([BuildingBack, BuildingFront, BuildingWheel], -20, 72) 
+		0, 3, 1.5, 1.5, false, spearmen)
+		
+	create_objects_in_rectangle(Spearman, 1, 1, 
+		0, 40, 1, 1, false, spearmen)
+		
+#	var scale_factor = 20
+#	for spearman in spearmen: 
+#		spearman.scale.x = scale_factor/((scale_factor - 3.0)+spearman.real_pos.z)
+#		spearman.scale.y = scale_factor/((scale_factor - 3.0) +spearman.real_pos.z)
+#
+	create_objects_in_rectangle(Spearman, 1, 1, 
+		0, 3, 1.5, 1.5, false, spearmen)
+
+#	create_objects_in_rectangle(Spearman, num_spearmen_x, num_spearmen_z, 
+#		-60, 1.5, 1.5, 1.5, false, spearmen)	
+#
+#	create_objects_in_rectangle(Spearman, num_spearmen_x, num_spearmen_z, 
+#		60, 1.5, 1.5, 1.5, false, spearmen)	
+		
+#	create_objects_in_rectangle(Knight, 4, 4, 
+#		12, 0, 9, 3, false, knights)
+				
+	
+	for i in range(10):
+		create_building([BuildingBack, BuildingFront, BuildingWheel], -300 + 10 + 60*i, 46) 
 
 	generate_lawn() 
 	
@@ -79,12 +110,17 @@ func _process(delta):
 	position_stuff_on_screen(delta)
 
 func position_stuff_on_screen(delta): 
-	for grass in lawn:
-		grass.position.x = z_and_x_to_x_converter(player_real_pos_x, grass.real_pos.z, grass.real_pos.x)
+	if is_grassing:
+#		$GrassesHolder.position.x = z_and_x_to_x_converter(player_real_pos_x, 
+#					1, 2)
+		for grass in lawn:
+			grass.position.x = z_and_x_to_x_converter(player_real_pos_x, 
+					grass.real_pos.z, grass.real_pos.x)
 	for parallax_obj in parallax_objects:
-		parallax_obj.position.x = z_and_x_to_x_converter(player_real_pos_x, parallax_obj.real_pos.z, parallax_obj.real_pos.x)
+		parallax_obj.position.x = z_and_x_to_x_converter(player_real_pos_x, 
+				parallax_obj.real_pos.z, parallax_obj.real_pos.x)
 
-func wave_movement(delta): 	
+func wave_movement(delta): 
 	for wave in waves: 
 		wave.real_pos.x += delta
 
@@ -114,21 +150,27 @@ func hero_world_movement(delta):
 	# print(player_real_pos_x)
 	
 	if Input.is_action_pressed("ui_up"):
-		if $HeroParallax.position.y > 832:
-			$HeroParallax.position.y = 832
-			$HeroParallax.z_index = -8
-		if $HeroParallax2.position.y > 832:
-			$HeroParallax2.position.y = 832
-			$HeroParallax2.z_index = -8			
-			is_hero_in_row_1 = false
+		is_grassing = true
 	if Input.is_action_pressed("ui_down"):
-		if $HeroParallax.position.y < 896:
-			$HeroParallax.position.y = 896
-			$HeroParallax.z_index = -1
-		if $HeroParallax2.position.y < 896:
-			$HeroParallax2.position.y = 896
-			$HeroParallax2.z_index = -1
-			is_hero_in_row_1 = true
+		is_grassing = false
+	
+		
+#	if Input.is_action_pressed("ui_up"):
+#		if $HeroParallax.position.y > 832:
+#			$HeroParallax.position.y = 832
+#			$HeroParallax.z_index = -8
+#		if $HeroParallax2.position.y > 832:
+#			$HeroParallax2.position.y = 832
+#			$HeroParallax2.z_index = -8			
+#			is_hero_in_row_1 = false
+#	if Input.is_action_pressed("ui_down"):
+#		if $HeroParallax.position.y < 896:
+#			$HeroParallax.position.y = 896
+#			$HeroParallax.z_index = -1
+#		if $HeroParallax2.position.y < 896:
+#			$HeroParallax2.position.y = 896
+#			$HeroParallax2.z_index = -1
+#			is_hero_in_row_1 = true
 
 	player_real_pos_x = player_real_pos_x + (delta * dir * SPEED_MOD)
 
@@ -153,21 +195,23 @@ func create_building(building_parts, x, far_z):
 	for Building in building_parts: 
 		var building = Building.instance()
 		add_child(building)
-		building.real_pos.x = -20
+		building.real_pos.x = x
 		building.real_pos.z = z
 		parallax_objects.push_front(building)
 		z -= 2	
 			
 func generate_lawn(): 
 	create_plants(num_grass, grass_x_off, grass_z_off, grass_x_mult - 1, grass_z_mult - 1)
-	create_plants(num_grass/2, grass_x_off, grass_z_off+6, grass_x_mult - 1, grass_z_mult - 1)
-	create_plants(num_grass/2, grass_x_off, grass_z_off+12, grass_x_mult - 1, grass_z_mult*2 - 1)
+#	create_plants2(num_grass, grass_x_off, grass_z_off+16, grass_x_mult - 1, grass_z_mult*2 - 1)
+#	create_plants(num_grass/2, grass_x_off, grass_z_off+12, grass_x_mult - 1, grass_z_mult*2 - 1)
 #	my_func(num_grass/4, grass_x_off, grass_z_off+16, grass_x_mult - 1, grass_z_mult*2 - 1)	
 
 	for grass in lawn:
 		grass.position.y = z_to_y_converter(grass.real_pos.z)
 		grass.z_index = -grass.real_pos.z * 10
-
+	for grass in lawn:
+		grass.position.x = z_and_x_to_x_converter(player_real_pos_x, 
+				grass.real_pos.z, grass.real_pos.x)
 func draw_line_to_middle(phys_obj): 
 	draw_line(
 		Vector2(phys_obj.position.x,phys_obj.position.y), 
@@ -183,17 +227,19 @@ func z_and_x_to_x_converter(hero_x_pos, z_pos, x_pos):
 	x_pos = (x_pos + hero_x_pos) * X_UNIT * 1.0
 	z_pos = z_pos * Z_UNIT + 1
 	return SCREEN_MID_X + x_pos / z_pos
-
-
-
 	
 func create_plants(n, x_off, y_off, x_mult, y_mult): 
 	var positions = PosGenerator.generate_random_positions(n, x_off, y_off, x_mult, y_mult)
 	for pos in positions: 
 		add_random_plant_to_lawn_at(pos[0] + randf(), pos[1])
+
+func create_plants2(n, x_off, y_off, x_mult, y_mult): 
+	var positions = PosGenerator.generate_random_positions(n, x_off, y_off, x_mult, y_mult)
+	for pos in positions: 
+		add_random_plant_to_lawn_at(pos[0] + randf()*4, pos[1]+ randf()*4)
 		
 func add_random_plant_to_lawn_at(x, z): 
-	var flowerng = rng.randi_range(0, 40)
+	var flowerng = rng.randi_range(0, 0)
 	var grass
 	var num
 	if flowerng == 0:
@@ -204,7 +250,7 @@ func add_random_plant_to_lawn_at(x, z):
 		num = rng.randi_range(0, 2)
 	grass.plant_num = num
 
-	add_child(grass)
+	$GrassesHolder.add_child(grass)
 	grass.real_pos.x = x
 	grass.real_pos.z = z
 	
@@ -220,16 +266,17 @@ func add_random_plant_to_lawn_at(x, z):
 			grass.get_node("AnimatedSprite2").visible = false
 			grass.get_node("AnimatedSprite").animation = "filtered"
 			grass.get_node("AnimatedSprite").frame = grass.plant_num
+			grass.get_node("AnimatedSprite").get_node("AnimatedSprite").frame = grass.plant_num
 		else: 
 			grass.get_node("AnimatedSprite2").visible = true
 			grass.get_node("AnimatedSprite").visible = false
 			grass.get_node("AnimatedSprite2").animation = "filtered"
 			grass.get_node("AnimatedSprite2").frame = grass.plant_num	
-
 	else: 
 		grass.get_node("AnimatedSprite").visible = true
 		grass.get_node("AnimatedSprite2").visible = false
 		grass.get_node("AnimatedSprite").animation = "filtered"
 		grass.get_node("AnimatedSprite").frame = grass.plant_num
+		grass.get_node("AnimatedSprite").get_node("AnimatedSprite").frame = grass.plant_num
 	
 	lawn.push_front(grass)

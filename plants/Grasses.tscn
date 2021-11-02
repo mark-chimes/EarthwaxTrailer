@@ -46,6 +46,12 @@ frames = SubResource( 1 )
 animation = "unfiltered"
 offset = Vector2( 0, -8 )
 
+[node name="AnimatedSprite" type="AnimatedSprite" parent="AnimatedSprite"]
+scale = Vector2( 1, -1 )
+frames = SubResource( 1 )
+animation = "unfiltered"
+offset = Vector2( 0, -8 )
+
 [node name="AnimatedSprite2" type="AnimatedSprite" parent="."]
 scale = Vector2( 2, 2 )
 frames = SubResource( 2 )

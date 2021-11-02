@@ -4,6 +4,7 @@
 [ext_resource path="res://buildings/BuildingFront.gd" type="Script" id=2]
 
 [node name="BuildingFront" type="Node2D"]
+scale = Vector2( 2, 2 )
 script = ExtResource( 2 )
 
 [node name="building_test_front" type="Sprite" parent="."]
