@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://plants/strips/strip1.png" type="Texture" id=1]
+[ext_resource path="res://plants/strips/grass_strip_test.png" type="Texture" id=1]
 [ext_resource path="res://plants/GrassStrip.gd" type="Script" id=2]
 
 [node name="GrassStrip" type="Node2D"]

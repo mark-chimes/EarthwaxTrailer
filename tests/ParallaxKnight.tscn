@@ -227,6 +227,4 @@ offset = Vector2( -64, -32 )
 [node name="AnimatedSprite2" type="AnimatedSprite" parent="."]
 scale = Vector2( 2, -2 )
 frames = SubResource( 52 )
-frame = 41
-playing = true
 offset = Vector2( -64, -32 )

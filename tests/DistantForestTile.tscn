@@ -4,6 +4,7 @@
 [ext_resource path="res://tests/DistantForestTile.gd" type="Script" id=2]
 
 [node name="DistantForestTile" type="Node2D"]
+z_index = 1000
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]

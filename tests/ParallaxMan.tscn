@@ -15,6 +15,7 @@ offset = Vector2( 224, 58 )
 [node name="spearman_idle_rest_on_pole2" type="Sprite" parent="."]
 position = Vector2( -448, -64 )
 scale = Vector2( 2, 2 )
+z_index = -1200
 texture = ExtResource( 1 )
 offset = Vector2( 224, 58 )
 flip_v = true
