@@ -17,7 +17,10 @@ var Chicken = preload("res://tests/ParallaxChicken.tscn")
 var DistantForestTile = preload("res://tests/DistantForestTile.tscn")
 var Flower = preload("res://plants/Flowers.tscn")
 var BuildingFront = preload("res://buildings/BuildingFront.tscn")
+var BuildingSidesFront = preload("res://buildings/BuildingSidesFront.tscn")
+var BuildingSidesFrontLeft = preload("res://buildings/BuildingSidesFrontLeft.tscn")
 var BuildingBack = preload("res://buildings/BuildingBack.tscn")
+var BuildingBackSidewalls = preload("res://buildings/BuildingBackSidewalls.tscn")
 var BuildingWheel = preload("res://buildings/BuildingWheel.tscn")
 var PosGenerator = preload("res://parallax/RandomPositionGenerator.gd")
 var GrassStrip = preload("res://plants/GrassStrip.tscn")
@@ -29,7 +32,7 @@ var rng = RandomNumberGenerator.new()
 # Generation values
 var num_chickens_x = 4
 var num_chickens_z = 0#4
-var num_spearmen_x = 12
+var num_spearmen_x = 40
 var num_spearmen_z = 8
 var spearman_separation = 1.5
 
@@ -55,6 +58,10 @@ const SPEED_MOD = 5
 var player_real_pos_x = 0
 var player_real_pos_z = 3
 
+var test_wall
+var chicken1
+var chicken2
+	
 enum Dir {
 	LEFT = 1,
 	RIGHT = -1,
@@ -78,16 +85,41 @@ func _ready():
 	
 	position_hero()
 	
-	for i in range(10):
-		create_building([BuildingBack, BuildingFront, BuildingWheel], -300 + 10 + 60*i, 46) 
+#	for i in range(10):
+#		create_building([BuildingBackSidewalls, BuildingBack, BuildingSidesFront, BuildingFront, BuildingWheel], -300 + 10 + 60*i, 48) 
 
+
+	create_building([BuildingBackSidewalls, BuildingBack, BuildingSidesFrontLeft, BuildingFront, BuildingWheel], 0, 48) 
+	test_wall = BuildingSidesFront.instance()
+	add_child(test_wall)
+	test_wall.real_pos.x = 0
+	test_wall.real_pos.z = 42
+	parallax_objects.push_front(test_wall) # TODO remove		
+	
+	chicken1 = Chicken.instance()
+	chicken2 = Chicken.instance()
+	add_child(chicken1)
+	add_child(chicken2) 
+	chicken1.real_pos.x = 0
+	chicken2.real_pos.x = 0
+	chicken1.real_pos.z = 42
+	chicken2.real_pos.z = 40
+	parallax_objects.push_front(chicken1) # TODO remove	
+	parallax_objects.push_front(chicken2) # TODO remove	
+	
+	
 	make_reeds()
 	generate_lawn() 
 
 						
 	for parallax_obj in parallax_objects:
 		parallax_obj.position.y = z_to_y_converter(parallax_obj.real_pos.z)
+
 		parallax_obj.z_index = -parallax_obj.real_pos.z * 10
+	chicken1.position.y -= 32
+	chicken1.visible = false
+	chicken2.visible = false
+#	for spearman in spearmen: 
 
 func make_reeds(): 
 	create_objects_in_rectangle_randoff(MudStrip, 3, 8, 
@@ -107,17 +139,41 @@ func make_reeds():
 #	create_objects_in_rectangle_randoff(ReedStrip, 3, 1, 
 #			0, -3, 0, 128, 0, true, reed_strips)
 
+const FULL_WIDTH = 9
+
 func _process(delta):
 	hero_world_movement(delta)
 	position_stuff_on_screen(delta)
 
+	var wall_sprite = test_wall.get_node("Sprite")
+	var width =  z_and_x_to_x_converter(player_real_pos_x, 
+				test_wall.real_pos.z+2, test_wall.real_pos.x) - test_wall.position.x
+	width = width/3.5
+	chicken1.position.x = z_and_x_to_x_converter(player_real_pos_x, 
+				test_wall.real_pos.z+2, test_wall.real_pos.x) + 108
+	chicken2.position.x = test_wall.position.x + 108
+	
+	if width < 0: 
+		width = 0
+				
+	wall_sprite.region_rect = Rect2(0,0,width,24)
+
+
 func position_stuff_on_screen(delta): 
+	# print("Player real pos x: " + str(player_real_pos_x))
 	for plant in plants:
 		plant.position.x = z_and_x_to_x_converter(player_real_pos_x, 
 				plant.real_pos.z, plant.real_pos.x)
 	for parallax_obj in parallax_objects:
+#		Optimization Cone
+#		if abs(parallax_obj.real_pos.x + player_real_pos_x) > 4*(20+parallax_obj.real_pos.z):
+#			parallax_obj.visible = false
+#			continue
+		parallax_obj.visible = true
 		parallax_obj.position.x = z_and_x_to_x_converter(player_real_pos_x, 
 				parallax_obj.real_pos.z, parallax_obj.real_pos.x)
+
+
 
 func hero_world_movement(delta): 
 	if Input.is_action_pressed("ui_right"):
@@ -227,11 +283,20 @@ func draw_line_to_middle(phys_obj):
 		Vector2(SCREEN_MID_X, HORIZON), 
 		Color(255, 0, 0), 
 		1)
+		
+func z_scale(parallax_obj):
+	var scale_mult = z_to_size_scale_converter(parallax_obj.real_pos.z)
+	parallax_obj.scale.x = scale_mult
+	parallax_obj.scale.y = scale_mult
+
+func z_to_size_scale_converter(z_pos): 
+	z_pos = z_pos * Z_UNIT + 1
+	return 1.3/z_pos
 
 func z_to_y_converter(z_pos):
 	z_pos = z_pos * Z_UNIT + 1
 	return HORIZON + HORIZON_HEIGHT / z_pos
-	
+
 func z_and_x_to_x_converter(hero_x_pos, z_pos, x_pos):
 	x_pos = (x_pos + hero_x_pos) * X_UNIT * 1.0
 	z_pos = z_pos * Z_UNIT + 1

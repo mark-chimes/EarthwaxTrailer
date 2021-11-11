@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://buildings/BuildingBack.gd" type="Script" id=1]
 [ext_resource path="res://buildings/building_test_back.png" type="Texture" id=2]
+[ext_resource path="res://buildings/sidewall_test.png" type="Texture" id=3]
 
 [node name="BuildingBack" type="Node2D"]
 scale = Vector2( 2, 2 )
@@ -19,3 +20,13 @@ texture = ExtResource( 2 )
 offset = Vector2( 0, -64 )
 region_enabled = true
 region_rect = Rect2( 0, 32, 128, 64 )
+
+[node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 2, 2 )
+texture = ExtResource( 3 )
+offset = Vector2( -9, -63 )
+
+[node name="Sprite2" type="Sprite" parent="."]
+scale = Vector2( -2, 2 )
+texture = ExtResource( 3 )
+offset = Vector2( -12, -63 )
