@@ -26,6 +26,7 @@ var PosGenerator = preload("res://parallax/RandomPositionGenerator.gd")
 var GrassStrip = preload("res://plants/GrassStrip.tscn")
 var ReedStrip = preload("res://plants/ReedStrip.tscn")
 var MudStrip = preload("res://plants/MudStrip.tscn")
+var Rat = preload("res://animals/ParallaxRat.tscn")
 
 var rng = RandomNumberGenerator.new()
 
@@ -78,11 +79,13 @@ func _ready():
 
 #	create_objects_in_rectangle(Chicken, num_chickens_x, num_chickens_z, 
 #			-num_chickens_x*1.5, 0, 1.5, 1.5, true, chickens)
-		
+	
+	create_single_object(Rat, 1, -1.5, [])
+	create_single_object(Chicken, -2, 2, [])
+	
 	create_objects_in_rectangle(Spearman, num_spearmen_x, num_spearmen_z, 
 			0, spearman_separation, spearman_separation, spearman_separation, 
 			false, spearmen)
-	
 	position_hero()
 	
 #	for i in range(10):
@@ -96,16 +99,16 @@ func _ready():
 	test_wall.real_pos.z = 42
 	parallax_objects.push_front(test_wall) # TODO remove		
 	
-	chicken1 = Chicken.instance()
-	chicken2 = Chicken.instance()
-	add_child(chicken1)
-	add_child(chicken2) 
-	chicken1.real_pos.x = 0
-	chicken2.real_pos.x = 0
-	chicken1.real_pos.z = 42
-	chicken2.real_pos.z = 40
-	parallax_objects.push_front(chicken1) # TODO remove	
-	parallax_objects.push_front(chicken2) # TODO remove	
+#	chicken1 = Chicken.instance()
+#	chicken2 = Chicken.instance()
+#	add_child(chicken1)
+#	add_child(chicken2) 
+#	chicken1.real_pos.x = 0
+#	chicken2.real_pos.x = 0
+#	chicken1.real_pos.z = 42
+#	chicken2.real_pos.z = 40
+#	parallax_objects.push_front(chicken1) # TODO remove	
+#	parallax_objects.push_front(chicken2) # TODO remove	
 	
 	
 	make_reeds()
@@ -116,17 +119,17 @@ func _ready():
 		parallax_obj.position.y = z_to_y_converter(parallax_obj.real_pos.z)
 
 		parallax_obj.z_index = -parallax_obj.real_pos.z * 10
-	chicken1.position.y -= 32
-	chicken1.visible = false
-	chicken2.visible = false
+#	chicken1.position.y -= 32
+#	chicken1.visible = false
+#	chicken2.visible = false
 #	for spearman in spearmen: 
 
 func make_reeds(): 
-	create_objects_in_rectangle_randoff(MudStrip, 3, 8, 
-			0, -2.5, 0, 120, 0.3, false, reed_strips)	
+	create_objects_in_rectangle_randoff(MudStrip, 3, 10, 
+			0, -1.5, 0, 120, 0.3, false, reed_strips)	
 
 	create_objects_in_rectangle_randoff(ReedStrip, 3, 3, 
-			0, -2.4, 0, 120, 0.7, true, reed_strips)	
+			0, -1.8, 0, 120, 0.7, true, reed_strips)	
 
 #	for z in range(0, 6): 
 #		create_objects_in_rectangle_randoff(MudStrip, 3, 1, 
@@ -149,10 +152,10 @@ func _process(delta):
 	var width =  z_and_x_to_x_converter(player_real_pos_x, 
 				test_wall.real_pos.z+2, test_wall.real_pos.x) - test_wall.position.x
 	width = width/3.5
-	chicken1.position.x = z_and_x_to_x_converter(player_real_pos_x, 
-				test_wall.real_pos.z+2, test_wall.real_pos.x) + 108
-	chicken2.position.x = test_wall.position.x + 108
-	
+#	chicken1.position.x = z_and_x_to_x_converter(player_real_pos_x, 
+#				test_wall.real_pos.z+2, test_wall.real_pos.x) + 108
+#	chicken2.position.x = test_wall.position.x + 108
+#
 	if width < 0: 
 		width = 0
 				
@@ -213,6 +216,15 @@ func position_hero():
 	$HeroParallax.position.y = z_to_y_converter(player_real_pos_z)
 	$HeroParallax2.position.y = z_to_y_converter(player_real_pos_z)
 	$HeroParallax.z_index = -player_real_pos_z * 10
+
+func create_single_object(object_type, x_pos, z_pos, custom_array): 
+	var obj = object_type.instance()
+	add_child(obj)
+	obj.real_pos.x = x_pos
+	obj.real_pos.z = z_pos
+	parallax_objects.append(obj)
+	if custom_array != null: 
+		custom_array.append(obj)
 
 func create_objects_in_rectangle(object_type, num_x, num_z, x_offset, z_offset,
 	x_distance, z_distance, should_randomize, custom_array): 
