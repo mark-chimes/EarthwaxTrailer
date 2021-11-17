@@ -13,7 +13,6 @@ const Z_UNIT = 0.05 # Separation degree for z
 var Spearman = preload("res://tests/ParallaxMan.tscn")
 var Knight = preload("res://tests/ParallaxKnight.tscn")
 var Chicken = preload("res://tests/ParallaxChicken.tscn")
-# var Grass = preload("res://plants/Grasses.tscn")
 var DistantForestTile = preload("res://tests/DistantForestTile.tscn")
 var Flower = preload("res://plants/Flowers.tscn")
 var Grass = preload("res://plants/Grasses.tscn")
@@ -79,56 +78,21 @@ func _ready():
 	create_objects_in_rectangle(DistantForestTile, num_trees, 1, 
 			-300, 150, 34, 1, false, [])
 
-	create_objects_in_rectangle(Chicken, num_chickens_x, num_chickens_z, 
-			-num_chickens_x*1.5, 0, 1.5, 1.5, true, chickens)
-	
-	create_single_object(Rat, 1, -1.5, [])
-	create_single_object(Chicken, -2, 2, [])
-	var grass_muds = []
-	create_objects_in_rectangle(GrassMud, 10, 240, 0, 2, 30, 0.5, true, grass_muds)
-	for grassmud in grass_muds: 
-		z_scale(grassmud)
-#
+	create_animals()
+
 	create_objects_in_rectangle(Spearman, num_spearmen_x, num_spearmen_z, 
 			0, spearman_separation, spearman_separation, spearman_separation, 
 			false, spearmen)
 	position_hero()
-	
-#	for i in range(10):
-#		create_building([BuildingBackSidewalls, BuildingBack, BuildingSidesFront, BuildingFront, BuildingWheel], -300 + 10 + 60*i, 48) 
-
-
-	create_building([BuildingBackSidewalls, BuildingBack, BuildingSidesFrontLeft, BuildingFront, BuildingWheel], 0, 48) 
-	test_wall = BuildingSidesFront.instance()
-	add_child(test_wall)
-	test_wall.real_pos.x = 0
-	test_wall.real_pos.z = 42
-	parallax_objects.push_front(test_wall) # TODO remove		
-	
-#	chicken1 = Chicken.instance()
-#	chicken2 = Chicken.instance()
-#	add_child(chicken1)
-#	add_child(chicken2) 
-#	chicken1.real_pos.x = 0
-#	chicken2.real_pos.x = 0
-#	chicken1.real_pos.z = 42
-#	chicken2.real_pos.z = 40
-#	parallax_objects.push_front(chicken1) # TODO remove	
-#	parallax_objects.push_front(chicken2) # TODO remove	
-	
-	
+	create_buildings()
 	make_reeds()
 	generate_lawn() 
-
+#	add_measuring_chickens()
 						
 	for parallax_obj in parallax_objects:
 		parallax_obj.position.y = z_to_y_converter(parallax_obj.real_pos.z)
 
 		parallax_obj.z_index = -parallax_obj.real_pos.z * 10
-#	chicken1.position.y -= 32
-#	chicken1.visible = false
-#	chicken2.visible = false
-#	for spearman in spearmen: 
 
 func make_reeds(): 
 	create_objects_in_rectangle_randoff(MudStrip, 3, 10, 
@@ -136,17 +100,6 @@ func make_reeds():
 
 	create_objects_in_rectangle_randoff(ReedStrip, 3, 3, 
 			0, -1.8, 0, 120, 0.7, true, reed_strips)	
-
-#	for z in range(0, 6): 
-#		create_objects_in_rectangle_randoff(MudStrip, 3, 1, 
-#				0, -1.75 - z/5.0, 0, 128, 0, true, reed_strips)	
-#
-#	create_objects_in_rectangle_randoff(ReedStrip, 3, 1, 
-#			0, -1, 0, 128, 0, true, reed_strips)
-#	create_objects_in_rectangle_randoff(ReedStrip, 3, 1, 
-#			0, -2, 0, 128, 0, true, reed_strips)
-#	create_objects_in_rectangle_randoff(ReedStrip, 3, 1, 
-#			0, -3, 0, 128, 0, true, reed_strips)
 
 const FULL_WIDTH = 9
 
@@ -158,15 +111,28 @@ func _process(delta):
 	var width =  z_and_x_to_x_converter(player_real_pos_x, 
 				test_wall.real_pos.z+2, test_wall.real_pos.x) - test_wall.position.x
 	width = width/3.5
-#	chicken1.position.x = z_and_x_to_x_converter(player_real_pos_x, 
-#				test_wall.real_pos.z+2, test_wall.real_pos.x) + 108
-#	chicken2.position.x = test_wall.position.x + 108
 #
 	if width < 0: 
 		width = 0
 				
 	wall_sprite.region_rect = Rect2(0,0,width,24)
 
+func create_animals(): 
+	create_objects_in_rectangle(Chicken, num_chickens_x, num_chickens_z, 
+			-num_chickens_x*1.5, 0, 1.5, 1.5, true, chickens)
+	
+	create_single_object(Rat, 1, -1.5, [])
+	create_single_object(Chicken, -2, 2, [])	
+
+func create_buildings(): 
+#	for i in range(10):
+#		create_building([BuildingBackSidewalls, BuildingBack, BuildingSidesFront, BuildingFront, BuildingWheel], -300 + 10 + 60*i, 48) 
+	create_building([BuildingBackSidewalls, BuildingBack, BuildingSidesFrontLeft, BuildingFront, BuildingWheel], 0, 48) 
+	test_wall = BuildingSidesFront.instance()
+	add_child(test_wall)
+	test_wall.real_pos.x = 0
+	test_wall.real_pos.z = 42
+	parallax_objects.push_front(test_wall) # TODO remove			
 
 func position_stuff_on_screen(delta): 
 	# print("Player real pos x: " + str(player_real_pos_x))
@@ -182,31 +148,29 @@ func position_stuff_on_screen(delta):
 		parallax_obj.position.x = z_and_x_to_x_converter(player_real_pos_x, 
 				parallax_obj.real_pos.z, parallax_obj.real_pos.x)
 
-
-
 func hero_world_movement(delta): 
 	if Input.is_action_pressed("ui_right"):
 		dir = Dir.RIGHT
-		$HeroParallax/AnimatedSprite.play("walk")
-		$HeroParallax/AnimatedSprite.scale.x = -2
-		$HeroParallax/Shadow.scale.x = -2
-		$HeroParallax2/AnimatedSprite.play("walk")
-		$HeroParallax2/AnimatedSprite.scale.x = -2
-		$HeroParallax2/Shadow.scale.x = -2
+		$Hero/AnimatedSprite.play("walk")
+		$Hero/AnimatedSprite.scale.x = -2
+		$Hero/Shadow.scale.x = -2
+		$HeroReflection/AnimatedSprite.play("walk")
+		$HeroReflection/AnimatedSprite.scale.x = -2
+		$HeroReflection/Shadow.scale.x = -2
 		player_real_pos_x += delta * dir * SPEED_MOD
 	elif Input.is_action_pressed("ui_left"):
 		dir = Dir.LEFT
-		$HeroParallax/AnimatedSprite.play("walk")
-		$HeroParallax/AnimatedSprite.scale.x = 2
-		$HeroParallax/Shadow.scale.x = 2
-		$HeroParallax2/AnimatedSprite.play("walk")
-		$HeroParallax2/AnimatedSprite.scale.x = 2
-		$HeroParallax2/Shadow.scale.x = 2
+		$Hero/AnimatedSprite.play("walk")
+		$Hero/AnimatedSprite.scale.x = 2
+		$Hero/Shadow.scale.x = 2
+		$HeroReflection/AnimatedSprite.play("walk")
+		$HeroReflection/AnimatedSprite.scale.x = 2
+		$HeroReflection/Shadow.scale.x = 2
 		player_real_pos_x += delta * dir * SPEED_MOD
 	else:
 		dir = Dir.NONE
-		$HeroParallax/AnimatedSprite.play("idle")
-		$HeroParallax2/AnimatedSprite.play("idle")
+		$Hero/AnimatedSprite.play("idle")
+		$HeroReflection/AnimatedSprite.play("idle")
 	# print(player_real_pos_x)
 	
 	if Input.is_action_just_pressed("ui_up"):
@@ -219,9 +183,9 @@ func hero_world_movement(delta):
 	player_real_pos_x = player_real_pos_x + (delta * dir * SPEED_MOD)
 
 func position_hero(): 
-	$HeroParallax.position.y = z_to_y_converter(player_real_pos_z)
-	$HeroParallax2.position.y = z_to_y_converter(player_real_pos_z)
-	$HeroParallax.z_index = -player_real_pos_z * 10
+	$Hero.position.y = z_to_y_converter(player_real_pos_z)
+	$HeroReflection.position.y = z_to_y_converter(player_real_pos_z)
+	$Hero.z_index = -player_real_pos_z * 10
 
 func create_single_object(object_type, x_pos, z_pos, custom_array): 
 	var obj = object_type.instance()
@@ -278,12 +242,16 @@ func create_building(building_parts, x, far_z):
 		z -= 2
 			
 func generate_lawn(): 
+	var grass_muds = []
+	create_objects_in_rectangle(GrassMud, 10, 240, 0, 2, 30, 1, true, grass_muds)
+	for grassmud in grass_muds: 
+		z_scale(grassmud)
 #	create_objects_in_rectangle_randoff(GrassStrip, 4, 16, 
 #			-64, 2, 65, 65, 1.5, true, grass_strips)	
 	var plants_x_width = 200
 	var plants_x_off = -plants_x_width / 2
 	var plants_z_off = 3
-	var plants_z_length = 16
+	var plants_z_length = 32
 	var plants_x_sep = 6
 	var plants_z_sep = 2
 	create_plants(plants_x_off, plants_z_off, 
@@ -348,25 +316,25 @@ func add_random_plant_to_lawn_at(x, z):
 	if plant.real_pos.z > 20: 
 		plant.get_node("AnimatedSprite2").visible = true
 		plant.get_node("AnimatedSprite").visible = false
-		plant.get_node("AnimatedSprite2").animation = "filtered"
+		plant.get_node("AnimatedSprite2").animation = "unfiltered"
 		plant.get_node("AnimatedSprite2").frame = plant.plant_num	
 	elif plant.real_pos.z > 15 and plant.real_pos.z <= 20:
 		var is_close = rng.randi_range(0,4)
 		if is_close == 0:
 			plant.get_node("AnimatedSprite").visible = true
 			plant.get_node("AnimatedSprite2").visible = false
-			plant.get_node("AnimatedSprite").animation = "filtered"
+			plant.get_node("AnimatedSprite").animation = "unfiltered"
 			plant.get_node("AnimatedSprite").frame = plant.plant_num
 			plant.get_node("AnimatedSprite").get_node("AnimatedSprite").frame = plant.plant_num
 		else: 
 			plant.get_node("AnimatedSprite2").visible = true
 			plant.get_node("AnimatedSprite").visible = false
-			plant.get_node("AnimatedSprite2").animation = "filtered"
+			plant.get_node("AnimatedSprite2").animation = "unfiltered"
 			plant.get_node("AnimatedSprite2").frame = plant.plant_num	
 	else: 
 		plant.get_node("AnimatedSprite").visible = true
 		plant.get_node("AnimatedSprite2").visible = false
-		plant.get_node("AnimatedSprite").animation = "filtered"
+		plant.get_node("AnimatedSprite").animation = "unfiltered"
 		plant.get_node("AnimatedSprite").frame = plant.plant_num
 		plant.get_node("AnimatedSprite").get_node("AnimatedSprite").frame = plant.plant_num
 	
