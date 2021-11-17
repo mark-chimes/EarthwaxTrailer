@@ -98,15 +98,6 @@ func _ready():
 
 		parallax_obj.z_index = -parallax_obj.real_pos.z * 10
 
-func make_reeds(): 
-	object_generator.create_objects_in_rectangle_randoff(MudStrip, 3, 10, 
-			0, -1.5, 0, 120, 0.3, false, reed_strips)	
-
-	object_generator.create_objects_in_rectangle_randoff(ReedStrip, 3, 3, 
-			0, -1.8, 0, 120, 0.7, true, reed_strips)	
-
-const FULL_WIDTH = 9
-
 func _process(delta):
 	hero_world_movement(delta)
 	position_stuff_on_screen(delta)
@@ -120,6 +111,13 @@ func _process(delta):
 		width = 0
 				
 	wall_sprite.region_rect = Rect2(0,0,width,24)
+
+func make_reeds(): 
+	object_generator.create_objects_in_rectangle_randoff(MudStrip, 3, 10, 
+			0, -1.5, 0, 120, 0.3, false, reed_strips)	
+
+	object_generator.create_objects_in_rectangle_randoff(ReedStrip, 3, 3, 
+			0, -1.8, 0, 120, 0.7, true, reed_strips)	
 
 func create_animals(): 
 	object_generator.create_objects_in_rectangle(Chicken, num_chickens_x, num_chickens_z, 
@@ -191,8 +189,6 @@ func position_hero():
 	$HeroReflection.position.y = z_to_y_converter(player_real_pos_z)
 	$Hero.z_index = -player_real_pos_z * 10
 
-
-
 func create_building(building_parts, x, far_z):
 	var z = far_z
 	for Building in building_parts: 
@@ -225,13 +221,7 @@ func generate_lawn():
 	for plant in plants:
 		plant.position.x = z_and_x_to_x_converter(player_real_pos_x, 
 				plant.real_pos.z, plant.real_pos.x)
-func draw_line_to_middle(phys_obj): 
-	draw_line(
-		Vector2(phys_obj.position.x,phys_obj.position.y), 
-		Vector2(SCREEN_MID_X, HORIZON), 
-		Color(255, 0, 0), 
-		1)
-		
+
 func z_scale(parallax_obj):
 	var scale_mult = z_to_size_scale_converter(parallax_obj.real_pos.z)
 	parallax_obj.scale.x = scale_mult
