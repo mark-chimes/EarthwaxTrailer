@@ -29,7 +29,10 @@ var ReedStrip = preload("res://plants/ReedStrip.tscn")
 var MudStrip = preload("res://plants/MudStrip.tscn")
 var Rat = preload("res://animals/ParallaxRat.tscn")
 
+var ParallaxObjectGenerator = preload("res://parallax/ParallaxObjectGenerator.gd")
+
 var rng = RandomNumberGenerator.new()
+var object_generator = ParallaxObjectGenerator.new()
 
 # Generation values
 var num_chickens_x = 4
@@ -74,13 +77,14 @@ var is_hero_in_row_1 = true
 
 func _ready():
 	dir = Dir.NONE
+	object_generator.init_values(self, parallax_objects)
 
-	create_objects_in_rectangle(DistantForestTile, num_trees, 1, 
+	object_generator.create_objects_in_rectangle(DistantForestTile, num_trees, 1, 
 			-300, 150, 34, 1, false, [])
 
 	create_animals()
 
-	create_objects_in_rectangle(Spearman, num_spearmen_x, num_spearmen_z, 
+	object_generator.create_objects_in_rectangle(Spearman, num_spearmen_x, num_spearmen_z, 
 			0, spearman_separation, spearman_separation, spearman_separation, 
 			false, spearmen)
 	position_hero()
@@ -95,10 +99,10 @@ func _ready():
 		parallax_obj.z_index = -parallax_obj.real_pos.z * 10
 
 func make_reeds(): 
-	create_objects_in_rectangle_randoff(MudStrip, 3, 10, 
+	object_generator.create_objects_in_rectangle_randoff(MudStrip, 3, 10, 
 			0, -1.5, 0, 120, 0.3, false, reed_strips)	
 
-	create_objects_in_rectangle_randoff(ReedStrip, 3, 3, 
+	object_generator.create_objects_in_rectangle_randoff(ReedStrip, 3, 3, 
 			0, -1.8, 0, 120, 0.7, true, reed_strips)	
 
 const FULL_WIDTH = 9
@@ -118,11 +122,11 @@ func _process(delta):
 	wall_sprite.region_rect = Rect2(0,0,width,24)
 
 func create_animals(): 
-	create_objects_in_rectangle(Chicken, num_chickens_x, num_chickens_z, 
+	object_generator.create_objects_in_rectangle(Chicken, num_chickens_x, num_chickens_z, 
 			-num_chickens_x*1.5, 0, 1.5, 1.5, true, chickens)
 	
-	create_single_object(Rat, 1, -1.5, [])
-	create_single_object(Chicken, -2, 2, [])	
+	object_generator.create_single_object(Rat, 1, -1.5, [])
+	object_generator.create_single_object(Chicken, -2, 2, [])	
 
 func create_buildings(): 
 #	for i in range(10):
@@ -187,49 +191,7 @@ func position_hero():
 	$HeroReflection.position.y = z_to_y_converter(player_real_pos_z)
 	$Hero.z_index = -player_real_pos_z * 10
 
-func create_single_object(object_type, x_pos, z_pos, custom_array): 
-	var obj = object_type.instance()
-	add_child(obj)
-	obj.real_pos.x = x_pos
-	obj.real_pos.z = z_pos
-	parallax_objects.append(obj)
-	if custom_array != null: 
-		custom_array.append(obj)
 
-func create_objects_in_rectangle(object_type, num_x, num_z, x_offset, z_offset,
-	x_distance, z_distance, should_randomize, custom_array): 
-	for z in range(num_z):
-		for x in range(num_x):
-			var obj = object_type.instance()
-			add_child(obj)
-			obj.real_pos.x = x * x_distance + x_offset
-			obj.real_pos.z = z * z_distance + z_offset
-			if should_randomize: 
-				obj.real_pos.x += randf()*16 - 32
-				obj.real_pos.z += randf() - 0.5
-			parallax_objects.append(obj)
-			if custom_array != null: 
-				custom_array.append(obj)
-				
-func create_objects_in_rectangle_randoff(object_type, num_x, num_z, x_offset, z_offset, randoff_x,
-	x_distance, z_distance, should_randomize, custom_array): 
-
-	for z in range(num_z):
-		var x_shift = randf()*randoff_x
-		for x in range(num_x):
-			var obj = object_type.instance()
-			var should_flip = rng.randi_range(0,1)
-			if should_flip == 0: 
-				obj.scale.x = -obj.scale.x
-			add_child(obj)
-			obj.real_pos.x = x * x_distance + x_offset
-			obj.real_pos.z = z * z_distance + z_offset
-			obj.real_pos.x += x_shift
-			if should_randomize: 
-				obj.real_pos.z += randf() - 0.5
-			parallax_objects.append(obj)
-			if custom_array != null: 
-				custom_array.append(obj)
 
 func create_building(building_parts, x, far_z):
 	var z = far_z
@@ -243,7 +205,7 @@ func create_building(building_parts, x, far_z):
 			
 func generate_lawn(): 
 	var grass_muds = []
-	create_objects_in_rectangle(GrassMud, 10, 240, 0, 2, 30, 1, true, grass_muds)
+	object_generator.create_objects_in_rectangle(GrassMud, 10, 240, 0, 2, 30, 1, true, grass_muds)
 	for grassmud in grass_muds: 
 		z_scale(grassmud)
 #	create_objects_in_rectangle_randoff(GrassStrip, 4, 16, 
@@ -296,7 +258,6 @@ func create_plants(x_off, z_off, x_width, z_length, x_sep, z_sep):
 		add_random_plant_to_lawn_at(pos[0], pos[1])
 
 func add_random_plant_to_lawn_at(x, z): 
-	
 	var num1 = rng.randi_range(0, 4)
 
 	var plant
