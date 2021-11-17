@@ -58,6 +58,7 @@ animation = "filtered"
 offset = Vector2( 0, -8 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="AnimatedSprite"]
+visible = false
 scale = Vector2( 1, -1 )
 z_index = -1200
 frames = SubResource( 1 )

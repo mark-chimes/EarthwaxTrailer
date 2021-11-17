@@ -464,6 +464,6 @@ script = ExtResource( 1 )
 scale = Vector2( 2, 2 )
 frames = SubResource( 111 )
 animation = "idle"
-frame = 38
+frame = 42
 playing = true
 offset = Vector2( 2, -4 )

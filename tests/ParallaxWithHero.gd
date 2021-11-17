@@ -16,6 +16,7 @@ var Chicken = preload("res://tests/ParallaxChicken.tscn")
 # var Grass = preload("res://plants/Grasses.tscn")
 var DistantForestTile = preload("res://tests/DistantForestTile.tscn")
 var Flower = preload("res://plants/Flowers.tscn")
+var Grass = preload("res://plants/Grasses.tscn")
 var BuildingFront = preload("res://buildings/BuildingFront.tscn")
 var BuildingSidesFront = preload("res://buildings/BuildingSidesFront.tscn")
 var BuildingSidesFrontLeft = preload("res://buildings/BuildingSidesFrontLeft.tscn")
@@ -24,6 +25,7 @@ var BuildingBackSidewalls = preload("res://buildings/BuildingBackSidewalls.tscn"
 var BuildingWheel = preload("res://buildings/BuildingWheel.tscn")
 var PosGenerator = preload("res://parallax/RandomPositionGenerator.gd")
 var GrassStrip = preload("res://plants/GrassStrip.tscn")
+var GrassMud = preload("res://plants/GrassMudStrip.tscn")
 var ReedStrip = preload("res://plants/ReedStrip.tscn")
 var MudStrip = preload("res://plants/MudStrip.tscn")
 var Rat = preload("res://animals/ParallaxRat.tscn")
@@ -77,12 +79,16 @@ func _ready():
 	create_objects_in_rectangle(DistantForestTile, num_trees, 1, 
 			-300, 150, 34, 1, false, [])
 
-#	create_objects_in_rectangle(Chicken, num_chickens_x, num_chickens_z, 
-#			-num_chickens_x*1.5, 0, 1.5, 1.5, true, chickens)
+	create_objects_in_rectangle(Chicken, num_chickens_x, num_chickens_z, 
+			-num_chickens_x*1.5, 0, 1.5, 1.5, true, chickens)
 	
 	create_single_object(Rat, 1, -1.5, [])
 	create_single_object(Chicken, -2, 2, [])
-	
+	var grass_muds = []
+	create_objects_in_rectangle(GrassMud, 10, 240, 0, 2, 30, 0.5, true, grass_muds)
+	for grassmud in grass_muds: 
+		z_scale(grassmud)
+#
 	create_objects_in_rectangle(Spearman, num_spearmen_x, num_spearmen_z, 
 			0, spearman_separation, spearman_separation, spearman_separation, 
 			false, spearmen)
@@ -235,7 +241,7 @@ func create_objects_in_rectangle(object_type, num_x, num_z, x_offset, z_offset,
 			obj.real_pos.x = x * x_distance + x_offset
 			obj.real_pos.z = z * z_distance + z_offset
 			if should_randomize: 
-				obj.real_pos.x += randf() - 0.5
+				obj.real_pos.x += randf()*16 - 32
 				obj.real_pos.z += randf() - 0.5
 			parallax_objects.append(obj)
 			if custom_array != null: 
@@ -272,8 +278,8 @@ func create_building(building_parts, x, far_z):
 		z -= 2
 			
 func generate_lawn(): 
-	create_objects_in_rectangle_randoff(GrassStrip, 4, 16, 
-			-64, 2, 65, 65, 1.5, true, grass_strips)	
+#	create_objects_in_rectangle_randoff(GrassStrip, 4, 16, 
+#			-64, 2, 65, 65, 1.5, true, grass_strips)	
 	var plants_x_width = 200
 	var plants_x_off = -plants_x_width / 2
 	var plants_z_off = 3
@@ -322,9 +328,18 @@ func create_plants(x_off, z_off, x_width, z_length, x_sep, z_sep):
 		add_random_plant_to_lawn_at(pos[0], pos[1])
 
 func add_random_plant_to_lawn_at(x, z): 
-	var num = rng.randi_range(0, 4)
-	var plant = Flower.instance()
-	plant.plant_num = num
+	
+	var num1 = rng.randi_range(0, 4)
+
+	var plant
+	if num1 == 0:
+		plant = Flower.instance()
+		var num = rng.randi_range(0, 4)
+		plant.plant_num = num
+	else: 
+		plant = Grass.instance()
+		var num = rng.randi_range(0, 2)
+		plant.plant_num = num
 
 	add_child(plant)
 	plant.real_pos.x = x
