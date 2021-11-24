@@ -11,7 +11,7 @@ var is_fading = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	modulate = Color( 0, 0, 0, 0)
+	modulate = Color( 1, 1, 1, 0)
 	visible = true
 
 func _process(delta): 
@@ -20,7 +20,7 @@ func _process(delta):
 	if increase_alpha:
 		if alpha < 1:
 			alpha = alpha + delta
-			modulate = Color( 0, 0, 0, alpha )
+			modulate = Color( 1, 1, 1, alpha )
 		else: 
 			alpha = 1
 			increase_alpha = false
@@ -28,7 +28,7 @@ func _process(delta):
 	else: 
 		if alpha > 0: 
 			alpha = alpha - delta
-			modulate = Color( 0, 0, 0, alpha )
+			modulate = Color( 1, 1, 1, alpha )
 		else:
 			alpha = 0
 			increase_alpha = true
@@ -38,7 +38,7 @@ func half_fade():
 	emit_signal("half_fade")
 
 func set_to_black(): 
-	modulate = Color( 0, 0, 0, 1 )
+	modulate = Color( 1, 1, 1, 1 )
 	alpha = 1
 	is_fading = false
 

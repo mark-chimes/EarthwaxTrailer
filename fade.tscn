@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://background/fade.png" type="Texture" id=1]
+[ext_resource path="res://fade.gd" type="Script" id=2]
+
+[node name="fade" type="Sprite"]
+visible = false
+modulate = Color( 0, 0, 0, 1 )
+position = Vector2( 192, 128 )
+scale = Vector2( 1.46117, 1.46659 )
+z_index = 100
+texture = ExtResource( 1 )
+script = ExtResource( 2 )
