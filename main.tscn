@@ -547,7 +547,7 @@ z_index = 2
 [node name="AnimatedSprite" type="AnimatedSprite" parent="player"]
 position = Vector2( 256, 208 )
 frames = SubResource( 9 )
-frame = 4
+frame = 2
 playing = true
 flip_h = true
 

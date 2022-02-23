@@ -9,6 +9,10 @@ var has_ended = false
 var is_grass1_moving = false
 var is_grass2_moving = false
 
+var is_buildings_moving = false
+var is_soldiers_moving = false
+
+
 const knight_speed = 100
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -63,15 +67,17 @@ func show_knight_trotting():
 func show_buildings(): 
 	$Knight.visible = false
 	$Building.visible = true
-	$Building/Knight/AnimatedSprite.play("talk")
+	$Building/Knight/AnimatedSprite.play("trot")
 	$Building/Tent/AnimatedSprite.play("default")
 	$Building/Tent/Builders/AnimatedSprite.play("default")
 	$Building/Tent/Builders/AnimatedSprite2.play("default")
+	is_buildings_moving = true
 
 func show_army(): 
 	$Building.visible = false
 	$Army.visible = true
-	$Army/Knight/AnimatedSprite.play("talk")
+	$Army/Knight/AnimatedSprite.play("trot")
+	is_soldiers_moving = true
 
 func show_battle(): 
 	$Army.visible = false

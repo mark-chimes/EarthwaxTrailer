@@ -1,13 +1,14 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://buildings/BuildingBack.gd" type="Script" id=1]
 [ext_resource path="res://buildings/building_test_back.png" type="Texture" id=2]
-[ext_resource path="res://buildings/sidewall_test.png" type="Texture" id=3]
-[ext_resource path="res://buildings/big-building-template.png" type="Texture" id=4]
-[ext_resource path="res://buildings/tower-template.png" type="Texture" id=5]
-[ext_resource path="res://buildings/castle_template.png" type="Texture" id=6]
+[ext_resource path="res://buildings/Tent_glow_lantern.png" type="Texture" id=3]
+[ext_resource path="res://buildings/castle_template.png" type="Texture" id=4]
+[ext_resource path="res://buildings/sidewall_test.png" type="Texture" id=5]
+[ext_resource path="res://buildings/tower-template.png" type="Texture" id=6]
 [ext_resource path="res://buildings/castle_template_filled.png" type="Texture" id=7]
-[ext_resource path="res://buildings/Tent_glow_lantern.png" type="Texture" id=8]
+[ext_resource path="res://buildings/big-building-template.png" type="Texture" id=8]
+[ext_resource path="res://buildings/right-tower-side.png" type="Texture" id=9]
 
 [node name="BuildingBack" type="Node2D"]
 scale = Vector2( 2, 2 )
@@ -31,36 +32,37 @@ region_rect = Rect2( 0, 32, 128, 64 )
 [node name="Sprite" type="Sprite" parent="."]
 visible = false
 scale = Vector2( 2, 2 )
-texture = ExtResource( 3 )
+texture = ExtResource( 5 )
 offset = Vector2( -9, -63 )
 
 [node name="Sprite2" type="Sprite" parent="."]
 visible = false
 scale = Vector2( -2, 2 )
-texture = ExtResource( 3 )
+texture = ExtResource( 5 )
 offset = Vector2( -12, -63 )
 
 [node name="big_building_template" type="Sprite" parent="."]
 visible = false
 position = Vector2( -496, -184 )
 scale = Vector2( 2, 2 )
-texture = ExtResource( 4 )
+texture = ExtResource( 8 )
 offset = Vector2( 244, 62 )
 
 [node name="tower_template" type="Sprite" parent="."]
 visible = false
 scale = Vector2( 2, 2 )
-texture = ExtResource( 5 )
+texture = ExtResource( 6 )
 offset = Vector2( 0, -126 )
 
 [node name="castle_template" type="Sprite" parent="."]
 visible = false
 position = Vector2( 0, -4 )
 scale = Vector2( 2, 2 )
-texture = ExtResource( 6 )
+texture = ExtResource( 4 )
 offset = Vector2( 0, -126 )
 
 [node name="castle_template2" type="Sprite" parent="."]
+visible = false
 position = Vector2( 0, -4 )
 scale = Vector2( 2, 2 )
 texture = ExtResource( 7 )
@@ -69,5 +71,17 @@ offset = Vector2( 0, -126 )
 [node name="tent" type="Sprite" parent="."]
 visible = false
 scale = Vector2( 2, 2 )
-texture = ExtResource( 8 )
+texture = ExtResource( 3 )
 offset = Vector2( 0, -44 )
+
+[node name="right-tower-side" type="Sprite" parent="."]
+visible = false
+position = Vector2( 124, -260 )
+scale = Vector2( 0.984375, 2 )
+texture = ExtResource( 9 )
+
+[node name="right-tower-side2" type="Sprite" parent="."]
+visible = false
+position = Vector2( -208, -264 )
+scale = Vector2( 0.984375, 2 )
+texture = ExtResource( 9 )

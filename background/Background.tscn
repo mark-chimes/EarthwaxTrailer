@@ -21,6 +21,7 @@ region_enabled = true
 region_rect = Rect2( 0, 0, 480, 120 )
 
 [node name="GreenUnderlay" type="Sprite" parent="."]
+visible = false
 position = Vector2( 960, 499.001 )
 scale = Vector2( 4, 1.97036 )
 z_index = -1000

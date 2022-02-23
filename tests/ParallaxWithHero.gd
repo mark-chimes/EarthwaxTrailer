@@ -20,6 +20,13 @@ var BuildingFront = preload("res://buildings/BuildingFront.tscn")
 var BuildingSidesFront = preload("res://buildings/BuildingSidesFront.tscn")
 var BuildingSidesFrontLeft = preload("res://buildings/BuildingSidesFrontLeft.tscn")
 var BuildingBack = preload("res://buildings/BuildingBack.tscn")
+var BuildingBack2 = preload("res://buildings/BuildingBack2.tscn")
+var CastleTowersFront = preload("res://buildings/CastleTowersFront.tscn")
+var TowerCrenellations = preload("res://buildings/TowerCrenellations.tscn")
+var CastleDoors = preload("res://buildings/CastleDoors.tscn")
+var CastleMainFront = preload("res://buildings/CastleMainFront.tscn")
+var TowerSideRight2 = preload("res://buildings/BuildingBack4.tscn")
+var TowerSideRight = preload("res://buildings/tower_side_right.tscn")
 var BuildingBackSidewalls = preload("res://buildings/BuildingBackSidewalls.tscn")
 var BuildingWheel = preload("res://buildings/BuildingWheel.tscn")
 var PosGenerator = preload("res://parallax/RandomPositionGenerator.gd")
@@ -39,7 +46,7 @@ var num_chickens_x = 4
 var num_chickens_z = 0#4
 var num_spearmen_x = 40
 var num_spearmen_z = 8
-var spearman_separation = 1.5
+var spearman_separation = 3
 
 var num_trees = 120
 var num_plants_x = 10
@@ -79,14 +86,41 @@ func _ready():
 	dir = Dir.NONE
 	object_generator.init_values(self, parallax_objects)
 
-	object_generator.create_objects_in_rectangle(DistantForestTile, num_trees, 1, 
-			-300, 150, 34, 1, false, [])
+#	object_generator.create_objects_in_rectangle(DistantForestTile, num_trees, 1, 
+#			-300, 150, 34, 1, false, [])
 
 	create_animals()
+	
+	object_generator.create_objects_in_rectangle(Spearman, 1, 1, 
+		-50, 6, spearman_separation, spearman_separation, 
+		false, spearmen)
+	
 
-	object_generator.create_objects_in_rectangle(Spearman, num_spearmen_x, num_spearmen_z, 
-			0, spearman_separation, spearman_separation, spearman_separation, 
-			false, spearmen)
+	#LEFT SIDE
+#	object_generator.create_objects_in_rectangle(Spearman, 1, 76, 
+#			-38, 80, spearman_separation, spearman_separation, 
+#			false, spearmen)
+#
+#	#FRONT	
+#	object_generator.create_objects_in_rectangle(Spearman, 76, 1, 
+#		-38, 80, spearman_separation, spearman_separation, 
+#		false, spearmen)
+#
+#	#MIDDLE	
+#	object_generator.create_objects_in_rectangle(Spearman, 76, 1, 
+#		-38, 118, spearman_separation, spearman_separation, 
+#		false, spearmen)	
+#
+#	#RIGHT
+#	object_generator.create_objects_in_rectangle(Spearman, 1, 76, 
+#		38, 80, spearman_separation, spearman_separation, 
+#		false, spearmen)
+	
+	#BACK
+#	object_generator.create_objects_in_rectangle(Spearman, 76, 1, 
+#		-38, 156, spearman_separation, spearman_separation, 
+#		false, spearmen)
+	
 	position_hero()
 	create_buildings()
 	make_reeds()
@@ -97,7 +131,10 @@ func _ready():
 		parallax_obj.position.y = z_to_y_converter(parallax_obj.real_pos.z)
 
 		parallax_obj.z_index = -parallax_obj.real_pos.z * 10
-
+	
+	for spearman in spearmen: 
+		z_scale(spearman)
+#
 func _process(delta):
 	hero_world_movement(delta)
 	position_stuff_on_screen(delta)
@@ -129,9 +166,10 @@ func create_animals():
 func create_buildings(): 
 #	for i in range(10):
 #		create_building([BuildingBackSidewalls, BuildingBack, BuildingSidesFront, BuildingFront, BuildingWheel], -300 + 10 + 60*i, 48) 
-	create_building([BuildingBackSidewalls, BuildingBack, BuildingSidesFrontLeft, BuildingFront, BuildingWheel], 0, 48) 
+#	create_building([BuildingBack, BuildingBack2, BuildingBack], 0, 156) 
+	create_building2()
 	test_wall = BuildingSidesFront.instance()
-	add_child(test_wall)
+#	add_child(test_wall)
 	test_wall.real_pos.x = 0
 	test_wall.real_pos.z = 42
 	parallax_objects.push_front(test_wall) # TODO remove			
@@ -189,16 +227,82 @@ func position_hero():
 	$HeroReflection.position.y = z_to_y_converter(player_real_pos_z)
 	$Hero.z_index = -player_real_pos_z * 10
 
+func create_building2(): 
+	var building = BuildingBack2.instance() 
+	building.real_pos.x = 0
+	building.real_pos.z = 118
+	building.scale.x = 1
+	building.scale.y = 1
+	add_child(building)
+	parallax_objects.push_front(building)
+		
+	building = CastleMainFront.instance() 
+	building.real_pos.x = 0
+	building.real_pos.z = 86
+	building.scale.x = 1
+	building.scale.y = 1
+	add_child(building)
+	parallax_objects.push_front(building)
+			
+	building = TowerSideRight.instance() 
+	building.real_pos.x = 0
+	building.real_pos.z = 84
+	building.scale.x = 1
+	building.scale.y = 1
+	add_child(building)
+	parallax_objects.push_front(building)
+	
+	building = TowerCrenellations.instance() 
+	building.real_pos.x = 0
+	building.real_pos.z = 81
+	building.scale.x = 1
+	building.scale.y = 1
+	add_child(building)
+	parallax_objects.push_front(building)
+	
+	building = CastleTowersFront.instance() 
+	building.real_pos.x = 0
+	building.real_pos.z = 80
+	building.scale.x = 1
+	building.scale.y = 1
+	add_child(building)
+	parallax_objects.push_front(building)
+	
+	building = CastleDoors.instance() 
+	building.real_pos.x = 0
+	building.real_pos.z = 78
+	building.scale.x = 1
+	building.scale.y = 1
+	add_child(building)
+	parallax_objects.push_front(building)
+	
+	
 func create_building(building_parts, x, far_z):
 	var z = far_z
+	var has_scaled = 0
 	for Building in building_parts: 
 		var building = Building.instance()
 		add_child(building)
+		if has_scaled == 0:
+			building.scale.x = 1
+			building.scale.y = 1
+#			parallax_objects.push_front(building)
+			has_scaled = 1
+		elif has_scaled == 1: 
+			building.scale.x = 1
+			building.scale.y = 1
+			has_scaled = 2
+			parallax_objects.push_front(building)
+		else: 
+			building.scale.x = 1
+			building.scale.y = 1
+			parallax_objects.push_front(building)
 		building.real_pos.x = x
 		building.real_pos.z = z
-		parallax_objects.push_front(building)
-		z -= 2
-			
+
+		z -= 38
+
+	
 func generate_lawn(): 
 	var grass_muds = []
 	object_generator.create_objects_in_rectangle(GrassMud, 10, 240, 0, 2, 30, 1, true, grass_muds)
