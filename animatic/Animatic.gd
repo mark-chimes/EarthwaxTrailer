@@ -98,6 +98,8 @@ func _process(delta):
 	
 	if is_grass1_moving: 
 		$walking/grass_strip_test.position.x -= delta * knight_speed
-	
+		$walking/Boulder_transparent.position.x -= delta * knight_speed
+		$walking/Gremlin_on_grass.position.x -= delta * knight_speed * 2
+		
 	if is_grass2_moving: 
 		$Knight/grass_strip_test.position.x -= delta * knight_speed
