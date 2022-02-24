@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://Trailer/BackgroundStuff.tscn" type="PackedScene" id=1]
 [ext_resource path="res://TimingsController.gd" type="Script" id=2]
@@ -12,8 +12,7 @@
 [ext_resource path="res://Arrows.gd" type="Script" id=10]
 [ext_resource path="res://Trailer/FarmsScene.tscn" type="PackedScene" id=11]
 [ext_resource path="res://background/preview.png" type="Texture" id=12]
-[ext_resource path="res://fade.gd" type="Script" id=13]
-[ext_resource path="res://background/fade.png" type="Texture" id=14]
+[ext_resource path="res://fade.tscn" type="PackedScene" id=13]
 [ext_resource path="res://fonts/OpenSans-Regular.ttf" type="DynamicFontData" id=15]
 [ext_resource path="res://background/preview2.png" type="Texture" id=16]
 [ext_resource path="res://background/preview3.png" type="Texture" id=17]
@@ -399,13 +398,7 @@ z_index = 2
 [node name="SadBattlefield" parent="GeneralMountainScene" instance=ExtResource( 18 )]
 visible = false
 
-[node name="fade" type="Sprite" parent="GeneralMountainScene"]
-visible = false
-modulate = Color( 0, 0, 0, 1 )
-position = Vector2( 192, 128 )
-z_index = 100
-texture = ExtResource( 14 )
-script = ExtResource( 13 )
+[node name="fade" parent="GeneralMountainScene" instance=ExtResource( 13 )]
 
 [node name="preview" type="Sprite" parent="."]
 visible = false
@@ -457,11 +450,11 @@ __meta__ = {
 
 [connection signal="people_enter" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/People" method="_on_TimingsController_people_enter"]
 [connection signal="people_enter" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/Rat" method="_on_TimingsController_people_enter"]
-[connection signal="shoot_arrows" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/Arrows2" method="_on_TimingsController_shoot_arrows"]
 [connection signal="shoot_arrows" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/Arrows" method="_on_TimingsController_shoot_arrows"]
 [connection signal="shoot_arrows" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/Rat" method="_on_TimingsController_shoot_arrows"]
-[connection signal="shoot_first_arrow" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/Arrows2" method="_on_TimingsController_shoot_first_arrow"]
+[connection signal="shoot_arrows" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/Arrows2" method="_on_TimingsController_shoot_arrows"]
 [connection signal="shoot_first_arrow" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/Arrows" method="_on_TimingsController_shoot_first_arrow"]
+[connection signal="shoot_first_arrow" from="GeneralMountainScene/TimingsController" to="GeneralMountainScene/TimingsController/Arrows2" method="_on_TimingsController_shoot_first_arrow"]
 [connection signal="people_enter" from="GeneralMountainScene/TimingsController/Rabbits" to="GeneralMountainScene/TimingsController/People" method="_on_Rabbits_people_enter"]
 [connection signal="people_enter" from="GeneralMountainScene/TimingsController/Rabbits" to="GeneralMountainScene/TimingsController/Rat" method="_on_Rabbits_people_enter"]
 [connection signal="shoot_arrows" from="GeneralMountainScene/TimingsController/Rabbits" to="GeneralMountainScene/TimingsController/Arrows" method="_on_Rabbits_shoot_arrows"]
@@ -471,4 +464,3 @@ __meta__ = {
 [connection signal="start_fading" from="GeneralMountainScene/TimingsController/People" to="GeneralMountainScene" method="_on_People_start_fading"]
 [connection signal="end_scene" from="GeneralMountainScene/FarmsScene" to="GeneralMountainScene" method="_on_FarmsScene_end_scene"]
 [connection signal="end_scene" from="GeneralMountainScene/SadBattlefield" to="GeneralMountainScene" method="_on_SadBattlefield_end_scene"]
-[connection signal="half_fade" from="GeneralMountainScene/fade" to="GeneralMountainScene" method="_on_fade_half_fade"]

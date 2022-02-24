@@ -1,0 +1,60 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://plants/assets_unfiltered/small_grass_02.png" type="Texture" id=1]
+[ext_resource path="res://plants/assets_filtered/small_grass_02.png" type="Texture" id=2]
+[ext_resource path="res://plants/assets_unfiltered/grass_small.png" type="Texture" id=3]
+[ext_resource path="res://plants/Grasses.gd" type="Script" id=4]
+[ext_resource path="res://plants/assets_unfiltered/small_grass_03.png" type="Texture" id=5]
+[ext_resource path="res://plants/assets_filtered/small_grass_03.png" type="Texture" id=6]
+[ext_resource path="res://plants/assets_filtered/grass_small.png" type="Texture" id=7]
+[ext_resource path="res://plants/assets_unfiltered/far_small_grass_02.png" type="Texture" id=8]
+[ext_resource path="res://plants/assets_filtered/far_small_grass_03.png" type="Texture" id=9]
+[ext_resource path="res://plants/assets_filtered/far_small_grass_02.png" type="Texture" id=10]
+[ext_resource path="res://plants/assets_unfiltered/far_small_grass_03.png" type="Texture" id=11]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 7 ), ExtResource( 2 ), ExtResource( 6 ) ],
+"loop": true,
+"name": "filtered",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 3 ), ExtResource( 1 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "unfiltered",
+"speed": 5.0
+} ]
+
+[sub_resource type="SpriteFrames" id=2]
+animations = [ {
+"frames": [ ExtResource( 10 ), ExtResource( 9 ), ExtResource( 10 ) ],
+"loop": true,
+"name": "filtered",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 8 ), ExtResource( 11 ), ExtResource( 8 ) ],
+"loop": true,
+"name": "unfiltered",
+"speed": 5.0
+} ]
+
+[node name="Grasses" type="Node2D"]
+script = ExtResource( 4 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 1 )
+animation = "unfiltered"
+offset = Vector2( 0, -8 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="AnimatedSprite"]
+scale = Vector2( 1, -1 )
+z_index = -1200
+frames = SubResource( 1 )
+animation = "unfiltered"
+offset = Vector2( 0, -8 )
+
+[node name="AnimatedSprite2" type="AnimatedSprite" parent="."]
+scale = Vector2( 2, 2 )
+frames = SubResource( 2 )
+animation = "unfiltered"
+offset = Vector2( 0, -4 )

@@ -37,9 +37,17 @@ func _process(delta):
 func half_fade(): 
 	emit_signal("half_fade")
 
+func set_to_black(): 
+	modulate = Color( 0, 0, 0, 1 )
+	alpha = 1
+	is_fading = false
+
+func fade_from_black(): 
+	set_to_black()
+	is_fading = true
+	
 func stop_fading(): 
 	is_fading = false
-	
 
 func start_fading(): 
 	is_fading = true

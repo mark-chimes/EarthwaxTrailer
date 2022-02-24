@@ -2,7 +2,7 @@ extends Node2D
 
 export var screendist = 10
 export var move_speed = 10
-export var camera_height = 2000
+export var camera_height = 100000
 export var display_height_offset = 0
 export var is_drawing_lines = false
 
@@ -27,7 +27,6 @@ func _process(delta):
 	update() # REDRAWS THE LINES
 	
 func _draw():
-	if is_drawing_lines:
 		draw_line_to_middle($parallax_guy1)
 		draw_line_to_middle($parallax_guy2)
 		draw_line_to_middle($parallax_guy3)
