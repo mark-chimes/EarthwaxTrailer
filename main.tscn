@@ -8,11 +8,12 @@
 [ext_resource path="res://bush_1.png" type="Texture" id=6]
 [ext_resource path="res://bushes.gd" type="Script" id=7]
 [ext_resource path="res://cloaked_walk_trimming_2.png" type="Texture" id=8]
-[ext_resource path="res://plants/grass.png" type="Texture" id=9]
+[ext_resource path="res://plant/grass.png" type="Texture" id=9]
 [ext_resource path="res://Grass_parallax.gd" type="Script" id=10]
-[ext_resource path="res://plants/distant_forest_tile_2.png" type="Texture" id=11]
+[ext_resource path="res://plant/distant_forest_tile_2.png" type="Texture" id=11]
 [ext_resource path="res://backtrees.gd" type="Script" id=12]
-[ext_resource path="res://plants/spekboom_small_tiled.png" type="Texture" id=13]
+[ext_resource path="res://plant/spekboom_small_tiled.png" type="Texture" id=13]
+
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 8 )

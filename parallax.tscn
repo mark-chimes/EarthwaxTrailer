@@ -3,14 +3,15 @@
 [ext_resource path="res://bushes.gd" type="Script" id=1]
 [ext_resource path="res://Grass_parallax.gd" type="Script" id=2]
 [ext_resource path="res://Trees.gd" type="Script" id=3]
-[ext_resource path="res://plants/grass.png" type="Texture" id=4]
+[ext_resource path="res://plant/grass.png" type="Texture" id=4]
 [ext_resource path="res://spearman.tscn" type="PackedScene" id=5]
 [ext_resource path="res://tree.png" type="Texture" id=6]
 [ext_resource path="res://cloaked_walk_trimming_2.png" type="Texture" id=7]
 [ext_resource path="res://mountain_with_grass.png" type="Texture" id=8]
 [ext_resource path="res://photo_resized_1.png" type="Texture" id=9]
 [ext_resource path="res://bush_1.png" type="Texture" id=10]
-[ext_resource path="res://enemies/warrior_large_naked_fists.png" type="Texture" id=11]
+[ext_resource path="res://enemy/warrior_large_naked_fists.png" type="Texture" id=11]
+
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 7 )
