@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://archive/Trailer/FarmSceneTest.gd" type="Script" id=1]
+[ext_resource path="res://archive/Trailer/Test/FarmSceneTest.gd" type="Script" id=1]
 [ext_resource path="res://archive/Trailer/BackgroundStuff.tscn" type="PackedScene" id=2]
 [ext_resource path="res://archive/Trailer/SadBattlefield.tscn" type="PackedScene" id=3]
 

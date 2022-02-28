@@ -1,7 +1,8 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://EwLogo.png" type="Texture" id=1]
+[ext_resource path="res://animatic/EwLogo.png" type="Texture" id=1]
 [ext_resource path="res://fade_logo.gd" type="Script" id=2]
+
 
 [node name="fade_logo" type="Sprite"]
 position = Vector2( 192, 128 )

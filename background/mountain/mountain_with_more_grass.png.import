@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/mountain.png-dd8260d24e7d4f8ff135941d99bd7a12.stex"
+path="res://.import/mountain_with_more_grass.png-51dd5e2ac74aa8d43e3747df20e457a1.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://mountain.png"
-dest_files=[ "res://.import/mountain.png-dd8260d24e7d4f8ff135941d99bd7a12.stex" ]
+source_file="res://background/mountain/mountain_with_more_grass.png"
+dest_files=[ "res://.import/mountain_with_more_grass.png-51dd5e2ac74aa8d43e3747df20e457a1.stex" ]
 
 [params]
 
@@ -28,6 +28,7 @@ process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
+process/normal_map_invert_y=false
 stream=false
 size_limit=0
 detect_3d=true

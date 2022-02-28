@@ -1,8 +1,9 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://weapons/arrow.png" type="Texture" id=1]
+[ext_resource path="res://weapon/arrow.png" type="Texture" id=1]
 [ext_resource path="res://Arrow.gd" type="Script" id=2]
-[ext_resource path="res://weapons/arrow_embedded.png" type="Texture" id=3]
+[ext_resource path="res://weapon/arrow_embedded.png" type="Texture" id=3]
+
 
 [node name="Arrow1" type="Node2D"]
 position = Vector2( 184, 200 )

@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://mountain.png" type="Texture" id=1]
+[ext_resource path="res://background/mountain/mountain.png" type="Texture" id=1]
 [ext_resource path="res://plant/distant_forest_tile_2.png" type="Texture" id=2]
 [ext_resource path="res://plant/grass.png" type="Texture" id=4]
 [ext_resource path="res://plant/water.png" type="Texture" id=5]

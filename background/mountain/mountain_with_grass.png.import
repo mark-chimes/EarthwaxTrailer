@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/EwLogo.png-00d457bb3b8aff0bdb7fa0aa0e6eda7a.stex"
+path="res://.import/mountain_with_grass.png-11ef0d80775a819c5aeaac9f9da7beb0.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://EwLogo.png"
-dest_files=[ "res://.import/EwLogo.png-00d457bb3b8aff0bdb7fa0aa0e6eda7a.stex" ]
+source_file="res://background/mountain/mountain_with_grass.png"
+dest_files=[ "res://.import/mountain_with_grass.png-11ef0d80775a819c5aeaac9f9da7beb0.stex" ]
 
 [params]
 
@@ -28,6 +28,7 @@ process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
+process/normal_map_invert_y=false
 stream=false
 size_limit=0
 detect_3d=true

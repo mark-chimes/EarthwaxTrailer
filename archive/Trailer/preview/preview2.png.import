@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/mountain.png-bd5f075e5e49b3510f7ad1c52960cc8c.stex"
+path="res://.import/preview2.png-c129894f39abef7d75bb692a9b7e8d09.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://background/mountain.png"
-dest_files=[ "res://.import/mountain.png-bd5f075e5e49b3510f7ad1c52960cc8c.stex" ]
+source_file="res://archive/Trailer/preview/preview2.png"
+dest_files=[ "res://.import/preview2.png-c129894f39abef7d75bb692a9b7e8d09.stex" ]
 
 [params]
 
@@ -28,6 +28,7 @@ process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
+process/normal_map_invert_y=false
 stream=false
 size_limit=0
 detect_3d=true

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/arrow_embedded.png-0410253c1bbfad63f53f8ea527623e9a.stex"
+path="res://.import/EwLogo.png-25798d6084c4c651aebf2388c6df2022.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://weapons/arrow_embedded.png"
-dest_files=[ "res://.import/arrow_embedded.png-0410253c1bbfad63f53f8ea527623e9a.stex" ]
+source_file="res://animatic/EwLogo.png"
+dest_files=[ "res://.import/EwLogo.png-25798d6084c4c651aebf2388c6df2022.stex" ]
 
 [params]
 
@@ -28,6 +28,7 @@ process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
+process/normal_map_invert_y=false
 stream=false
 size_limit=0
 detect_3d=true

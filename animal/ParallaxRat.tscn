@@ -1,6 +1,6 @@
 [gd_scene load_steps=115 format=2]
 
-[ext_resource path="res://ParallaxRat.gd" type="Script" id=1]
+[ext_resource path="res://animal/ParallaxRat.gd" type="Script" id=1]
 [ext_resource path="res://animal/rat_walk.png" type="Texture" id=2]
 [ext_resource path="res://animal/rat_idle.png" type="Texture" id=3]
 

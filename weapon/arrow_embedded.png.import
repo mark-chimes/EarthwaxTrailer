@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/preview.png-a73cec7142c562b4886ea0f948644d7f.stex"
+path="res://.import/arrow_embedded.png-97fb2b347a9ba0c5568a21fc651d7d32.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://background/preview.png"
-dest_files=[ "res://.import/preview.png-a73cec7142c562b4886ea0f948644d7f.stex" ]
+source_file="res://weapon/arrow_embedded.png"
+dest_files=[ "res://.import/arrow_embedded.png-97fb2b347a9ba0c5568a21fc651d7d32.stex" ]
 
 [params]
 
@@ -28,6 +28,7 @@ process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
+process/normal_map_invert_y=false
 stream=false
 size_limit=0
 detect_3d=true

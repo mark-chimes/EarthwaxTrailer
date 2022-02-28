@@ -2,20 +2,20 @@
 
 [ext_resource path="res://archive/Trailer/BackgroundStuff.tscn" type="PackedScene" id=1]
 [ext_resource path="res://TimingsController.gd" type="Script" id=2]
-[ext_resource path="res://GeneralMountainScene.gd" type="Script" id=3]
+[ext_resource path="res://archive/Trailer/GeneralMountainScene.gd" type="Script" id=3]
 [ext_resource path="res://animal/Rabbit.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Rabbits.gd" type="Script" id=5]
 [ext_resource path="res://animal/rat_walk.png" type="Texture" id=6]
 [ext_resource path="res://Rat.gd" type="Script" id=7]
-[ext_resource path="res://weapons/Arrow.tscn" type="PackedScene" id=8]
+[ext_resource path="res://weapon/Arrow.tscn" type="PackedScene" id=8]
 [ext_resource path="res://archive/Trailer/People.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Arrows.gd" type="Script" id=10]
 [ext_resource path="res://archive/Trailer/FarmsScene.tscn" type="PackedScene" id=11]
-[ext_resource path="res://background/preview.png" type="Texture" id=12]
+[ext_resource path="res://archive/Trailer/preview/preview.png" type="Texture" id=12]
 [ext_resource path="res://fade.tscn" type="PackedScene" id=13]
 [ext_resource path="res://font/OpenSans-Regular.ttf" type="DynamicFontData" id=15]
-[ext_resource path="res://background/preview2.png" type="Texture" id=16]
-[ext_resource path="res://background/preview3.png" type="Texture" id=17]
+[ext_resource path="res://archive/Trailer/preview/preview2.png" type="Texture" id=16]
+[ext_resource path="res://archive/Trailer/preview/preview3.png" type="Texture" id=17]
 [ext_resource path="res://archive/Trailer/SadBattlefield.tscn" type="PackedScene" id=18]
 [ext_resource path="res://background/Trees.tscn" type="PackedScene" id=19]
 
@@ -386,7 +386,6 @@ script = ExtResource( 7 )
 position = Vector2( 336, 240 )
 frames = SubResource( 5 )
 animation = "walk"
-frame = 2
 speed_scale = 3.0
 playing = true
 
