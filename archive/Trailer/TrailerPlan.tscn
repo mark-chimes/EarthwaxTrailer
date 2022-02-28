@@ -12,7 +12,7 @@
 [ext_resource path="res://Arrows.gd" type="Script" id=10]
 [ext_resource path="res://archive/Trailer/FarmsScene.tscn" type="PackedScene" id=11]
 [ext_resource path="res://archive/Trailer/preview/preview.png" type="Texture" id=12]
-[ext_resource path="res://fade.tscn" type="PackedScene" id=13]
+[ext_resource path="res://animatic/fade/fade.tscn" type="PackedScene" id=13]
 [ext_resource path="res://font/OpenSans-Regular.ttf" type="DynamicFontData" id=15]
 [ext_resource path="res://archive/Trailer/preview/preview2.png" type="Texture" id=16]
 [ext_resource path="res://archive/Trailer/preview/preview3.png" type="Texture" id=17]
@@ -386,7 +386,7 @@ script = ExtResource( 7 )
 position = Vector2( 336, 240 )
 frames = SubResource( 5 )
 animation = "walk"
-frame = 3
+frame = 1
 speed_scale = 3.0
 playing = true
 

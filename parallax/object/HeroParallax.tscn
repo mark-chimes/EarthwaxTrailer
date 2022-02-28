@@ -599,6 +599,6 @@ offset = Vector2( -60, -27 )
 scale = Vector2( 2, 2 )
 frames = SubResource( 142 )
 animation = "trot"
-frame = 4
+frame = 24
 playing = true
 offset = Vector2( -60, -27 )
