@@ -1,1 +1,1 @@
-extends "res://parallax/ParallaxObject.gd"
+extends "res://parallax/util/ParallaxObject.gd"
