@@ -34,7 +34,7 @@ var GrassStrip = preload("res://plant/GrassStrip.tscn")
 var GrassMud = preload("res://plant/GrassMudStrip.tscn")
 var ReedStrip = preload("res://plant/ReedStrip.tscn")
 var MudStrip = preload("res://plant/MudStrip.tscn")
-var Rat = preload("res://animal/ParallaxRat.tscn")
+var Rat = preload("res://parallax/object/ParallaxRat.tscn")
 
 var ParallaxObjectGenerator = preload("res://parallax/ParallaxObjectGenerator.gd")
 

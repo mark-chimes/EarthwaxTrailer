@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://people/spearman_idle_rest_on_pole.png" type="Texture" id=1]
+[ext_resource path="res://creature/human/spearman/spearman_idle_rest_on_pole.png" type="Texture" id=1]
 [ext_resource path="res://trailer/archive/farm_attack/Spearman.gd" type="Script" id=2]
 
 

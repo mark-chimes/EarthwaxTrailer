@@ -1,8 +1,8 @@
 [gd_scene load_steps=72 format=2]
 
 [ext_resource path="res://parallax/object/ParallaxChicken.gd" type="Script" id=1]
-[ext_resource path="res://animal/chicken_peck.png" type="Texture" id=2]
-[ext_resource path="res://animal/chicken_idle.png" type="Texture" id=3]
+[ext_resource path="res://creature/animal/chicken/chicken_peck.png" type="Texture" id=2]
+[ext_resource path="res://creature/animal/chicken/chicken_idle.png" type="Texture" id=3]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 2 )

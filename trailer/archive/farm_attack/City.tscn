@@ -4,11 +4,11 @@
 [ext_resource path="res://trailer/archive/farm_attack/BackgroundStuff.tscn" type="PackedScene" id=2]
 [ext_resource path="res://trailer/archive/farm_attack/CityCommander.tscn" type="PackedScene" id=3]
 [ext_resource path="res://trailer/archive/farm_attack/City.gd" type="Script" id=4]
-[ext_resource path="res://people/small_builder_hammer_placeholder_1.png" type="Texture" id=5]
+[ext_resource path="res://creature/human/builder/small_builder_hammer_placeholder_1.png" type="Texture" id=5]
 [ext_resource path="res://trailer/archive/farm_attack/CityMessenger.gd" type="Script" id=6]
-[ext_resource path="res://people/generic_man_sprint.png" type="Texture" id=7]
-[ext_resource path="res://people/generic_man_idle_alert.png" type="Texture" id=8]
-[ext_resource path="res://people/generic_man_point.png" type="Texture" id=9]
+[ext_resource path="res://creature/human/generic/generic_man_sprint.png" type="Texture" id=7]
+[ext_resource path="res://creature/human/generic/generic_man_idle_alert.png" type="Texture" id=8]
+[ext_resource path="res://creature/human/generic/generic_man_point.png" type="Texture" id=9]
 [ext_resource path="res://font/OpenSans-Regular.ttf" type="DynamicFontData" id=10]
 
 

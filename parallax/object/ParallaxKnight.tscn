@@ -1,7 +1,7 @@
 [gd_scene load_steps=55 format=2]
 
 [ext_resource path="res://parallax/object/ParallaxKnight.gd" type="Script" id=1]
-[ext_resource path="res://hero/hero_knight_mounted_sword_idle_alert.png" type="Texture" id=2]
+[ext_resource path="res://creature/human/hero/hero_knight_mounted_sword_idle_alert.png" type="Texture" id=2]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 2 )
