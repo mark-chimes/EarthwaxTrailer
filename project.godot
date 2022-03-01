@@ -12,7 +12,8 @@ config_version=4
 
 config/name="Earthwax"
 run/main_scene="res://parallax/experiment/castle/CastleExperiment.tscn"
-config/icon="res://icon.png"
+config/icon="res://gremlin.png"
+config/windows_native_icon="res://gremlin_small.ico"
 
 [display]
 
