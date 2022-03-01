@@ -3,7 +3,7 @@
 [ext_resource path="res://enemy/gremlin_small_walk.png" type="Texture" id=1]
 [ext_resource path="res://enemy/gremlin_small_attack.png" type="Texture" id=2]
 [ext_resource path="res://enemy/gremlin_dissolve.png" type="Texture" id=3]
-[ext_resource path="res://archive/Trailer/Gremlin.gd" type="Script" id=4]
+[ext_resource path="res://trailer/archive/farm_attack/Gremlin.gd" type="Script" id=4]
 
 
 [sub_resource type="AtlasTexture" id=1]
