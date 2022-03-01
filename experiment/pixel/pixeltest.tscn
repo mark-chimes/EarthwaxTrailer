@@ -1,6 +1,6 @@
 [gd_scene load_steps=50 format=2]
 
-[ext_resource path="res://experiment/archive/pixel/pixeltest.gd" type="Script" id=1]
+[ext_resource path="res://experiment/pixel/pixeltest.gd" type="Script" id=1]
 [ext_resource path="res://creature/human/hero/hero_knight_mounted_sword_trot.png" type="Texture" id=2]
 [ext_resource path="res://building/tent/Tent_burning.png" type="Texture" id=3]
 
@@ -211,7 +211,7 @@ script = ExtResource( 1 )
 position = Vector2( 109, 0 )
 frames = SubResource( 46 )
 animation = "trot"
-frame = 5
+frame = 8
 speed_scale = 4.0
 playing = true
 flip_h = true
