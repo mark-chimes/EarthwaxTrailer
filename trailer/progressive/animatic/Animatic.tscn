@@ -7,7 +7,7 @@
 [ext_resource path="res://trailer/progressive/animatic/fade/fade.tscn" type="PackedScene" id=5]
 [ext_resource path="res://trailer/progressive/animatic/fade/fade_logo.tscn" type="PackedScene" id=6]
 [ext_resource path="res://trailer/creature/Gremlin.tscn" type="PackedScene" id=7]
-[ext_resource path="res://trailer/farm_attack/creature/Farmer.tscn" type="PackedScene" id=8]
+[ext_resource path="res://trailer/archive/farm_attack/creature/Farmer.tscn" type="PackedScene" id=8]
 [ext_resource path="res://creature/human/hero/hero_knight_mounted_sword_trot.png" type="Texture" id=9]
 [ext_resource path="res://creature/human/hero/hero_knight_mounted_sword_talk.png" type="Texture" id=10]
 [ext_resource path="res://building/tent/Tent_building_spritesheet.png" type="Texture" id=11]
@@ -22,6 +22,7 @@
 [ext_resource path="res://creature/human/soldier/soldier_dead.png" type="Texture" id=20]
 [ext_resource path="res://creature/human/hero/hero_knight_mounted_sword_idle_alert.png" type="Texture" id=21]
 [ext_resource path="res://background/Boulder_transparent.png" type="Texture" id=22]
+
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 21 )

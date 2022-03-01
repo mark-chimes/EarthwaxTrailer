@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/preview3.png-45189b5f1800f25249999056c56c00fc.stex"
+path="res://.import/preview2.png-282dc02cd5c949e5d6e8e1334bdc4645.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://trailer/farm_attack/preview/preview3.png"
-dest_files=[ "res://.import/preview3.png-45189b5f1800f25249999056c56c00fc.stex" ]
+source_file="res://trailer/archive/farm_attack/preview/preview2.png"
+dest_files=[ "res://.import/preview2.png-282dc02cd5c949e5d6e8e1334bdc4645.stex" ]
 
 [params]
 
