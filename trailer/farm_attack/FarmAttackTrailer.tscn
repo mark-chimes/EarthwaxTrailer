@@ -1,21 +1,21 @@
 [gd_scene load_steps=25 format=2]
 
-[ext_resource path="res://trailer/archive/farm_attack/preview/preview.png" type="Texture" id=1]
-[ext_resource path="res://trailer/archive/farm_attack/preview/preview3.png" type="Texture" id=2]
-[ext_resource path="res://trailer/archive/farm_attack/preview/preview2.png" type="Texture" id=3]
-[ext_resource path="res://trailer/archive/farm_attack/Rabbits.gd" type="Script" id=4]
+[ext_resource path="res://trailer/farm_attack/preview/preview.png" type="Texture" id=1]
+[ext_resource path="res://trailer/farm_attack/preview/preview3.png" type="Texture" id=2]
+[ext_resource path="res://trailer/farm_attack/preview/preview2.png" type="Texture" id=3]
+[ext_resource path="res://trailer/farm_attack/creature/Rabbits.gd" type="Script" id=4]
 [ext_resource path="res://creature/animal/rat/rat_walk.png" type="Texture" id=5]
 [ext_resource path="res://trailer/util/timing/TimingsController.gd" type="Script" id=6]
-[ext_resource path="res://trailer/archive/farm_attack/GeneralMountainScene.gd" type="Script" id=7]
-[ext_resource path="res://trailer/archive/farm_attack/Rat.gd" type="Script" id=8]
+[ext_resource path="res://trailer/farm_attack/scene/GeneralMountainScene.gd" type="Script" id=7]
+[ext_resource path="res://trailer/farm_attack/creature/Rat.gd" type="Script" id=8]
 [ext_resource path="res://trailer/progressive/animatic/fade/fade.tscn" type="PackedScene" id=9]
 [ext_resource path="res://weapon/arrow/Arrow.tscn" type="PackedScene" id=10]
-[ext_resource path="res://trailer/archive/farm_attack/People.tscn" type="PackedScene" id=11]
-[ext_resource path="res://trailer/archive/farm_attack/SadBattlefield.tscn" type="PackedScene" id=12]
-[ext_resource path="res://trailer/archive/farm_attack/BackgroundStuff.tscn" type="PackedScene" id=13]
-[ext_resource path="res://trailer/archive/farm_attack/Trees.tscn" type="PackedScene" id=14]
-[ext_resource path="res://trailer/archive/farm_attack/FarmsScene.tscn" type="PackedScene" id=15]
-[ext_resource path="res://trailer/archive/farm_attack/Rabbit.tscn" type="PackedScene" id=16]
+[ext_resource path="res://trailer/farm_attack/scene/People.tscn" type="PackedScene" id=11]
+[ext_resource path="res://trailer/farm_attack/scene/SadBattlefield.tscn" type="PackedScene" id=12]
+[ext_resource path="res://trailer/farm_attack/background/BackgroundStuff.tscn" type="PackedScene" id=13]
+[ext_resource path="res://trailer/farm_attack/background/Trees.tscn" type="PackedScene" id=14]
+[ext_resource path="res://trailer/farm_attack/scene/FarmsScene.tscn" type="PackedScene" id=15]
+[ext_resource path="res://trailer/farm_attack/creature/Rabbit.tscn" type="PackedScene" id=16]
 [ext_resource path="res://weapon/arrow/Arrows.gd" type="Script" id=17]
 [ext_resource path="res://font/OpenSans-Regular.ttf" type="DynamicFontData" id=18]
 
@@ -386,7 +386,7 @@ script = ExtResource( 8 )
 position = Vector2( 336, 240 )
 frames = SubResource( 5 )
 animation = "walk"
-frame = 2
+frame = 1
 speed_scale = 3.0
 playing = true
 

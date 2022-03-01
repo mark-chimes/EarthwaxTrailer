@@ -5,4 +5,4 @@ func _ready():
 	
 func start_scene(): 
 	visible = true
-	$SadBattlefield.start_battlefield_scene()
+	$FarmsScene.start_farm_scene()

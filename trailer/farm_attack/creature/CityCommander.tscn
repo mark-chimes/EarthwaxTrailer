@@ -1,6 +1,6 @@
 [gd_scene load_steps=155 format=2]
 
-[ext_resource path="res://trailer/archive/farm_attack/CityCommander.gd" type="Script" id=1]
+[ext_resource path="res://trailer/farm_attack/creature/CityCommander.gd" type="Script" id=1]
 [ext_resource path="res://creature/human/hero/hero_knight_mounted_sword_idle_alert.png" type="Texture" id=2]
 [ext_resource path="res://creature/human/hero/hero_knight_mounted_sword_talk.png" type="Texture" id=3]
 [ext_resource path="res://creature/human/hero/hero_knight_mounted_sword_trot.png" type="Texture" id=4]
