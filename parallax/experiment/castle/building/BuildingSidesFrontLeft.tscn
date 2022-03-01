@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://parallax/experiment/castle/building/house/sidewall_test.png" type="Texture" id=1]
+[ext_resource path="res://parallax/util/ParallaxObject.gd" type="Script" id=2]
+
+[node name="BuildingSidesFrontLeft" type="Node2D"]
+scale = Vector2( 2, 2 )
+script = ExtResource( 2 )
+
+[node name="sidewall_test" type="Sprite" parent="."]
+scale = Vector2( -2, 2 )
+texture = ExtResource( 1 )
+offset = Vector2( -12, -63 )

@@ -5,7 +5,7 @@
 [ext_resource path="res://plant/grass.png" type="Texture" id=4]
 [ext_resource path="res://plant/water.png" type="Texture" id=5]
 [ext_resource path="res://plant/sand.png" type="Texture" id=6]
-[ext_resource path="res://background/fade-black.png" type="Texture" id=7]
+[ext_resource path="res://background/fade/fade-black.png" type="Texture" id=7]
 [ext_resource path="res://trailer/archive/farm_attack/Camera2D.gd" type="Script" id=8]
 
 

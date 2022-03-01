@@ -1,0 +1,48 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://parallax/experiment/castle/CastleExperiment.gd" type="Script" id=1]
+[ext_resource path="res://util/performance/FPSCounter.gd" type="Script" id=2]
+[ext_resource path="res://util/pixel/Ruler.gd" type="Script" id=3]
+[ext_resource path="res://util/pixel/pixel_ruler.png" type="Texture" id=4]
+[ext_resource path="res://background/Background.tscn" type="PackedScene" id=5]
+[ext_resource path="res://parallax/object/HeroParallax.tscn" type="PackedScene" id=6]
+
+[node name="ParallaxWithHero" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Background" parent="." instance=ExtResource( 5 )]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+current = true
+
+[node name="Hero" parent="." instance=ExtResource( 6 )]
+position = Vector2( 960, 584 )
+z_index = -20
+
+[node name="HeroReflection" parent="." instance=ExtResource( 6 )]
+position = Vector2( 960, 584 )
+scale = Vector2( 1, -1 )
+z_index = -1800
+
+[node name="FPSCounter" type="Node2D" parent="."]
+position = Vector2( 120, 64 )
+script = ExtResource( 2 )
+
+[node name="Label" type="Label" parent="FPSCounter"]
+margin_right = 40.0
+margin_bottom = 14.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "5000
+"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Ruler" type="Node2D" parent="."]
+visible = false
+script = ExtResource( 3 )
+
+[node name="pixel_ruler" type="Sprite" parent="Ruler"]
+scale = Vector2( 2, 2 )
+texture = ExtResource( 4 )

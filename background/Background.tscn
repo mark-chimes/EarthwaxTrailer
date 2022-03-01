@@ -1,9 +1,8 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://background/plain-green2.png" type="Texture" id=1]
-[ext_resource path="res://background/blue-strip.png" type="Texture" id=2]
+[ext_resource path="res://background/grass/plain-green2.png" type="Texture" id=1]
+[ext_resource path="res://background/water/blue-strip.png" type="Texture" id=2]
 [ext_resource path="res://background/mountain/mountain.png" type="Texture" id=3]
-
 
 [node name="Background" type="Node2D"]
 
