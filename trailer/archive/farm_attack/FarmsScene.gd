@@ -1,7 +1,7 @@
 extends Node2D
 signal end_scene
 
-var FunctionTimerScript = load("res://trailer/utils/timing/FunctionTimer.gd")
+var FunctionTimerScript = load("res://trailer/util/timing/FunctionTimer.gd")
 var timer = 0
 var switch = 0
 var has_started = false

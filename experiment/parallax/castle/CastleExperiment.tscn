@@ -1,9 +1,9 @@
 [gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://experiment/parallax/castle/CastleExperiment.gd" type="Script" id=1]
-[ext_resource path="res://test/FPSCounter.gd" type="Script" id=2]
+[ext_resource path="res://experiment/util/performance/FPSCounter.gd" type="Script" id=2]
 [ext_resource path="res://test/Ruler.gd" type="Script" id=3]
-[ext_resource path="res://test/pixel_ruler.png" type="Texture" id=4]
+[ext_resource path="res://experiment/util/pixel/pixel_ruler.png" type="Texture" id=4]
 [ext_resource path="res://background/Background.tscn" type="PackedScene" id=5]
 [ext_resource path="res://parallax/object/HeroParallax.tscn" type="PackedScene" id=6]
 

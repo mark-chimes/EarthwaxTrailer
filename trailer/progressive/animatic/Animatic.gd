@@ -1,7 +1,7 @@
 extends Node2D
 
 
-var FunctionTimerScript = load("res://trailer/utils/timing/FunctionTimer.gd")
+var FunctionTimerScript = load("res://trailer/util/timing/FunctionTimer.gd")
 var function_timer
 var has_scene_started = false
 var has_ended = false
