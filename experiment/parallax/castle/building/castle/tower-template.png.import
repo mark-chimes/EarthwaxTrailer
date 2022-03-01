@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/sidewall_test_backup.png-8bd2f1dec81f9f71a1cb49260ff12f37.stex"
+path="res://.import/tower-template.png-c8be117cb7026a941dbd7bb3b37a0555.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://building/sidewall_test_backup.png"
-dest_files=[ "res://.import/sidewall_test_backup.png-8bd2f1dec81f9f71a1cb49260ff12f37.stex" ]
+source_file="res://experiment/parallax/castle/building/castle/tower-template.png"
+dest_files=[ "res://.import/tower-template.png-c8be117cb7026a941dbd7bb3b37a0555.stex" ]
 
 [params]
 

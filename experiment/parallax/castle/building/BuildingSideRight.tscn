@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://parallax/util/ParallaxObject.gd" type="Script" id=1]
-[ext_resource path="res://building/sidewall_test.png" type="Texture" id=2]
+[ext_resource path="res://experiment/parallax/castle/building/house/sidewall_test.png" type="Texture" id=2]
 
 
 [node name="BuildingSideRight" type="Node2D"]

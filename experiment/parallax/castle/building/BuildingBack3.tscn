@@ -1,13 +1,13 @@
 [gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://experiment/parallax/castle/building/BuildingBack.gd" type="Script" id=1]
-[ext_resource path="res://building/building_test_back.png" type="Texture" id=2]
-[ext_resource path="res://building/castle_template.png" type="Texture" id=3]
-[ext_resource path="res://building/sidewall_test.png" type="Texture" id=4]
-[ext_resource path="res://building/tower-template.png" type="Texture" id=5]
-[ext_resource path="res://building/castle_template_filled.png" type="Texture" id=6]
-[ext_resource path="res://building/castle_right_wall_template.png" type="Texture" id=7]
-[ext_resource path="res://building/big-building-template.png" type="Texture" id=8]
+[ext_resource path="res://experiment/parallax/castle/building/house/building_test_back.png" type="Texture" id=2]
+[ext_resource path="res://experiment/parallax/castle/building/castle/castle_template.png" type="Texture" id=3]
+[ext_resource path="res://experiment/parallax/castle/building/house/sidewall_test.png" type="Texture" id=4]
+[ext_resource path="res://experiment/parallax/castle/building/castle/tower-template.png" type="Texture" id=5]
+[ext_resource path="res://experiment/parallax/castle/building/castle/castle_template_filled.png" type="Texture" id=6]
+[ext_resource path="res://experiment/parallax/castle/building/castle/castle_right_wall_template.png" type="Texture" id=7]
+[ext_resource path="res://experiment/parallax/castle/building/house/big-building-template.png" type="Texture" id=8]
 
 
 [node name="BuildingBack" type="Node2D"]

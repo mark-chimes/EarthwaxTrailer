@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/castle_template_middle.png-e5ea45dae60d757333096cef13813b78.stex"
+path="res://.import/Tent_burning.png-b18e24db48efc884cbeb4799a0bc2e1f.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://building/castle_template_middle.png"
-dest_files=[ "res://.import/castle_template_middle.png-e5ea45dae60d757333096cef13813b78.stex" ]
+source_file="res://building/tent/Tent_burning.png"
+dest_files=[ "res://.import/Tent_burning.png-b18e24db48efc884cbeb4799a0bc2e1f.stex" ]
 
 [params]
 

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Tent_glow_lantern.png-b3b250e9fdf84fb4ddfd7e9d8fcb2b1a.stex"
+path="res://.import/building_test_back_backup.png-3e12038171596960cea513b09c72a5ff.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://building/Tent_glow_lantern.png"
-dest_files=[ "res://.import/Tent_glow_lantern.png-b3b250e9fdf84fb4ddfd7e9d8fcb2b1a.stex" ]
+source_file="res://experiment/parallax/castle/building/house/building_test_back_backup.png"
+dest_files=[ "res://.import/building_test_back_backup.png-3e12038171596960cea513b09c72a5ff.stex" ]
 
 [params]
 

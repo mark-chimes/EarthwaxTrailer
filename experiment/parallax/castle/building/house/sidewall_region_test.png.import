@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/sidewall_region_test.png-4bd1561516aabbab43e53ca320913b96.stex"
+path="res://.import/sidewall_region_test.png-a49669b7917ee2f51f34c94b419e1071.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://building/sidewall_region_test.png"
-dest_files=[ "res://.import/sidewall_region_test.png-4bd1561516aabbab43e53ca320913b96.stex" ]
+source_file="res://experiment/parallax/castle/building/house/sidewall_region_test.png"
+dest_files=[ "res://.import/sidewall_region_test.png-a49669b7917ee2f51f34c94b419e1071.stex" ]
 
 [params]
 

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/castle_towers_filled.png-f2ac94d7cb6c9117b8b0e4a10681d49b.stex"
+path="res://.import/Tent_glow_lantern.png-0a429687558d22fc3c0040e055e56379.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://building/castle_towers_filled.png"
-dest_files=[ "res://.import/castle_towers_filled.png-f2ac94d7cb6c9117b8b0e4a10681d49b.stex" ]
+source_file="res://building/tent/Tent_glow_lantern.png"
+dest_files=[ "res://.import/Tent_glow_lantern.png-0a429687558d22fc3c0040e055e56379.stex" ]
 
 [params]
 

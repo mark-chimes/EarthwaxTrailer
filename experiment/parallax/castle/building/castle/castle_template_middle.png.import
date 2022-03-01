@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/big-building-template.png-84f563a6b2f39e4ca53450c84a6f15c6.stex"
+path="res://.import/castle_template_middle.png-baa3ce7d73b25a3aedaf6ae272331d97.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://building/big-building-template.png"
-dest_files=[ "res://.import/big-building-template.png-84f563a6b2f39e4ca53450c84a6f15c6.stex" ]
+source_file="res://experiment/parallax/castle/building/castle/castle_template_middle.png"
+dest_files=[ "res://.import/castle_template_middle.png-baa3ce7d73b25a3aedaf6ae272331d97.stex" ]
 
 [params]
 

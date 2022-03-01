@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://experiment/parallax/castle/building/BuildingWheel.gd" type="Script" id=1]
-[ext_resource path="res://building/cat_test.png" type="Texture" id=2]
+[ext_resource path="res://experiment/parallax/castle/building/animal/cat_test.png" type="Texture" id=2]
 
 [node name="Cats" type="Node2D"]
 script = ExtResource( 1 )
