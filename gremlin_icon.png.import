@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/gremlin.png-f1e6cd88be9d2e21d9949e70285e7bc8.stex"
+path="res://.import/gremlin_icon.png-329a41cf3f482d7a51fb098695f467dc.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://gremlin.png"
-dest_files=[ "res://.import/gremlin.png-f1e6cd88be9d2e21d9949e70285e7bc8.stex" ]
+source_file="res://gremlin_icon.png"
+dest_files=[ "res://.import/gremlin_icon.png-329a41cf3f482d7a51fb098695f467dc.stex" ]
 
 [params]
 
