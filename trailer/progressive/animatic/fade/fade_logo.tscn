@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://trailer/progressive/animatic/fade/fade_logo.gd" type="Script" id=1]
+[ext_resource path="res://trailer/progressive/animatic/EwLogo.png" type="Texture" id=2]
+
+[node name="fade_logo" type="Sprite"]
+position = Vector2( 192, 128 )
+scale = Vector2( 1.46117, 1.46659 )
+z_index = 100
+texture = ExtResource( 2 )
+script = ExtResource( 1 )

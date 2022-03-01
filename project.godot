@@ -11,8 +11,9 @@ config_version=4
 [application]
 
 config/name="Earthwax"
-run/main_scene="res://tests/ParallaxWithHero.tscn"
-config/icon="res://icon.png"
+run/main_scene="res://parallax/experiment/castle/CastleExperiment.tscn"
+config/icon="res://gremlin_icon.png"
+config/windows_native_icon="res://gremlin_small.ico"
 
 [display]
 
@@ -48,7 +49,3 @@ texture={
 [physics]
 
 common/enable_pause_aware_picking=true
-
-[rendering]
-
-environment/default_environment="res://default_env.tres"

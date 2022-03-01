@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://creature/animal/chicken/chicken_idle.png" type="Texture" id=1]
+
+[node name="ReferenceChicken" type="Node2D"]
+position = Vector2( 968, 576 )
+
+[node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 8, 8 )
+texture = ExtResource( 1 )
+centered = false
+region_rect = Rect2( 0, 0, 5, 16 )

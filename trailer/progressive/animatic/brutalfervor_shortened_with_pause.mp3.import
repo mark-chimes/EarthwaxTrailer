@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/brutalfervor_shortened_with_pause.mp3-393cb7067f30868fffc4c9f267c09fec.mp3str"
+
+[deps]
+
+source_file="res://trailer/progressive/animatic/brutalfervor_shortened_with_pause.mp3"
+dest_files=[ "res://.import/brutalfervor_shortened_with_pause.mp3-393cb7067f30868fffc4c9f267c09fec.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0
