@@ -1,6 +1,7 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://creature/animal/chicken/chicken_idle.png" type="Texture" id=1]
+[ext_resource path="res://entity/creature/animal/chicken/chicken_idle.png" type="Texture" id=1]
+
 
 [node name="ReferenceChicken" type="Node2D"]
 position = Vector2( 968, 576 )

@@ -1,8 +1,9 @@
 [gd_scene load_steps=50 format=2]
 
 [ext_resource path="res://experiment/pixel/pixeltest.gd" type="Script" id=1]
-[ext_resource path="res://creature/human/hero/hero_knight_mounted_sword_trot.png" type="Texture" id=2]
-[ext_resource path="res://building/tent/Tent_burning.png" type="Texture" id=3]
+[ext_resource path="res://entity/creature/human/hero/knight/hero_knight_mounted_sword_trot.png" type="Texture" id=2]
+[ext_resource path="res://entity/building/tent/Tent_burning.png" type="Texture" id=3]
+
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 2 )

@@ -1,12 +1,13 @@
 [gd_scene load_steps=26 format=2]
 
-[ext_resource path="res://creature/glut/grub/gremlin_dissolve.png" type="Texture" id=1]
-[ext_resource path="res://background/mountain/mountain_with_grass.png" type="Texture" id=2]
-[ext_resource path="res://creature/human/soldier/soldier_dead.png" type="Texture" id=3]
+[ext_resource path="res://entity/creature/glut/grub/gremlin_dissolve.png" type="Texture" id=1]
+[ext_resource path="res://decor/background/mountain/mountain_with_grass.png" type="Texture" id=2]
+[ext_resource path="res://entity/creature/human/soldier/soldier_dead.png" type="Texture" id=3]
 [ext_resource path="res://trailer/archive/farm_attack/creature/Commander.tscn" type="PackedScene" id=4]
 [ext_resource path="res://trailer/archive/farm_attack/scene/SadBattlefield.gd" type="Script" id=5]
-[ext_resource path="res://plant/bush_repeating.png" type="Texture" id=6]
-[ext_resource path="res://building/tent/Tent_burning.png" type="Texture" id=7]
+[ext_resource path="res://decor/placeholder/bush_repeating.png" type="Texture" id=6]
+[ext_resource path="res://entity/building/tent/Tent_burning.png" type="Texture" id=7]
+
 
 
 
