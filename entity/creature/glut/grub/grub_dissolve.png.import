@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/wave.png-ec4beee843f8a6b77cf0ac33a770f8af.stex"
+path="res://.import/grub_dissolve.png-78d4abdf6e3174ccdd58a3b305891502.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://decor/background/water/wave.png"
-dest_files=[ "res://.import/wave.png-ec4beee843f8a6b77cf0ac33a770f8af.stex" ]
+source_file="res://entity/creature/glut/grub/grub_dissolve.png"
+dest_files=[ "res://.import/grub_dissolve.png-78d4abdf6e3174ccdd58a3b305891502.stex" ]
 
 [params]
 

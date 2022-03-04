@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Tent_glow_lantern.png-f23bbd44377e045051ae5556033e662c.stex"
+path="res://.import/grub_small_attack.png-079a064559007407d76395707f2415c7.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://entity/building/tent/Tent_glow_lantern.png"
-dest_files=[ "res://.import/Tent_glow_lantern.png-f23bbd44377e045051ae5556033e662c.stex" ]
+source_file="res://entity/creature/glut/grub/grub_small_attack.png"
+dest_files=[ "res://.import/grub_small_attack.png-079a064559007407d76395707f2415c7.stex" ]
 
 [params]
 

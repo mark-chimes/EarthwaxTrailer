@@ -1,9 +1,9 @@
 [gd_scene load_steps=34 format=2]
 
-[ext_resource path="res://trailer/creature/gremlin/TrailerGremlin.gd" type="Script" id=1]
-[ext_resource path="res://entity/creature/glut/grub/gremlin_small_walk.png" type="Texture" id=2]
-[ext_resource path="res://entity/creature/glut/grub/gremlin_dissolve.png" type="Texture" id=3]
-[ext_resource path="res://entity/creature/glut/grub/gremlin_small_attack.png" type="Texture" id=4]
+[ext_resource path="res://trailer/creature/grub/TrailerGrub.gd" type="Script" id=1]
+[ext_resource path="res://entity/creature/glut/grub/grub_small_walk.png" type="Texture" id=2]
+[ext_resource path="res://entity/creature/glut/grub/grub_dissolve.png" type="Texture" id=3]
+[ext_resource path="res://entity/creature/glut/grub/grub_small_attack.png" type="Texture" id=4]
 
 [sub_resource type="AtlasTexture" id=25]
 atlas = ExtResource( 2 )
@@ -20,6 +20,30 @@ region = Rect2( 0, 32, 32, 32 )
 [sub_resource type="AtlasTexture" id=24]
 atlas = ExtResource( 3 )
 region = Rect2( 0, 128, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=1]
+atlas = ExtResource( 4 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=2]
+atlas = ExtResource( 4 )
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = ExtResource( 4 )
+region = Rect2( 0, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=4]
+atlas = ExtResource( 4 )
+region = Rect2( 32, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=5]
+atlas = ExtResource( 4 )
+region = Rect2( 0, 64, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=6]
+atlas = ExtResource( 4 )
+region = Rect2( 32, 64, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=7]
 atlas = ExtResource( 3 )
@@ -89,30 +113,6 @@ region = Rect2( 96, 96, 32, 32 )
 atlas = ExtResource( 3 )
 region = Rect2( 0, 128, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=1]
-atlas = ExtResource( 4 )
-region = Rect2( 0, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=2]
-atlas = ExtResource( 4 )
-region = Rect2( 32, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=3]
-atlas = ExtResource( 4 )
-region = Rect2( 0, 32, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=4]
-atlas = ExtResource( 4 )
-region = Rect2( 32, 32, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=5]
-atlas = ExtResource( 4 )
-region = Rect2( 0, 64, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=6]
-atlas = ExtResource( 4 )
-region = Rect2( 32, 64, 32, 32 )
-
 [sub_resource type="SpriteFrames" id=28]
 animations = [ {
 "frames": [ SubResource( 25 ), SubResource( 26 ), SubResource( 27 ) ],
@@ -125,14 +125,14 @@ animations = [ {
 "name": "dead",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), SubResource( 10 ), SubResource( 11 ), SubResource( 12 ), SubResource( 13 ), SubResource( 14 ), SubResource( 15 ), SubResource( 16 ), SubResource( 17 ), SubResource( 18 ), SubResource( 19 ), SubResource( 20 ), SubResource( 21 ), SubResource( 22 ), SubResource( 23 ) ],
-"loop": true,
-"name": "die",
-"speed": 5.0
-}, {
 "frames": [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ) ],
 "loop": true,
 "name": "attack",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), SubResource( 10 ), SubResource( 11 ), SubResource( 12 ), SubResource( 13 ), SubResource( 14 ), SubResource( 15 ), SubResource( 16 ), SubResource( 17 ), SubResource( 18 ), SubResource( 19 ), SubResource( 20 ), SubResource( 21 ), SubResource( 22 ), SubResource( 23 ) ],
+"loop": true,
+"name": "die",
 "speed": 5.0
 } ]
 
@@ -148,7 +148,6 @@ script = ExtResource( 1 )
 position = Vector2( 8, 0 )
 frames = SubResource( 28 )
 animation = "walk"
-frame = 1
 playing = true
 
 [node name="GremlinArea" type="Area2D" parent="."]

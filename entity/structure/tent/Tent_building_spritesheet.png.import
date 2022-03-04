@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Tent_building_spritesheet.png-c4104d80116832de2c8a6bf796397147.stex"
+path="res://.import/Tent_building_spritesheet.png-13b0e85945f9306562d7dace46e0f4b2.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://entity/building/tent/Tent_building_spritesheet.png"
-dest_files=[ "res://.import/Tent_building_spritesheet.png-c4104d80116832de2c8a6bf796397147.stex" ]
+source_file="res://entity/structure/tent/Tent_building_spritesheet.png"
+dest_files=[ "res://.import/Tent_building_spritesheet.png-13b0e85945f9306562d7dace46e0f4b2.stex" ]
 
 [params]
 

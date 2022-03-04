@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/gremlin_small_walk.png-34c6c8a2db273b5a7e4425624a950a40.stex"
+path="res://.import/Tent_glow_lantern.png-ff3108a633de0e283c407b65a04857bd.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://entity/creature/glut/grub/gremlin_small_walk.png"
-dest_files=[ "res://.import/gremlin_small_walk.png-34c6c8a2db273b5a7e4425624a950a40.stex" ]
+source_file="res://entity/structure/tent/Tent_glow_lantern.png"
+dest_files=[ "res://.import/Tent_glow_lantern.png-ff3108a633de0e283c407b65a04857bd.stex" ]
 
 [params]
 

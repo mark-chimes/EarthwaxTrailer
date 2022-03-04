@@ -6,18 +6,18 @@
 [ext_resource path="res://entity/creature/human/generic/generic_man_walk.png" type="Texture" id=4]
 [ext_resource path="res://trailer/progressive/animatic/fade/fade.tscn" type="PackedScene" id=5]
 [ext_resource path="res://trailer/progressive/animatic/fade/fade_logo.tscn" type="PackedScene" id=6]
-[ext_resource path="res://trailer/creature/gremlin/TrailerGremlin.tscn" type="PackedScene" id=7]
+[ext_resource path="res://trailer/creature/grub/TrailerGrub.tscn" type="PackedScene" id=7]
 [ext_resource path="res://trailer/archive/farm_attack/creature/Farmer.tscn" type="PackedScene" id=8]
 [ext_resource path="res://entity/creature/human/hero/knight/hero_knight_mounted_sword_trot.png" type="Texture" id=9]
 [ext_resource path="res://entity/creature/human/hero/knight/hero_knight_mounted_sword_talk.png" type="Texture" id=10]
-[ext_resource path="res://entity/building/tent/Tent_building_spritesheet.png" type="Texture" id=11]
+[ext_resource path="res://entity/structure/tent/Tent_building_spritesheet.png" type="Texture" id=11]
 [ext_resource path="res://entity/creature/human/builder/small_builder_hammer_placeholder_1.png" type="Texture" id=12]
-[ext_resource path="res://entity/building/tent/Tent_glow_lantern.png" type="Texture" id=13]
+[ext_resource path="res://entity/structure/tent/Tent_glow_lantern.png" type="Texture" id=13]
 [ext_resource path="res://entity/creature/human/spearman/spearman_idle_rest_on_pole.png" type="Texture" id=14]
 [ext_resource path="res://entity/creature/glut/warrior/warrior_large_naked_fists_idle.png" type="Texture" id=15]
-[ext_resource path="res://entity/creature/glut/grub/gremlin_small_attack.png" type="Texture" id=16]
-[ext_resource path="res://entity/creature/glut/grub/gremlin_dissolve.png" type="Texture" id=17]
-[ext_resource path="res://entity/creature/glut/grub/gremlin_small_walk.png" type="Texture" id=18]
+[ext_resource path="res://entity/creature/glut/grub/grub_small_attack.png" type="Texture" id=16]
+[ext_resource path="res://entity/creature/glut/grub/grub_dissolve.png" type="Texture" id=17]
+[ext_resource path="res://entity/creature/glut/grub/grub_small_walk.png" type="Texture" id=18]
 [ext_resource path="res://decor/grass/grass_strip_test.png" type="Texture" id=19]
 [ext_resource path="res://entity/creature/human/soldier/soldier_dead.png" type="Texture" id=20]
 [ext_resource path="res://entity/creature/human/hero/knight/hero_knight_mounted_sword_idle_alert.png" type="Texture" id=21]
@@ -753,6 +753,30 @@ region = Rect2( 32, 0, 32, 32 )
 atlas = ExtResource( 18 )
 region = Rect2( 0, 32, 32, 32 )
 
+[sub_resource type="AtlasTexture" id=191]
+atlas = ExtResource( 16 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=192]
+atlas = ExtResource( 16 )
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=193]
+atlas = ExtResource( 16 )
+region = Rect2( 0, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=194]
+atlas = ExtResource( 16 )
+region = Rect2( 32, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=195]
+atlas = ExtResource( 16 )
+region = Rect2( 0, 64, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=196]
+atlas = ExtResource( 16 )
+region = Rect2( 32, 64, 32, 32 )
+
 [sub_resource type="AtlasTexture" id=174]
 atlas = ExtResource( 17 )
 region = Rect2( 0, 0, 32, 32 )
@@ -821,30 +845,6 @@ region = Rect2( 96, 96, 32, 32 )
 atlas = ExtResource( 17 )
 region = Rect2( 0, 128, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=191]
-atlas = ExtResource( 16 )
-region = Rect2( 0, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=192]
-atlas = ExtResource( 16 )
-region = Rect2( 32, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=193]
-atlas = ExtResource( 16 )
-region = Rect2( 0, 32, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=194]
-atlas = ExtResource( 16 )
-region = Rect2( 32, 32, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=195]
-atlas = ExtResource( 16 )
-region = Rect2( 0, 64, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=196]
-atlas = ExtResource( 16 )
-region = Rect2( 32, 64, 32, 32 )
-
 [sub_resource type="SpriteFrames" id=200]
 animations = [ {
 "frames": [ SubResource( 197 ), SubResource( 198 ), SubResource( 199 ) ],
@@ -852,14 +852,14 @@ animations = [ {
 "name": "walk",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 174 ), SubResource( 175 ), SubResource( 176 ), SubResource( 177 ), SubResource( 178 ), SubResource( 179 ), SubResource( 180 ), SubResource( 181 ), SubResource( 182 ), SubResource( 183 ), SubResource( 184 ), SubResource( 185 ), SubResource( 186 ), SubResource( 187 ), SubResource( 188 ), SubResource( 189 ), SubResource( 190 ) ],
-"loop": true,
-"name": "die",
-"speed": 5.0
-}, {
 "frames": [ SubResource( 191 ), SubResource( 192 ), SubResource( 193 ), SubResource( 194 ), SubResource( 195 ), SubResource( 196 ) ],
 "loop": true,
 "name": "attack",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 174 ), SubResource( 175 ), SubResource( 176 ), SubResource( 177 ), SubResource( 178 ), SubResource( 179 ), SubResource( 180 ), SubResource( 181 ), SubResource( 182 ), SubResource( 183 ), SubResource( 184 ), SubResource( 185 ), SubResource( 186 ), SubResource( 187 ), SubResource( 188 ), SubResource( 189 ), SubResource( 190 ) ],
+"loop": true,
+"name": "die",
 "speed": 5.0
 } ]
 
@@ -996,7 +996,7 @@ position = Vector2( 957.756, 461.049 )
 scale = Vector2( 2, 2 )
 frames = SubResource( 148 )
 animation = "idle"
-frame = 32
+frame = 42
 playing = true
 flip_h = true
 
@@ -1015,7 +1015,7 @@ scale = Vector2( -2, 2 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Building/Knight"]
 frames = SubResource( 148 )
 animation = "idle"
-frame = 32
+frame = 42
 playing = true
 
 [node name="Tent" type="Node2D" parent="Building"]
@@ -1055,7 +1055,7 @@ scale = Vector2( -2, 2 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Army/Knight"]
 frames = SubResource( 148 )
 animation = "idle"
-frame = 32
+frame = 42
 playing = true
 
 [node name="Soldiers" type="Node2D" parent="Army"]
@@ -1230,7 +1230,7 @@ position = Vector2( 1436, 429.049 )
 scale = Vector2( 2, 2 )
 frames = SubResource( 173 )
 animation = "idle"
-frame = 8
+frame = 6
 playing = true
 flip_h = true
 
@@ -1239,6 +1239,7 @@ position = Vector2( 1473.75, 493.049 )
 scale = Vector2( 2, 2 )
 frames = SubResource( 173 )
 animation = "idle"
+frame = 7
 playing = true
 flip_h = true
 
@@ -1416,7 +1417,7 @@ scale = Vector2( 2, -2 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Battle/Soldiers/Knight"]
 frames = SubResource( 148 )
 animation = "idle"
-frame = 32
+frame = 42
 playing = true
 
 [node name="spearman_idle_rest_on_pole17" type="Sprite" parent="Battle/Soldiers"]
@@ -1680,5 +1681,5 @@ scale = Vector2( 2, -2 )
 position = Vector2( -90.3545, -5.73828 )
 frames = SubResource( 148 )
 animation = "idle"
-frame = 32
+frame = 42
 playing = true

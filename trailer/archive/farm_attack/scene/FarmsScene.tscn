@@ -2,8 +2,8 @@
 
 [ext_resource path="res://decor/placeholder/bush_repeating.png" type="Texture" id=1]
 [ext_resource path="res://entity/creature/human/farmer/farmer_talk_alert.png" type="Texture" id=2]
-[ext_resource path="res://entity/building/tent/Tent_glow_lantern.png" type="Texture" id=3]
-[ext_resource path="res://trailer/creature/gremlin/TrailerGremlin.tscn" type="PackedScene" id=4]
+[ext_resource path="res://entity/structure/tent/Tent_glow_lantern.png" type="Texture" id=3]
+[ext_resource path="res://trailer/creature/grub/TrailerGrub.tscn" type="PackedScene" id=4]
 [ext_resource path="res://entity/creature/human/farmer/farmer_attack_swing.png" type="Texture" id=5]
 [ext_resource path="res://entity/creature/human/farmer/farmer_idle_rest.png" type="Texture" id=6]
 [ext_resource path="res://entity/creature/human/farmer/farmer_die.png" type="Texture" id=7]

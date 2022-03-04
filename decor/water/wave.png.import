@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Tent_burning.png-e8622ba2ed3634af9e04152a62612268.stex"
+path="res://.import/wave.png-95f06a7ff125eef45e558d4393ab3bca.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://entity/building/tent/Tent_burning.png"
-dest_files=[ "res://.import/Tent_burning.png-e8622ba2ed3634af9e04152a62612268.stex" ]
+source_file="res://decor/water/wave.png"
+dest_files=[ "res://.import/wave.png-95f06a7ff125eef45e558d4393ab3bca.stex" ]
 
 [params]
 

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/gremlin_dissolve.png-96c41482941e2b8c98fbd24ace261263.stex"
+path="res://.import/grub_small_walk.png-0525fe01a5144303b6f258989177f3b0.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://entity/creature/glut/grub/gremlin_dissolve.png"
-dest_files=[ "res://.import/gremlin_dissolve.png-96c41482941e2b8c98fbd24ace261263.stex" ]
+source_file="res://entity/creature/glut/grub/grub_small_walk.png"
+dest_files=[ "res://.import/grub_small_walk.png-0525fe01a5144303b6f258989177f3b0.stex" ]
 
 [params]
 
