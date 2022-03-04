@@ -1,10 +1,11 @@
 [gd_scene load_steps=155 format=2]
 
-[ext_resource path="res://font/OpenSans-Regular.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://creature/human/hero/hero_knight_mounted_sword_trot.png" type="Texture" id=2]
+[ext_resource path="res://text/font/OpenSans-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://entity/creature/human/hero/knight/hero_knight_mounted_sword_trot.png" type="Texture" id=2]
 [ext_resource path="res://trailer/archive/farm_attack/creature/Commander.gd" type="Script" id=3]
-[ext_resource path="res://creature/human/hero/hero_knight_mounted_sword_idle_alert.png" type="Texture" id=4]
-[ext_resource path="res://creature/human/hero/hero_knight_mounted_sword_talk.png" type="Texture" id=5]
+[ext_resource path="res://entity/creature/human/hero/knight/hero_knight_mounted_sword_idle_alert.png" type="Texture" id=4]
+[ext_resource path="res://entity/creature/human/hero/knight/hero_knight_mounted_sword_talk.png" type="Texture" id=5]
+
 
 
 [sub_resource type="AtlasTexture" id=1]

@@ -10,12 +10,12 @@ const X_UNIT =  32.0 # Width in  pixels at z0 to separate
 const Z_UNIT = 0.05 # Separation degree for z
 
 # Imports
-var Spearman = preload("res://parallax/object/ParallaxMan.tscn")
-var Knight = preload("res://parallax/object/ParallaxKnight.tscn")
-var Chicken = preload("res://parallax/object/ParallaxChicken.tscn")
-var DistantForestTile = preload("res://parallax/object/DistantForestTile.tscn")
-var Flower = preload("res://plant/Flowers.tscn")
-var Grass = preload("res://plant/Grasses.tscn")
+var Spearman = preload("res://entity/creature/human/spearman/ParallaxMan.tscn")
+var Knight = preload("res://entity/creature/human/hero/knight/ParallaxKnight.tscn")
+var Chicken = preload("res://entity/creature/animal/chicken/parallax/ParallaxChicken.tscn")
+var DistantForestTile = preload("res://decor/forest/distant/DistantForestTile.tscn")
+var Flower = preload("res://decor/flower/Flower.tscn")
+var Grass = preload("res://decor/grass/Grass.tscn")
 var BuildingFront = preload("res://parallax/experiment/castle/building/BuildingFront.tscn")
 var BuildingSidesFront = preload("res://parallax/experiment/castle/building/BuildingSidesFront.tscn")
 var BuildingSidesFrontLeft = preload("res://parallax/experiment/castle/building/BuildingSidesFrontLeft.tscn")
@@ -30,11 +30,11 @@ var TowerSideRight = preload("res://parallax/experiment/castle/building/tower_si
 var BuildingBackSidewalls = preload("res://parallax/experiment/castle/building/BuildingBackSidewalls.tscn")
 var BuildingWheel = preload("res://parallax/experiment/castle/building/BuildingWheel.tscn")
 var PosGenerator = preload("res://parallax/util/RandomPositionGenerator.gd")
-var GrassStrip = preload("res://plant/GrassStrip.tscn")
-var GrassMud = preload("res://plant/GrassMudStrip.tscn")
-var ReedStrip = preload("res://plant/ReedStrip.tscn")
-var MudStrip = preload("res://plant/MudStrip.tscn")
-var Rat = preload("res://parallax/object/ParallaxRat.tscn")
+var GrassStrip = preload("res://decor/grass/GrassStrip.tscn")
+var GrassMud = preload("res://decor/grass/GrassMudStrip.tscn")
+var ReedStrip = preload("res://decor/reed/ReedStrip.tscn")
+var MudStrip = preload("res://decor/mud/MudStrip.tscn")
+var Rat = preload("res://entity/creature/animal/rat/parallax/ParallaxRat.tscn")
 
 var ParallaxObjectGenerator = preload("res://parallax/util/ParallaxObjectGenerator.gd")
 

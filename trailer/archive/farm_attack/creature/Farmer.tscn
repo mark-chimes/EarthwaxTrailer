@@ -1,10 +1,11 @@
 [gd_scene load_steps=23 format=2]
 
-[ext_resource path="res://creature/human/generic/generic_man_attack_swing.png" type="Texture" id=1]
-[ext_resource path="res://creature/human/generic/generic_man_sprint.png" type="Texture" id=2]
-[ext_resource path="res://creature/human/generic/generic_man_rest_on_pole.png" type="Texture" id=3]
-[ext_resource path="res://creature/human/generic/generic_man_walk.png" type="Texture" id=4]
+[ext_resource path="res://entity/creature/human/generic/generic_man_attack_swing.png" type="Texture" id=1]
+[ext_resource path="res://entity/creature/human/generic/generic_man_sprint.png" type="Texture" id=2]
+[ext_resource path="res://entity/creature/human/generic/generic_man_rest_on_pole.png" type="Texture" id=3]
+[ext_resource path="res://entity/creature/human/generic/generic_man_walk.png" type="Texture" id=4]
 [ext_resource path="res://trailer/archive/farm_attack/creature/Farmer.gd" type="Script" id=5]
+
 
 
 [sub_resource type="AtlasTexture" id=1]

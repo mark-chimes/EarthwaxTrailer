@@ -1,6 +1,7 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://plant/Tree.tscn" type="PackedScene" id=1]
+[ext_resource path="res://entity/plant/tree/Tree.tscn" type="PackedScene" id=1]
+
 
 [node name="Trees" type="Node2D"]
 z_index = -9

@@ -4,8 +4,8 @@
 [ext_resource path="res://util/performance/FPSCounter.gd" type="Script" id=2]
 [ext_resource path="res://util/pixel/Ruler.gd" type="Script" id=3]
 [ext_resource path="res://util/pixel/pixel_ruler.png" type="Texture" id=4]
-[ext_resource path="res://background/Background.tscn" type="PackedScene" id=5]
-[ext_resource path="res://parallax/object/HeroParallax.tscn" type="PackedScene" id=6]
+[ext_resource path="res://decor/background/Background.tscn" type="PackedScene" id=5]
+[ext_resource path="res://entity/creature/human/hero/HeroParallax.tscn" type="PackedScene" id=6]
 
 [node name="ParallaxWithHero" type="Node2D"]
 script = ExtResource( 1 )
