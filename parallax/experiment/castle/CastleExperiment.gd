@@ -393,4 +393,4 @@ func add_random_plant_to_lawn_at(x, z):
 		plant.get_node("AnimatedSprite").frame = plant.plant_num
 		plant.get_node("AnimatedSprite").get_node("AnimatedSprite").frame = plant.plant_num
 	
-	plants.push_front(plant)
+	parallax_objects.push_front(plant)
