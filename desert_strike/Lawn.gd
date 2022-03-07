@@ -85,13 +85,14 @@ func position_stuff_on_screen(delta):
 func hero_world_movement(delta): 
 	if Input.is_action_pressed("ui_right"):
 		dir = Dir.RIGHT
-		#player_real_pos_x += delta * dir * SPEED_MOD
 	elif Input.is_action_pressed("ui_left"):
 		dir = Dir.LEFT
-		#player_real_pos_x += delta * dir * SPEED_MOD
 	else:
 		dir = Dir.NONE
-	player_real_pos_x = player_real_pos_x + (delta * dir * SPEED_MOD)
+	var speed_mult = SPEED_MOD
+	if Input.is_action_pressed("run"):
+		speed_mult *= 3
+	player_real_pos_x = player_real_pos_x + (delta * dir * speed_mult)
 
 func generate_lawn(): 
 	var grass_muds = []
