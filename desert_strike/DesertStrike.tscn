@@ -7,6 +7,8 @@
 
 [node name="DesertStrike" type="Node2D"]
 
+[node name="ParallaxEngine" parent="." instance=ExtResource( 4 )]
+
 [node name="Background" parent="." instance=ExtResource( 1 )]
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -31,5 +33,3 @@ __meta__ = {
 script = ExtResource( 3 )
 
 [node name="EntityController" type="Node2D" parent="."]
-
-[node name="ParallaxEngine" parent="." instance=ExtResource( 4 )]

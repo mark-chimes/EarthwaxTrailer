@@ -19,7 +19,7 @@ var grass_strips = []
 var reed_strips = []
 
 func _ready():
-	parallax_engine._ready()
+	#parallax_engine._ready()
 	make_reeds()
 	generate_lawn() 
 

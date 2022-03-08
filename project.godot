@@ -12,6 +12,9 @@ config_version=4
 
 config/name="Earthwax"
 run/main_scene="res://desert_strike/DesertStrike.tscn"
+boot_splash/image="res://entity/creature/glut/warrior/warrior_large_naked_fists.png"
+boot_splash/use_filter=false
+boot_splash/bg_color=Color( 0.12549, 0.145098, 0.192157, 1 )
 config/icon="res://gremlin_icon.png"
 config/windows_native_icon="res://gremlin_small.ico"
 
@@ -57,3 +60,7 @@ run={
 [physics]
 
 common/enable_pause_aware_picking=true
+
+[rendering]
+
+environment/default_clear_color=Color( 0, 0, 0, 1 )

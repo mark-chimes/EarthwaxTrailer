@@ -28,20 +28,22 @@ var dir = Dir.RIGHT
 func _ready():
 	dir = Dir.NONE
 	object_generator.init_values(self, parallax_objects)
-	for parallax_obj in parallax_objects:
-		parallax_obj.position.y = z_to_y_converter(parallax_obj.real_pos.z)
-
-		parallax_obj.z_index = -parallax_obj.real_pos.z * 10
 
 func create_objects_in_rectangle_randoff(object_type, num_x, num_z, x_offset, z_offset, randoff_x,
 		x_distance, z_distance, should_randomize, custom_array): 
 	object_generator.create_objects_in_rectangle_randoff(object_type, num_x, num_z, x_offset, z_offset,
 			randoff_x, x_distance, z_distance, should_randomize, custom_array)
+	for object in custom_array:
+		object.position.y = z_to_y_converter(object.real_pos.z)
+		object.z_index = -object.real_pos.z * 10
 
 func create_objects_in_rectangle(object_type, num_x, num_z, x_offset, z_offset,
 		x_distance, z_distance, should_randomize, custom_array): 
 	object_generator.create_objects_in_rectangle(object_type, num_x, num_z, x_offset, z_offset,
 			x_distance, z_distance, should_randomize, custom_array)
+	for object in custom_array:
+		object.position.y = z_to_y_converter(object.real_pos.z)
+		object.z_index = -object.real_pos.z * 10
 
 func _process(delta):
 	hero_world_movement(delta)
@@ -84,4 +86,6 @@ func z_and_x_to_x_converter(hero_x_pos, z_pos, x_pos):
 	return SCREEN_MID_X + x_pos / z_pos
 	
 func add_object_to_parallax_world(object):
+	object.position.y = z_to_y_converter(object.real_pos.z)
+	object.z_index = -object.real_pos.z * 10
 	parallax_objects.append(object)
