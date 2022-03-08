@@ -7,4 +7,4 @@ enum Dir {
 
 func walk(dir):
 	$AnimatedSprite.play("walk")
-	$AnimatedSprite.flip_h = (dir == Dir.LEFT)
+	$AnimatedSprite.flip_h = (dir == Dir.RIGHT)
