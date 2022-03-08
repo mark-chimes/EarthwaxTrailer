@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://decor/background/Background.tscn" type="PackedScene" id=1]
 [ext_resource path="res://util/performance/FPSCounter.gd" type="Script" id=2]
 [ext_resource path="res://desert_strike/Lawn.gd" type="Script" id=3]
 [ext_resource path="res://desert_strike/ParallaxEngine.tscn" type="PackedScene" id=4]
+[ext_resource path="res://desert_strike/HumanArmy.gd" type="Script" id=5]
 
 [node name="DesertStrike" type="Node2D"]
 
@@ -33,3 +34,6 @@ __meta__ = {
 script = ExtResource( 3 )
 
 [node name="EntityController" type="Node2D" parent="."]
+
+[node name="HumanArmy" type="Node2D" parent="EntityController"]
+script = ExtResource( 5 )
