@@ -27,10 +27,14 @@ func get_pos():
 func add_grubling():
 	grubling = Grubling.instance()
 	add_child(grubling)
-	grubling.real_pos.x = 50
+	grubling.real_pos.x = 20
 	grubling.real_pos.z = 5
 	parallax_engine.add_object_to_parallax_world(grubling)
 
 func fight():
 	state = State.FIGHT
+	grubling.set_state(state, Dir.LEFT)
+
+func idle():
+	state = State.IDLE
 	grubling.set_state(state, Dir.LEFT)

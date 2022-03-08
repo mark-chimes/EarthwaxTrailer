@@ -9,12 +9,12 @@ enum State {
 	WALK,
 	FIGHT,
 	IDLE,
+	DIE,
 }
 
 var state = State.IDLE
 
 func _process(delta):
-	print(state)
 	match state:
 		State.WALK:
 			real_pos.x += delta * 20
@@ -22,8 +22,12 @@ func _process(delta):
 			pass
 		State.FIGHT:
 			pass
+		State.DIE:
+			pass
 
 func set_state(new_state, dir):
+	if state == State.DIE:
+		return
 	state = new_state
 	match state:
 		State.WALK:
@@ -32,4 +36,10 @@ func set_state(new_state, dir):
 			$AnimatedSprite.play("attack")
 		State.IDLE:
 			$AnimatedSprite.play("idle")
+		State.DIE:
+			$AnimatedSprite.play("death")
+			$AnimatedSprite.flip_h = (dir == Dir.LEFT)
+			yield($AnimatedSprite, "animation_finished")
+			$AnimatedSprite.frame = $AnimatedSprite.frames.get_frame_count("death")
+			$AnimatedSprite.playing = false
 	$AnimatedSprite.flip_h = (dir == Dir.LEFT)

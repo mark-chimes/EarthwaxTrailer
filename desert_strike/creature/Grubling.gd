@@ -14,7 +14,6 @@ enum State {
 var state = State.IDLE
 
 func _process(delta):
-	print(state)
 	match state:
 		State.WALK:
 			real_pos.x -= delta * 20
