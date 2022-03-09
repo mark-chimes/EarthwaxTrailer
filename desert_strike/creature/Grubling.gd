@@ -1,4 +1,7 @@
 extends "res://parallax/util/ParallaxObject.gd"
+signal die
+#onready var rng = RandomNumberGenerator.new()
+var rng
 
 enum Dir {
 	LEFT = -1,
@@ -9,9 +12,15 @@ enum State {
 	WALK,
 	FIGHT,
 	IDLE,
+	DIE,
 }
 
 var state = State.IDLE
+var dir = Dir.RIGHT
+var is_in_combat = false
+
+func set_rng(new_rng): 
+	rng = new_rng
 
 func _process(delta):
 	match state:
@@ -21,14 +30,32 @@ func _process(delta):
 			pass
 		State.FIGHT:
 			pass
+		State.DIE:
+			pass
 
-func set_state(new_state, dir):
+func set_state(new_state, new_dir):
+	if state == State.DIE:
+		return
 	state = new_state
+	dir = new_dir
 	match state:
 		State.WALK:
 			$AnimatedSprite.play("walk")
 		State.FIGHT:
 			$AnimatedSprite.play("attack")
+			$AnimatedSprite.flip_h = (dir == Dir.RIGHT)
+			var fight_time = rng.randf_range(3,5)
+			print(fight_time)
+			yield(get_tree().create_timer(fight_time), "timeout")
+			set_state(State.DIE, dir)
 		State.IDLE:
 			$AnimatedSprite.play("idle")
+		State.DIE:
+			print("Grubling died")
+			$AnimatedSprite.play("die")
+			$AnimatedSprite.flip_h = (dir == Dir.RIGHT)
+			emit_signal("die")
+			yield($AnimatedSprite, "animation_finished")
+			$AnimatedSprite.frame = $AnimatedSprite.frames.get_frame_count("die")
+			$AnimatedSprite.playing = false
 	$AnimatedSprite.flip_h = (dir == Dir.RIGHT)

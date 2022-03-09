@@ -26,6 +26,7 @@ var dead_farmers = 0
 var defeat_threshold = 4
 
 func _ready():
+	rng.randomize()
 	add_farmer(3)
 	add_farmer(7)
 	add_farmer(11)
@@ -49,11 +50,12 @@ func _process(delta):
 		State.FIGHT:
 			for i in range(len(farmers)): 
 				var farmer = farmers[i]
-				if farmer.state == State.FIGHT:
+				if farmer.state == State.FIGHT or farmer.state == State.DIE:
 					continue
 				var grub_pos = frontline_func.call_func(i+1)
 				#assume grub is on the right
 				if grub_pos - farmer.real_pos.x < 2:
+					print("Farmer fighting")
 					farmer.set_state(State.FIGHT, Dir.RIGHT)
 					farmer.connect("death", self, "_farmer_death")
 		State.DIE:
@@ -73,7 +75,7 @@ func add_farmer(z_pos):
 	farmer.set_rng(rng)
 	farmers.append(farmer)
 	add_child(farmer)
-	farmer.real_pos.x = -20 + rng.randi_range(-5, 5)
+	farmer.real_pos.x = -20 + rng.randi_range(-10, 10)
 	farmer.real_pos.z = z_pos
 	parallax_engine.add_object_to_parallax_world(farmer)
 
