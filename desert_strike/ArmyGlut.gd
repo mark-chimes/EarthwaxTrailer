@@ -44,7 +44,7 @@ func _process(delta):
 		State.FIGHT:
 			for i in range(len(grublings)): 
 				var grubling = grublings[i]
-				if grubling.state == State.FIGHT or grubling.state == State.DIE:
+				if not grubling.state == State.WALK:
 					continue
 				var farm_pos = frontline_func.call_func(i+1)
 				#assume grub is on the right

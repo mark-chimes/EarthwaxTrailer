@@ -38,19 +38,13 @@ func _ready():
 func _process(delta): 
 	match state:
 		State.WALK:
-	#		if is_in_combat: 
-	#			if abs(real_pos.x - fight_loc_x) < 1:
-	#			# if hasn't yet met worm in lane
-	#				set_state(State.FIGHT, dir)
-	#				return
-	#		real_pos.x += delta * 20
 			pass
 		State.IDLE:
 			pass
 		State.FIGHT:
 			for i in range(len(farmers)): 
 				var farmer = farmers[i]
-				if farmer.state == State.FIGHT or farmer.state == State.DIE:
+				if not farmer.state == State.WALK:
 					continue
 				var grub_pos = frontline_func.call_func(i+1)
 				#assume grub is on the right

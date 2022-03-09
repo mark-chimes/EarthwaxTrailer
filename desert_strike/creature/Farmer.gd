@@ -1,5 +1,5 @@
 extends "res://parallax/util/ParallaxObject.gd"
-signal die
+signal death
 #onready var rng = RandomNumberGenerator.new()
 var rng
 
@@ -57,7 +57,7 @@ func set_state(new_state, new_dir):
 		State.DIE:
 			$AnimatedSprite.play("die")
 			$AnimatedSprite.flip_h = (dir == Dir.LEFT)
-			emit_signal("die")
+			emit_signal("death")
 			yield($AnimatedSprite, "animation_finished")
 			$AnimatedSprite.frame = $AnimatedSprite.frames.get_frame_count("die")
 			$AnimatedSprite.playing = false
