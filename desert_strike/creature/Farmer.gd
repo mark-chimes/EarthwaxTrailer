@@ -1,6 +1,7 @@
 extends "res://parallax/util/ParallaxObject.gd"
 signal death
-onready var rng = RandomNumberGenerator.new()
+#onready var rng = RandomNumberGenerator.new()
+var rng
 
 enum Dir {
 	LEFT = -1,
@@ -15,13 +16,23 @@ enum State {
 }
 
 var state = State.IDLE
+var dir = Dir.RIGHT
+var is_in_combat = false
+var fight_loc_x = -100
 
-func _ready(): 
-	rng.randomize()
+#func _ready(): 
+#	rng.randomize()
+
+func set_rng(new_rng): 
+	rng = new_rng
 
 func _process(delta):
 	match state:
 		State.WALK:
+			if is_in_combat: 
+				if abs(real_pos.x - fight_loc_x) < 1: 
+					set_state(State.FIGHT, dir)
+					return
 			real_pos.x += delta * 20
 		State.IDLE:
 			pass
@@ -30,10 +41,16 @@ func _process(delta):
 		State.DIE:
 			pass
 
-func set_state(new_state, dir):
+func fight(new_fight_loc_x, new_dir): 
+	is_in_combat = true
+	fight_loc_x = new_fight_loc_x
+	dir = new_dir
+
+func set_state(new_state, new_dir):
 	if state == State.DIE:
 		return
 	state = new_state
+	dir = new_dir
 	match state:
 		State.WALK:
 			$AnimatedSprite.play("walk")

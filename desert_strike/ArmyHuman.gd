@@ -4,6 +4,8 @@ signal defeat
 
 var Farmer = preload("res://desert_strike/creature/Farmer.tscn")
 onready var parallax_engine = get_parent().get_parent().get_node("ParallaxEngine")
+onready var rng = RandomNumberGenerator.new()
+
 var farmers = []
 enum Dir {
 	LEFT = -1,
@@ -32,20 +34,27 @@ func _ready():
 		farmer.set_state(state, Dir.RIGHT)
 
 func get_pos():
-	return farmers[0].real_pos.x
+	# TODO Optimize this
+	# TODO Currently this assumes the army is moving right and is beyond -100
+	var front_pos = -100
+	for farmer in farmers: 
+		if farmer.real_pos.x > front_pos:
+			front_pos = farmer.real_pos.x
+	return front_pos
 
 func add_farmer(z_pos):
 	var farmer = Farmer.instance()
+	farmer.set_rng(rng)
 	farmers.append(farmer)
 	add_child(farmer)
-	farmer.real_pos.x = -20
+	farmer.real_pos.x = -20 + rng.randi_range(-5, 5)
 	farmer.real_pos.z = z_pos
 	parallax_engine.add_object_to_parallax_world(farmer)
 
 func fight():
 	state = State.FIGHT
 	for farmer in farmers:
-		farmer.set_state(state, Dir.RIGHT)
+		farmer.fight(get_pos(), Dir.RIGHT)
 		farmer.connect("death", self, "_farmer_death")
 
 #	state = State.DIE
