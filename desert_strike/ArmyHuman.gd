@@ -19,6 +19,9 @@ enum State {
 
 var state = State.IDLE
 
+var dead_farmers = 0
+var defeat_threshold = 4
+
 func _ready():
 	add_farmer(3)
 	add_farmer(7)
@@ -43,11 +46,18 @@ func fight():
 	state = State.FIGHT
 	for farmer in farmers:
 		farmer.set_state(state, Dir.RIGHT)
-	yield(get_tree().create_timer(5.0), "timeout")
-	emit_signal("defeat")
-	state = State.DIE
-	for farmer in farmers:
-		farmer.set_state(state, Dir.RIGHT)
+		farmer.connect("death", self, "_farmer_death")
+
+#	state = State.DIE
+#	for farmer in farmers:
+#		farmer.set_state(state, Dir.RIGHT)
 
 func get_state():
 	return state
+	
+func _farmer_death(): 
+	dead_farmers += 1
+	if dead_farmers >= defeat_threshold: 
+		emit_signal("defeat")
+		# TODO remove farmers from array
+		# TODO Rout
