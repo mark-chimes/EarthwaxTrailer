@@ -5,6 +5,7 @@ signal defeat
 var Farmer = preload("res://desert_strike/creature/Farmer.tscn")
 onready var parallax_engine = get_parent().get_parent().get_node("ParallaxEngine")
 onready var rng = RandomNumberGenerator.new()
+var frontline_func = null
 
 var farmers = []
 enum Dir {
@@ -32,6 +33,31 @@ func _ready():
 	state = State.WALK
 	for farmer in farmers:
 		farmer.set_state(state, Dir.RIGHT)
+		
+func _process(delta): 
+	match state:
+		State.WALK:
+	#		if is_in_combat: 
+	#			if abs(real_pos.x - fight_loc_x) < 1:
+	#			# if hasn't yet met worm in lane
+	#				set_state(State.FIGHT, dir)
+	#				return
+	#		real_pos.x += delta * 20
+			pass
+		State.IDLE:
+			pass
+		State.FIGHT:
+			for i in range(len(farmers)): 
+				var farmer = farmers[i]
+				if farmer.state == State.FIGHT:
+					continue
+				var grub_pos = frontline_func.call_func(i+1)
+				#assume grub is on the right
+				if grub_pos - farmer.real_pos.x < 2:
+					farmer.set_state(State.FIGHT, Dir.RIGHT)
+					farmer.connect("death", self, "_farmer_death")
+		State.DIE:
+			pass
 
 func get_pos():
 	# TODO Optimize this
@@ -51,11 +77,10 @@ func add_farmer(z_pos):
 	farmer.real_pos.z = z_pos
 	parallax_engine.add_object_to_parallax_world(farmer)
 
-func fight():
+func fight(new_frontline_func):
+	frontline_func = new_frontline_func
 	state = State.FIGHT
-	for farmer in farmers:
-		farmer.fight(get_pos(), Dir.RIGHT)
-		farmer.connect("death", self, "_farmer_death")
+
 
 #	state = State.DIE
 #	for farmer in farmers:
@@ -70,3 +95,8 @@ func _farmer_death():
 		emit_signal("defeat")
 		# TODO remove farmers from array
 		# TODO Rout
+
+func get_frontline_at_lane(lane_num): 
+	# TODO What happens when farmers are removed from the array?
+	return farmers[lane_num-1].real_pos.x
+	

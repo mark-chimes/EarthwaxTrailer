@@ -2,6 +2,7 @@ extends Node2D
 
 var Grubling = preload("res://desert_strike/creature/Grubling.tscn")
 onready var parallax_engine = get_parent().get_parent().get_node("ParallaxEngine")
+
 var grublings = []
 enum Dir {
 	LEFT = -1,
@@ -36,7 +37,7 @@ func add_grubling(z_pos):
 	grubling.real_pos.z = z_pos
 	parallax_engine.add_object_to_parallax_world(grubling)
 
-func fight():
+func fight(frontline_func):
 	state = State.FIGHT
 	for grubling in grublings:
 		grubling.set_state(state, Dir.LEFT)
@@ -45,3 +46,7 @@ func idle():
 	state = State.IDLE
 	for grubling in grublings:
 		grubling.set_state(state, Dir.LEFT)
+		
+func get_frontline_at_lane(lane_num): 
+	# TODO What happens when grublings are removed from the array?
+	return grublings[lane_num-1].real_pos.x

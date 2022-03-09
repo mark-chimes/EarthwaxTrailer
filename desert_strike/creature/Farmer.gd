@@ -29,10 +29,6 @@ func set_rng(new_rng):
 func _process(delta):
 	match state:
 		State.WALK:
-			if is_in_combat: 
-				if abs(real_pos.x - fight_loc_x) < 1: 
-					set_state(State.FIGHT, dir)
-					return
 			real_pos.x += delta * 20
 		State.IDLE:
 			pass
@@ -40,11 +36,6 @@ func _process(delta):
 			pass
 		State.DIE:
 			pass
-
-func fight(new_fight_loc_x, new_dir): 
-	is_in_combat = true
-	fight_loc_x = new_fight_loc_x
-	dir = new_dir
 
 func set_state(new_state, new_dir):
 	if state == State.DIE:
