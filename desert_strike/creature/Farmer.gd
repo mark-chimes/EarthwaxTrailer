@@ -46,6 +46,7 @@ func set_state(new_state, new_dir):
 		State.WALK:
 			$AnimatedSprite.play("walk")
 		State.FIGHT:
+			$AnimatedSprite.connect("animation_finished", self, "play_sound_attack")
 			$AnimatedSprite.play("attack")
 			$AnimatedSprite.flip_h = (dir == Dir.LEFT)
 			var fight_time = rng.randf_range(3,5)
@@ -58,7 +59,19 @@ func set_state(new_state, new_dir):
 			$AnimatedSprite.play("die")
 			$AnimatedSprite.flip_h = (dir == Dir.LEFT)
 			emit_signal("death")
+			play_sound_death()
 			yield($AnimatedSprite, "animation_finished")
 			$AnimatedSprite.frame = $AnimatedSprite.frames.get_frame_count("die")
 			$AnimatedSprite.playing = false
 	$AnimatedSprite.flip_h = (dir == Dir.LEFT)
+
+func play_sound_death():
+	var sounds = $SoundDie.get_children()
+	sounds[randi() % sounds.size()].play()
+
+func play_sound_attack():
+	if state != State.FIGHT:
+		return
+	print("attack")
+	var sounds = $SoundAttack.get_children()
+	sounds[randi() % sounds.size()].play()
