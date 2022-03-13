@@ -26,18 +26,18 @@ func _ready():
 
 func make_tree_line(): 
 	parallax_engine.create_objects_in_rectangle(DistantForestTile, 120, 1, 
-		-300, 150, 34, 1, false, [])
+		-400, 150, 34, 1, false, [])
 
 func make_reeds(): 
 	parallax_engine.create_objects_in_rectangle_randoff(MudStrip, 3, 10, 
-			0, -1.5, 0, 120, 0.3, false, reed_strips)	
+			-100, -1.5, 0, 120, 0.3, false, reed_strips)	
 
 	parallax_engine.create_objects_in_rectangle_randoff(ReedStrip, 3, 3, 
-			0, -1.8, 0, 120, 0.7, true, reed_strips)	
+			-100, -1.8, 0, 120, 0.7, true, reed_strips)	
 
 func generate_lawn(): 
 	var grass_muds = []
-	parallax_engine.create_objects_in_rectangle(GrassMud, 10, 240, 0, 2, 30, 1, true, grass_muds)
+	parallax_engine.create_objects_in_rectangle(GrassMud, 10, 240, -100, 2, 30, 1, true, grass_muds)
 	for grassmud in grass_muds: 
 		parallax_engine.z_scale(grassmud)
 	var plants_x_width = 200
