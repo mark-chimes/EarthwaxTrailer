@@ -67,11 +67,11 @@ func set_state(new_state, new_dir):
 
 func play_sound_death():
 	var sounds = $SoundDie.get_children()
-	sounds[randi() % sounds.size()].play()
+	sounds[rng.randi() % sounds.size()].play()
 
 func play_sound_attack():
 	if state != State.FIGHT:
 		return
 	print("attack")
 	var sounds = $SoundAttack.get_children()
-	sounds[randi() % sounds.size()].play()
+	sounds[rng.randi() % sounds.size()].play()

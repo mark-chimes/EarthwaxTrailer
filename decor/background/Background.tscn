@@ -7,14 +7,21 @@
 [node name="Background" type="Node2D"]
 
 [node name="Mountain" type="Sprite" parent="."]
-position = Vector2( 960, 96 )
-scale = Vector2( 4, 4 )
+position = Vector2( 960, 260 )
+scale = Vector2( 2, 2 )
+z_index = -2000
+texture = ExtResource( 3 )
+
+[node name="Mountain2" type="Sprite" parent="."]
+position = Vector2( 960, 632 )
+scale = Vector2( 2, -2 )
 z_index = -2000
 texture = ExtResource( 3 )
 
 [node name="MountainReflection" type="Sprite" parent="."]
-position = Vector2( 960, 872 )
-scale = Vector2( 4, -4 )
+visible = false
+position = Vector2( 952.865, 588.431 )
+scale = Vector2( 2, -2 )
 z_index = -2000
 texture = ExtResource( 3 )
 region_enabled = true

@@ -26,7 +26,7 @@ var dead_farmers = 0
 var defeat_threshold = 4
 
 func _ready():
-	rng.randomize()
+	rng.set_seed(hash("42069"))
 	add_farmer(3)
 	add_farmer(7)
 	add_farmer(11)

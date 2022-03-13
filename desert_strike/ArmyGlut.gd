@@ -26,7 +26,7 @@ var dead_grublings = 0
 var defeat_threshold = 4
 
 func _ready():
-	rng.randomize()
+	rng.set_seed(42069)
 	add_grubling(3)
 	add_grubling(7)
 	add_grubling(11)

@@ -22,6 +22,11 @@ func _ready():
 	#parallax_engine._ready()
 	make_reeds()
 	generate_lawn() 
+	make_tree_line()
+
+func make_tree_line(): 
+	parallax_engine.create_objects_in_rectangle(DistantForestTile, 120, 1, 
+		-300, 150, 34, 1, false, [])
 
 func make_reeds(): 
 	parallax_engine.create_objects_in_rectangle_randoff(MudStrip, 3, 10, 

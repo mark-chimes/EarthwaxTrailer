@@ -86,8 +86,8 @@ func _ready():
 	dir = Dir.NONE
 	object_generator.init_values(self, parallax_objects)
 
-#	object_generator.create_objects_in_rectangle(DistantForestTile, num_trees, 1, 
-#			-300, 150, 34, 1, false, [])
+	object_generator.create_objects_in_rectangle(DistantForestTile, num_trees, 1, 
+			-300, 150, 34, 1, false, [])
 
 	create_animals()
 	
