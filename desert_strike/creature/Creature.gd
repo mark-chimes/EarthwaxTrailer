@@ -23,11 +23,12 @@ var mute = true
 
 func set_rng(new_rng): 
 	rng = new_rng
+	rng.randomize()
 
 func _process(delta):
 	match state:
 		State.WALK:
-			real_pos.x += delta * 20 * dir
+			real_pos.x += delta * 5 * dir
 		State.IDLE:
 			pass
 		State.FIGHT:

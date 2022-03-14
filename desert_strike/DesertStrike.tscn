@@ -21,7 +21,7 @@ current = true
 zoom = Vector2( 0.5, 0.5 )
 
 [node name="FPSCounter" type="Node2D" parent="."]
-position = Vector2( 120, 64 )
+position = Vector2( 534, 239 )
 script = ExtResource( 2 )
 
 [node name="Label" type="Label" parent="FPSCounter"]
