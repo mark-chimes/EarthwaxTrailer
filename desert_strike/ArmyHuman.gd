@@ -77,6 +77,7 @@ func add_farmer(z_pos):
 	farmer.set_rng(rng)
 	farmers.append(farmer)
 	add_child(farmer)
+	farmer.dir = Dir.RIGHT
 	farmer.real_pos.x = -20 + rng.randi_range(-10, 10)
 	farmer.real_pos.z = z_pos
 	parallax_engine.add_object_to_parallax_world(farmer)

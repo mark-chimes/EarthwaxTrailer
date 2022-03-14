@@ -74,6 +74,7 @@ func add_grubling(z_pos):
 	var grubling = Grubling.instance()
 	grubling.set_rng(rng)
 	grublings.append(grubling)
+	grubling.dir = Dir.LEFT
 	add_child(grubling)
 	grubling.real_pos.x = 20 + rng.randi_range(-10, 10)
 	grubling.real_pos.z = z_pos
