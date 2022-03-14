@@ -49,7 +49,7 @@ func set_state(new_state, new_dir):
 			$AnimatedSprite.connect("animation_finished", self, "play_sound_attack")
 			$AnimatedSprite.play("attack")
 			$AnimatedSprite.flip_h = (dir == Dir.LEFT)
-			var fight_time = rng.randf_range(3,5)
+			var fight_time = rng.randf_range(1,3)
 			print(fight_time)
 			yield(get_tree().create_timer(fight_time), "timeout")
 			set_state(State.DIE, dir)

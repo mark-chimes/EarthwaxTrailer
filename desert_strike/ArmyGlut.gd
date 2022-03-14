@@ -13,14 +13,21 @@ enum Dir {
 	RIGHT = 1,
 }
 
-enum State {
+enum StateCreature {
 	WALK,
 	FIGHT,
 	IDLE,
 	DIE,
 }
 
-var state = State.IDLE
+enum StateArmy {
+	WALK,
+	FIGHT,
+	IDLE,
+	DIE,
+}
+
+var state = StateArmy.IDLE
 
 var dead_grublings = 0
 var defeat_threshold = 4
@@ -31,27 +38,27 @@ func _ready():
 	add_grubling(7)
 	add_grubling(11)
 	add_grubling(15)
-	state = State.WALK
+	state = StateArmy.WALK
 	for grubling in grublings:
-		grubling.set_state(state, Dir.LEFT)
+		grubling.set_state(StateCreature.WALK, Dir.LEFT)
 		
 func _process(delta): 
 	match state:
-		State.WALK:
+		StateArmy.WALK:
 			pass
-		State.IDLE:
+		StateArmy.IDLE:
 			pass
-		State.FIGHT:
+		StateArmy.FIGHT:
 			for i in range(len(grublings)): 
 				var grubling = grublings[i]
-				if not grubling.state == State.WALK:
+				if not grubling.state == StateCreature.WALK:
 					continue
 				var farm_pos = frontline_func.call_func(i+1)
 				#assume grub is on the right
 				if grubling.real_pos.x - farm_pos < 2:
-					grubling.set_state(State.FIGHT, Dir.LEFT)
+					grubling.set_state(StateCreature.FIGHT, Dir.LEFT)
 					grubling.connect("death", self, "_grubling_death")
-		State.DIE:
+		StateArmy.DIE:
 			pass
 
 func get_pos():
@@ -74,7 +81,7 @@ func add_grubling(z_pos):
 
 func fight(new_frontline_func):
 	frontline_func = new_frontline_func
-	state = State.FIGHT
+	state = StateArmy.FIGHT
 
 func get_state():
 	return state
@@ -92,6 +99,6 @@ func get_frontline_at_lane(lane_num):
 	
 
 func idle():
-	state = State.IDLE
+	state = StateArmy.IDLE
 	for grubling in grublings:
 		grubling.set_state(state, Dir.LEFT)

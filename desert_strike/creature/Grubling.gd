@@ -44,7 +44,7 @@ func set_state(new_state, new_dir):
 		State.FIGHT:
 			$AnimatedSprite.play("attack")
 			$AnimatedSprite.flip_h = (dir == Dir.RIGHT)
-			var fight_time = rng.randf_range(3,5)
+			var fight_time = rng.randf_range(1,3)
 			yield(get_tree().create_timer(fight_time), "timeout")
 			set_state(State.IDLE, dir)
 		State.IDLE:

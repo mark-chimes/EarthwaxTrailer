@@ -13,14 +13,22 @@ enum Dir {
 	RIGHT = 1,
 }
 
-enum State {
+enum StateCreature {
 	WALK,
 	FIGHT,
 	IDLE,
 	DIE,
 }
 
-var state = State.IDLE
+
+enum StateArmy {
+	WALK,
+	FIGHT,
+	IDLE,
+	DIE,
+}
+
+var state = StateArmy.IDLE
 
 var dead_farmers = 0
 var defeat_threshold = 4
@@ -31,28 +39,28 @@ func _ready():
 	add_farmer(7)
 	add_farmer(11)
 	add_farmer(15)
-	state = State.WALK
+	state = StateArmy.WALK
 	for farmer in farmers:
-		farmer.set_state(state, Dir.RIGHT)
+		farmer.set_state(StateCreature.WALK, Dir.RIGHT)
 		
 func _process(delta): 
 	match state:
-		State.WALK:
+		StateArmy.WALK:
 			pass
-		State.IDLE:
+		StateArmy.IDLE:
 			pass
-		State.FIGHT:
+		StateArmy.FIGHT:
 			for i in range(len(farmers)): 
 				var farmer = farmers[i]
-				if not farmer.state == State.WALK:
+				if not farmer.state == StateCreature.WALK:
 					continue
 				var grub_pos = frontline_func.call_func(i+1)
 				#assume grub is on the right
 				if grub_pos - farmer.real_pos.x < 2:
 					print("Farmer fighting")
-					farmer.set_state(State.FIGHT, Dir.RIGHT)
+					farmer.set_state(StateCreature.FIGHT, Dir.RIGHT)
 					farmer.connect("death", self, "_farmer_death")
-		State.DIE:
+		StateArmy.DIE:
 			pass
 
 func get_pos():
@@ -75,7 +83,7 @@ func add_farmer(z_pos):
 
 func fight(new_frontline_func):
 	frontline_func = new_frontline_func
-	state = State.FIGHT
+	state = StateArmy.FIGHT
 
 
 #	state = State.DIE
