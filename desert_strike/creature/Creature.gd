@@ -1,5 +1,7 @@
 extends "res://parallax/util/ParallaxObject.gd"
 
+var HealthBar = preload("res://desert_strike/HealthBar.tscn")
+
 signal death
 var rng
 
@@ -21,6 +23,23 @@ var dir = Dir.RIGHT
 var is_in_combat = false
 var mute = true
 
+var health = 10
+onready var health_bar = HealthBar.instance()
+var MAX_HEALTH = 10
+var show_health = true
+
+func _ready(): 
+	init_health_bar()
+
+func init_health_bar(): 
+	add_child(health_bar)
+	health_bar.init_health_bar(MAX_HEALTH)
+	if not show_health: 
+		health_bar.visible = false
+
+func update_health_bar(new_health): 
+	health_bar.update_health(new_health)
+
 func set_rng(new_rng): 
 	rng = new_rng
 	rng.randomize()
@@ -28,6 +47,8 @@ func set_rng(new_rng):
 func _process(delta):
 	match state:
 		State.WALK:
+			health -= delta
+			update_health_bar(health)
 			real_pos.x += delta * 5 * dir
 		State.IDLE:
 			pass
@@ -75,6 +96,5 @@ func play_sound_attack():
 		return
 	if state != State.FIGHT:
 		return
-	print("attack")
 	var sounds = $SoundAttack.get_children()
 	sounds[rng.randi() % sounds.size()].play()

@@ -45,7 +45,6 @@ func initialize_army():
 		creature.set_state(StateCreature.WALK, army_dir)
 
 func _process(delta):
-	print(state) 
 	match state:
 		StateArmy.WALK:
 			pass
