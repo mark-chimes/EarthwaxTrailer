@@ -38,6 +38,8 @@ onready var debug_label = DebugLabel.instance()
 func _ready(): 
 	init_health_bar()
 	add_child(debug_label)
+	debug_label.position.x = 0
+	debug_label.position.y = -96
 	update_debug_label()
 
 func init_health_bar(): 
@@ -54,8 +56,6 @@ func set_rng(new_rng):
 	rng.randomize()
 
 func _process(delta):
-	update_debug_label()
-	
 	match state:
 		State.WALK:
 			health -= delta
@@ -71,8 +71,7 @@ func _process(delta):
 func update_debug_label(): 
 	if not is_debug: 
 		return 
-	debug_label.position.x = 0
-	debug_label.position.y = -96
+	
 	var label_text
 	match state:
 		State.WALK: 
@@ -89,6 +88,7 @@ func set_state(new_state, new_dir):
 	if state == State.DIE:
 		return
 	state = new_state
+	update_debug_label()
 	dir = new_dir
 	match state:
 		State.WALK:
@@ -111,6 +111,7 @@ func set_state(new_state, new_dir):
 			$AnimatedSprite.frame = $AnimatedSprite.frames.get_frame_count("die")
 			$AnimatedSprite.playing = false
 	$AnimatedSprite.flip_h = (dir != sprite_dir)
+	
 
 func attack_prep_anim_finish(): 
 	if state != State.FIGHT: 
