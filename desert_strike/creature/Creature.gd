@@ -1,4 +1,5 @@
 extends "res://parallax/util/ParallaxObject.gd"
+signal attack
 
 var HealthBar = preload("res://desert_strike/HealthBar.tscn")
 var DebugLabel = preload("res://desert_strike/DebugLabel.tscn")
@@ -27,7 +28,7 @@ var mute = true
 var health = 10
 onready var health_bar = HealthBar.instance()
 var MAX_HEALTH = 10
-var show_health = false
+var show_health = true
 
 var time_between_attacks = 3
 
@@ -39,7 +40,7 @@ func _ready():
 	add_child(debug_label)
 	debug_label.position.x = 0
 	debug_label.position.y = -96
-	update_debug_label()
+	update_debug_label_with_state()
 
 func init_health_bar(): 
 	add_child(health_bar)
@@ -57,8 +58,6 @@ func set_rng(new_rng):
 func _process(delta):
 	match state:
 		State.WALK:
-			health -= delta
-			update_health_bar(health)
 			real_pos.x += delta * 5 * dir
 		State.IDLE:
 			pass
@@ -67,7 +66,10 @@ func _process(delta):
 		State.DIE:
 			pass
 
-func update_debug_label(): 
+func set_debug_label(label_text): 
+	debug_label.get_node("Label").text = label_text
+	
+func update_debug_label_with_state(): 
 	if not is_debug: 
 		return 
 	
@@ -81,13 +83,13 @@ func update_debug_label():
 			 label_text = "idle"
 		State.DIE: 	
 			label_text = "die"
-	debug_label.get_node("Label").text = label_text
+	set_debug_label(label_text)
 
 func set_state(new_state, new_dir):
 	if state == State.DIE:
 		return
 	state = new_state
-	update_debug_label()
+	update_debug_label_with_state()
 	dir = new_dir
 	match state:
 		State.WALK:
@@ -96,10 +98,6 @@ func set_state(new_state, new_dir):
 			$AnimatedSprite.connect("animation_finished", self, "attack_prep_anim_finish")
 			$AnimatedSprite.play("attack_prep")
 			prepare_attack_strike()
-			var fight_time = rng.randf_range(12,15)
-			yield(get_tree().create_timer(fight_time), "timeout")
-			if state == State.FIGHT:
-				set_state(State.DIE, dir)
 		State.IDLE:
 			$AnimatedSprite.play("idle")
 		State.DIE:
@@ -114,26 +112,35 @@ func set_state(new_state, new_dir):
 	
 func prepare_attack_strike(): 
 	yield(get_tree().create_timer(time_between_attacks), "timeout")
-	if state != State.FIGHT: 
+	if state == State.FIGHT: 
+		emit_signal("attack")
+	if state != State.FIGHT: # has to be checked again after attack signal
 		return
 	$AnimatedSprite.connect("animation_finished", self, "attack_anim_finish")
 	$AnimatedSprite.play("attack_strike")
 	play_sound_attack()
 	prepare_attack_strike()
 
+func take_damage(): 
+	health -= 3
+	if health <= 0: 
+		health = 0
+		if state == State.FIGHT:
+			set_state(State.DIE, dir)
+	update_health_bar(health)
+
 func attack_prep_anim_finish(): 
+	$AnimatedSprite.disconnect("animation_finished", self, "attack_prep_anim_finish")
 	if state != State.FIGHT: 
 		return
-	$AnimatedSprite.disconnect("animation_finished", self, "attack_prep_anim_finish")
 	$AnimatedSprite.play("attack_hold")
 
 func attack_anim_finish(): 
+	$AnimatedSprite.disconnect("animation_finished", self, "attack_anim_finish")
 	if state != State.FIGHT: 
 		return
-	$AnimatedSprite.disconnect("animation_finished", self, "attack_anim_finish")
 	$AnimatedSprite.connect("animation_finished", self, "attack_prep_anim_finish")
 	$AnimatedSprite.play("attack_prep")
-
 	
 func play_sound_death():
 	if mute: 

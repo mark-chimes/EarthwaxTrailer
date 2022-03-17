@@ -55,9 +55,11 @@ func _process(delta):
 				var creature = creatures[i]
 				if not creature.state == StateCreature.WALK:
 					continue
-				var enemy_pos = frontline_func.call_func(i+1)
-
-				if abs(creature.real_pos.x - enemy_pos) < 2: 
+				var front_enemy = frontline_func.call_func(i+1)
+				var front_enemy_pos = front_enemy.real_pos.x
+				if abs(creature.real_pos.x - front_enemy_pos) < 2: 
+					# connect signal for attack
+					creature.connect("attack", front_enemy, "take_damage")
 					creature.set_state(StateCreature.FIGHT, army_dir)
 					creature.connect("death", self, "_creature_death")
 		StateArmy.DIE:
@@ -107,5 +109,5 @@ func idle():
 
 func get_frontline_at_lane(lane_num): 
 	# TODO What happens when creatures are removed from the array?
-	return creatures[lane_num-1].real_pos.x
+	return creatures[lane_num-1]
 	
