@@ -29,8 +29,7 @@ onready var health_bar = HealthBar.instance()
 var MAX_HEALTH = 10
 var show_health = false
 
-var ready_attack_time = 3
-var hold_attack_time = 3
+var time_between_attacks = 3
 
 var is_debug = false
 onready var debug_label = DebugLabel.instance()
@@ -96,7 +95,8 @@ func set_state(new_state, new_dir):
 		State.FIGHT:
 			$AnimatedSprite.connect("animation_finished", self, "attack_prep_anim_finish")
 			$AnimatedSprite.play("attack_prep")
-			var fight_time = rng.randf_range(6,8)
+			prepare_attack_strike()
+			var fight_time = rng.randf_range(12,15)
 			yield(get_tree().create_timer(fight_time), "timeout")
 			if state == State.FIGHT:
 				set_state(State.DIE, dir)
@@ -112,18 +112,20 @@ func set_state(new_state, new_dir):
 			$AnimatedSprite.playing = false
 	$AnimatedSprite.flip_h = (dir != sprite_dir)
 	
+func prepare_attack_strike(): 
+	yield(get_tree().create_timer(time_between_attacks), "timeout")
+	if state != State.FIGHT: 
+		return
+	$AnimatedSprite.connect("animation_finished", self, "attack_anim_finish")
+	$AnimatedSprite.play("attack_strike")
+	play_sound_attack()
+	prepare_attack_strike()
 
 func attack_prep_anim_finish(): 
 	if state != State.FIGHT: 
 		return
 	$AnimatedSprite.disconnect("animation_finished", self, "attack_prep_anim_finish")
 	$AnimatedSprite.play("attack_hold")
-	yield(get_tree().create_timer(hold_attack_time), "timeout")
-	if state != State.FIGHT: 
-		return
-	$AnimatedSprite.connect("animation_finished", self, "attack_anim_finish")
-	$AnimatedSprite.play("attack_strike")
-	play_sound_attack()
 
 func attack_anim_finish(): 
 	if state != State.FIGHT: 
@@ -131,6 +133,7 @@ func attack_anim_finish():
 	$AnimatedSprite.disconnect("animation_finished", self, "attack_anim_finish")
 	$AnimatedSprite.connect("animation_finished", self, "attack_prep_anim_finish")
 	$AnimatedSprite.play("attack_prep")
+
 	
 func play_sound_death():
 	if mute: 
