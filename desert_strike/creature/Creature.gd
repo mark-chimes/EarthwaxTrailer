@@ -1,6 +1,7 @@
 extends "res://parallax/util/ParallaxObject.gd"
 
 var HealthBar = preload("res://desert_strike/HealthBar.tscn")
+var DebugLabel = preload("res://desert_strike/DebugLabel.tscn")
 
 signal death
 var rng
@@ -26,10 +27,18 @@ var mute = true
 var health = 10
 onready var health_bar = HealthBar.instance()
 var MAX_HEALTH = 10
-var show_health = true
+var show_health = false
+
+var ready_attack_time = 3
+var hold_attack_time = 3
+
+var is_debug = false
+onready var debug_label = DebugLabel.instance()
 
 func _ready(): 
 	init_health_bar()
+	add_child(debug_label)
+	update_debug_label()
 
 func init_health_bar(): 
 	add_child(health_bar)
@@ -45,6 +54,8 @@ func set_rng(new_rng):
 	rng.randomize()
 
 func _process(delta):
+	update_debug_label()
+	
 	match state:
 		State.WALK:
 			health -= delta
@@ -57,6 +68,23 @@ func _process(delta):
 		State.DIE:
 			pass
 
+func update_debug_label(): 
+	if not is_debug: 
+		return 
+	debug_label.position.x = 0
+	debug_label.position.y = -96
+	var label_text
+	match state:
+		State.WALK: 
+			label_text = "walk"
+		State.FIGHT: 
+			label_text = "fight"
+		State.IDLE:
+			 label_text = "idle"
+		State.DIE: 	
+			label_text = "die"
+	debug_label.get_node("Label").text = label_text
+
 func set_state(new_state, new_dir):
 	if state == State.DIE:
 		return
@@ -66,12 +94,12 @@ func set_state(new_state, new_dir):
 		State.WALK:
 			$AnimatedSprite.play("walk")
 		State.FIGHT:
-			$AnimatedSprite.connect("animation_finished", self, "play_sound_attack")
-			$AnimatedSprite.play("attack")
-			$AnimatedSprite.flip_h = (dir != sprite_dir)
-			var fight_time = rng.randf_range(1,3)
+			$AnimatedSprite.connect("animation_finished", self, "attack_prep_anim_finish")
+			$AnimatedSprite.play("attack_prep")
+			var fight_time = rng.randf_range(6,8)
 			yield(get_tree().create_timer(fight_time), "timeout")
-			set_state(State.DIE, dir)
+			if state == State.FIGHT:
+				set_state(State.DIE, dir)
 		State.IDLE:
 			$AnimatedSprite.play("idle")
 		State.DIE:
@@ -84,7 +112,25 @@ func set_state(new_state, new_dir):
 			$AnimatedSprite.playing = false
 	$AnimatedSprite.flip_h = (dir != sprite_dir)
 
+func attack_prep_anim_finish(): 
+	if state != State.FIGHT: 
+		return
+	$AnimatedSprite.disconnect("animation_finished", self, "attack_prep_anim_finish")
+	$AnimatedSprite.play("attack_hold")
+	yield(get_tree().create_timer(hold_attack_time), "timeout")
+	if state != State.FIGHT: 
+		return
+	$AnimatedSprite.connect("animation_finished", self, "attack_anim_finish")
+	$AnimatedSprite.play("attack_strike")
+	play_sound_attack()
 
+func attack_anim_finish(): 
+	if state != State.FIGHT: 
+		return
+	$AnimatedSprite.disconnect("animation_finished", self, "attack_anim_finish")
+	$AnimatedSprite.connect("animation_finished", self, "attack_prep_anim_finish")
+	$AnimatedSprite.play("attack_prep")
+	
 func play_sound_death():
 	if mute: 
 		return
