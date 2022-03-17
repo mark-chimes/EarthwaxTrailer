@@ -37,7 +37,7 @@ func make_reeds():
 
 func generate_lawn(): 
 	var grass_muds = []
-	parallax_engine.create_objects_in_rectangle(GrassMud, 10, 240, -100, 2, 30, 1, true, grass_muds)
+	parallax_engine.create_objects_in_rectangle_back(GrassMud, 10, 240, -100, 2, 30, 1, true, grass_muds)
 	for grassmud in grass_muds: 
 		parallax_engine.z_scale(grassmud)
 	var plants_x_width = 200

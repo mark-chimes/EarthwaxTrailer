@@ -45,6 +45,14 @@ func create_objects_in_rectangle(object_type, num_x, num_z, x_offset, z_offset,
 		object.position.y = z_to_y_converter(object.real_pos.z)
 		object.z_index = -object.real_pos.z * 10
 
+func create_objects_in_rectangle_back(object_type, num_x, num_z, x_offset, z_offset,
+		x_distance, z_distance, should_randomize, custom_array): 
+	object_generator.create_objects_in_rectangle(object_type, num_x, num_z, x_offset, z_offset,
+			x_distance, z_distance, should_randomize, custom_array)
+	for object in custom_array:
+		object.position.y = z_to_y_converter(object.real_pos.z)
+		object.z_index = -object.real_pos.z * 10 - 100
+
 func _process(delta):
 	hero_world_movement(delta)
 	position_stuff_on_screen(delta)
