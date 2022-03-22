@@ -7,6 +7,8 @@ var DebugLabel = preload("res://desert_strike/DebugLabel.tscn")
 signal death
 var rng
 
+var band_lane = Vector2(0,0)
+
 enum Dir {
 	LEFT = -1,
 	RIGHT = 1,
@@ -41,6 +43,9 @@ func _ready():
 	debug_label.position.x = 0
 	debug_label.position.y = -96
 	#update_debug_label_with_state()
+	
+func set_band_lane(band, lane): 
+	band_lane = Vector2(band, lane)
 
 func init_health_bar(): 
 	add_child(health_bar)
