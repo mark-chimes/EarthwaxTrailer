@@ -80,7 +80,7 @@ func _process(delta):
 		StateArmy.FIGHT:
 			for lane_index in range(len(creature_lanes)): 
 				var lane = creature_lanes[lane_index]
-				var lane_offset = FIGHT_SEP + lane_index*1.0/5
+				var lane_offset = FIGHT_SEP + lane_index*1.0/10
 				var front_enemy = frontline_func.call_func(lane_index)
 				
 				for band_index in range(len(lane)):
