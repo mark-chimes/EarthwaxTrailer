@@ -28,11 +28,11 @@ var mute = true
 var health = 10
 onready var health_bar = HealthBar.instance()
 var MAX_HEALTH = 10
-var show_health = true
+var show_health = false
 
 var time_between_attacks = 3
 
-var is_debug = false
+var is_debug = true
 onready var debug_label = DebugLabel.instance()
 
 func _ready(): 
@@ -40,7 +40,7 @@ func _ready():
 	add_child(debug_label)
 	debug_label.position.x = 0
 	debug_label.position.y = -96
-	update_debug_label_with_state()
+	#update_debug_label_with_state()
 
 func init_health_bar(): 
 	add_child(health_bar)
@@ -83,13 +83,13 @@ func update_debug_label_with_state():
 			 label_text = "idle"
 		State.DIE: 	
 			label_text = "die"
-	set_debug_label(label_text)
+	#set_debug_label(label_text)
 
 func set_state(new_state, new_dir):
 	if state == State.DIE:
 		return
 	state = new_state
-	update_debug_label_with_state()
+	#update_debug_label_with_state()
 	dir = new_dir
 	match state:
 		State.WALK:
