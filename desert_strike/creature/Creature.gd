@@ -7,7 +7,7 @@ var DebugLabel = preload("res://desert_strike/DebugLabel.tscn")
 signal death
 var rng
 
-var band_lane = Vector2(0,0)
+var band_lane = Vector2(0,0) # TODO Change to two variables
 
 enum Dir {
 	LEFT = -1,

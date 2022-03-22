@@ -264,7 +264,7 @@ script = ExtResource( 5 )
 scale = Vector2( 2, 2 )
 frames = SubResource( 32 )
 animation = "die"
-frame = 5
+frame = 8
 playing = true
 offset = Vector2( 0, -26 )
 
