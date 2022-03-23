@@ -82,7 +82,8 @@ func _process(delta):
 		StateArmy.WALK:
 			pass
 		StateArmy.IDLE:
-			pass
+			for creature in army_grid.get_all_creatures(): 
+				creature.set_state(StateCreature.IDLE, army_dir)
 		StateArmy.FIGHT:
 			for lane_index in range(NUM_LANES): 
 				# var lane = army_grid.get_lane(lane_index)
@@ -99,10 +100,15 @@ func _process(delta):
 				for band_index in range(army_grid.get_lane_length(lane_index)):
 					var creature = army_grid.get_creature_band_lane(band_index, lane_index)
 					
-					if creature.state in [StateCreature.FIGHT, StateCreature.DIE]:
+					if creature.state in [ StateCreature.FIGHT, StateCreature.DIE]:
 						continue
 
 					if band_index == 0: 
+#						if creature.state == StateCreature.FIGHT:
+#							if not enemy_army_grid.has_frontline_at_lane(lane_index): 
+#								creature.set_state(StateCreature.IDLE, army_dir)
+#								continue
+							
 						if abs(creature.real_pos.x - (battlefronts[lane_index] - (army_dir * lane_offset))) < END_POS_DELTA:
 							creature.set_state(StateCreature.AWAIT_FIGHT, army_dir)
 							
@@ -131,10 +137,13 @@ func _on_creature_attack(attacker):
 	
 func _on_get_attacked(lane_index, damage): 
 	# TODO should not even be getting attacked if there is no frontline
-	if not enemy_army_grid.has_frontline_at_lane(lane_index): 
+#	if not enemy_army_grid.has_frontline_at_lane(lane_index): 
+#		printerr("Null frontline creature being attacked in lane " + str(lane_index))
+#		return	
+	#var frontline_creature = enemy_army_grid.get_frontline_at_lane(lane_index)
+	if not army_grid.has_frontline_at_lane(lane_index): 
 		printerr("Null frontline creature being attacked in lane " + str(lane_index))
 		return	
-	var frontline_creature = enemy_army_grid.get_frontline_at_lane(lane_index)
 	army_grid.get_frontline_at_lane(lane_index).take_damage(damage)
 		
 func get_pos():
