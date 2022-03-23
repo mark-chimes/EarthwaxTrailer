@@ -6,6 +6,7 @@ var DebugLabel = preload("res://desert_strike/DebugLabel.tscn")
 
 signal death
 var rng
+var damage
 
 var band
 var lane
@@ -128,9 +129,8 @@ func prepare_attack_strike():
 	play_sound_attack()
 	prepare_attack_strike()
 
-func take_damage(): 
-	# TODO variable amounts of damage
-	health -= 3
+func take_damage(the_damage): 
+	health -= the_damage
 	if health <= 0: 
 		health = 0
 		if state == State.FIGHT:

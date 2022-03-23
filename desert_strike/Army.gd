@@ -1,7 +1,7 @@
 extends Node2D
 
 signal defeat
-signal attack(lane)
+signal attack(lane, damage)
 
 var ArmyGrid = preload("res://desert_strike/ArmyGrid.gd")
 
@@ -97,10 +97,10 @@ func _on_creature_attack(attacker):
 	# TODO need a way to know how to pick a good target, etc.	
 	
 	# The other army will know to attack the frontline of its lane
-	emit_signal("attack", attacker.lane)
+	emit_signal("attack", attacker.lane, attacker.damage)
 	
-func _on_get_attacked(lane): 
-	get_frontline_at_lane(lane).take_damage()
+func _on_get_attacked(lane, damage): 
+	get_frontline_at_lane(lane).take_damage(damage)
 		
 func get_pos():
 	# TODO Optimize this
