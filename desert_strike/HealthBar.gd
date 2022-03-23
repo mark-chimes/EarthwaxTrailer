@@ -14,6 +14,6 @@ func update_health(new_health):
 	health = new_health
 	$ProgressBar.value = health
 	
-func set_color(color_scheme):
+func set_color(color_scheme: Color):
 	var style_box = $ProgressBar.get("custom_styles/fg")
-	style_box.bg_color = Color8(122, 0, 180, 75) #color_scheme # Color8(r, g, b, a)
+	style_box.bg_color = color_scheme # Color8(r, g, b, a)
