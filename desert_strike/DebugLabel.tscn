@@ -1,0 +1,12 @@
+[gd_scene format=2]
+
+[node name="DebugLabel" type="Node2D"]
+
+[node name="Label" type="Label" parent="."]
+margin_left = -21.0
+margin_right = 19.0
+margin_bottom = 14.0
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}

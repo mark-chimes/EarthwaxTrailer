@@ -86,8 +86,8 @@ func _ready():
 	dir = Dir.NONE
 	object_generator.init_values(self, parallax_objects)
 
-#	object_generator.create_objects_in_rectangle(DistantForestTile, num_trees, 1, 
-#			-300, 150, 34, 1, false, [])
+	object_generator.create_objects_in_rectangle(DistantForestTile, num_trees, 1, 
+			-300, 150, 34, 1, false, [])
 
 	create_animals()
 	
@@ -393,4 +393,4 @@ func add_random_plant_to_lawn_at(x, z):
 		plant.get_node("AnimatedSprite").frame = plant.plant_num
 		plant.get_node("AnimatedSprite").get_node("AnimatedSprite").frame = plant.plant_num
 	
-	plants.push_front(plant)
+	parallax_objects.push_front(plant)

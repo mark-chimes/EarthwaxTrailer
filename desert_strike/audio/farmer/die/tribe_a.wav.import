@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/tribe_a.wav-77297c4b7a83aee9edecd9dfc3a2bcf1.sample"
+
+[deps]
+
+source_file="res://desert_strike/audio/farmer/die/tribe_a.wav"
+dest_files=[ "res://.import/tribe_a.wav-77297c4b7a83aee9edecd9dfc3a2bcf1.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
