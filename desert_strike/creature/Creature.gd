@@ -91,13 +91,16 @@ func update_debug_label_with_state():
 			 label_text = "idle"
 		State.DIE: 	
 			label_text = "die"
-	#set_debug_label(label_text)
+	set_debug_label(label_text)
 
 func set_state(new_state, new_dir):
-	if state == State.DIE:
+	# This part is temporary. Should be removed when dead creatures no longer get
+	# state information from the army
+	if state == State.DIE and (new_state in [State.WALK, State.FIGHT, State.IDLE]):
 		return
 	state = new_state
-	#update_debug_label_with_state()
+	
+	update_debug_label_with_state()
 	dir = new_dir
 	match state:
 		State.WALK:
