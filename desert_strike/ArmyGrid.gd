@@ -62,6 +62,19 @@ func add_creature(creature):
 	creature_lanes[adding_lane_index].append(creature)
 	adding_lane_index += 1
 
+func add_creature_to_shortest_lane(creature): 
+	var shortest_lane_index = 0
+	var shortest_length = len(creature_lanes[0])
+	
+	for lane_index in range(len(creature_lanes)): 
+		var lane = creature_lanes[lane_index]
+		if len(lane) < shortest_length:
+			shortest_lane_index = lane_index
+			
+	var lane = creature_lanes[shortest_lane_index]
+	creature.set_band_lane(len(lane), shortest_lane_index)
+	lane.append(creature)
+	
 func has_creatures(): 
 	for lane in creature_lanes: 
 		if len(lane) > 0:

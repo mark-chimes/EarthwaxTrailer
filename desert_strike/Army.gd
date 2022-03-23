@@ -53,10 +53,27 @@ var army_dir = Dir.RIGHT
 func initialize_army(): 
 	rng.set_seed(hash("42069"))
 	army_grid.initialize(NUM_LANES)
-	for i in range(0, NUM_LANES + 4):
-		add_creature()
 	state = StateArmy.WALK
+	for i in range(0, NUM_LANES):
+		add_creature()
 	for creature in army_grid.get_all_creatures():
+		creature.set_state(StateCreature.WALK, army_dir)
+
+func add_new_creatures(num_creatures): 
+	var new_creatures = [] 
+	for i in range(0, num_creatures):
+		var creature = Creature.instance()
+		army_grid.add_creature_to_shortest_lane(creature)
+		var z_pos = (creature.lane * DISTANCE_BETWEEN_LANES) + 3 
+		creature.real_pos.z = z_pos
+		add_child(creature)
+		creature.dir = army_dir
+		creature.real_pos.x = (-army_dir * ARMY_HALF_SEP) \
+				+ (-army_dir * creature.band * STARTING_BAND_SEP) + rng.randf_range(-2, 2)
+		parallax_engine.add_object_to_parallax_world(creature)	
+		new_creatures.append(creature)
+		
+	for creature in new_creatures:
 		creature.set_state(StateCreature.WALK, army_dir)
 
 func _process(delta):
@@ -81,7 +98,7 @@ func _process(delta):
 				for band_index in range(army_grid.get_lane_length(lane_index)):
 					var creature = army_grid.get_creature_band_lane(band_index, lane_index)
 					
-					if not creature.state == StateCreature.WALK:
+					if not creature.state in [StateCreature.WALK, StateCreature.IDLE]:
 						continue
 
 					if band_index == 0: 
@@ -140,7 +157,6 @@ func add_creature():
 	creature.real_pos.x = (-army_dir * ARMY_HALF_SEP) \
 			+ (-army_dir * creature.band * STARTING_BAND_SEP) + rng.randf_range(-2, 2)
 	parallax_engine.add_object_to_parallax_world(creature)
-	
 
 func fight(new_battlefronts, new_enemy_army_grid):
 	battlefronts = new_battlefronts

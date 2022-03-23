@@ -11,6 +11,9 @@ const BATTLE_SEP = 10
 const NUM_LANES = 4
 onready var rng = RandomNumberGenerator.new()
 
+const TIME_BETWEEN_WAVES = 10
+var wave_timer = 0 
+
 func _ready():
 	$ArmyHuman.connect("defeat", self, "_human_defeat")
 	rng.randomize()
@@ -19,9 +22,20 @@ func _process(delta):
 	if not $ArmyHuman.has_creatures() or not $ArmyGlut.has_creatures(): 
 		return
 	
+	# TODO Waves for already-defeated armies.
+	if wave_timer >= TIME_BETWEEN_WAVES: 
+		# new wave
+		$ArmyHuman.add_new_creatures(5)
+		$ArmyGlut.add_new_creatures(3)
+		wave_timer = 0
+	else: 
+		wave_timer += delta
+	
 	if $ArmyHuman.get_state() == State.FIGHT or $ArmyHuman.get_state() == State.DIE\
 			or $ArmyGlut.get_state() == State.FIGHT or $ArmyGlut.get_state() == State.DIE:
 		return
+	
+	
 	
 	if abs($ArmyHuman.get_pos() - $ArmyGlut.get_pos()) < BATTLE_SEP:
 		var battlefront_base = ($ArmyHuman.get_pos() + $ArmyGlut.get_pos())/2
