@@ -18,6 +18,7 @@ enum Dir {
 
 enum State {
 	WALK,
+	AWAIT_FIGHT,
 	FIGHT,
 	IDLE,
 	DIE,
@@ -33,6 +34,7 @@ var health = 10
 onready var health_bar = HealthBar.instance()
 var MAX_HEALTH = 10
 var show_health = true
+const WALK_SPEED = 5
 
 var time_between_attacks = 3
 
@@ -66,7 +68,9 @@ func update_health_bar(new_health):
 func _process(delta):
 	match state:
 		State.WALK:
-			real_pos.x += delta * 5 * dir
+			real_pos.x += delta * WALK_SPEED * dir
+		State.AWAIT_FIGHT: 
+			pass
 		State.IDLE:
 			pass
 		State.FIGHT:
@@ -85,6 +89,8 @@ func update_debug_label_with_state():
 	match state:
 		State.WALK: 
 			label_text = "walk"
+		State.AWAIT_FIGHT: 
+			label_text = "await"
 		State.FIGHT: 
 			label_text = "fight"
 		State.IDLE:
@@ -96,7 +102,7 @@ func update_debug_label_with_state():
 func set_state(new_state, new_dir):
 	# This part is temporary. Should be removed when dead creatures no longer get
 	# state information from the army
-	if state == State.DIE and (new_state in [State.WALK, State.FIGHT, State.IDLE]):
+	if state == State.DIE and (new_state in [State.WALK, State.AWAIT_FIGHT, State.FIGHT, State.IDLE]):
 		return
 	state = new_state
 	
@@ -105,6 +111,8 @@ func set_state(new_state, new_dir):
 	match state:
 		State.WALK:
 			$AnimatedSprite.play("walk")
+		State.AWAIT_FIGHT:
+			$AnimatedSprite.play("idle")
 		State.FIGHT:
 			$AnimatedSprite.connect("animation_finished", self, "attack_prep_anim_finish")
 			$AnimatedSprite.play("attack_prep")

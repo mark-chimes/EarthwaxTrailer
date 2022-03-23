@@ -24,6 +24,7 @@ enum Dir {
 
 enum StateCreature {
 	WALK,
+	AWAIT_FIGHT,
 	FIGHT,
 	IDLE,
 	DIE,
@@ -98,15 +99,19 @@ func _process(delta):
 				for band_index in range(army_grid.get_lane_length(lane_index)):
 					var creature = army_grid.get_creature_band_lane(band_index, lane_index)
 					
-					if not creature.state in [StateCreature.WALK, StateCreature.IDLE]:
+					if creature.state in [StateCreature.FIGHT, StateCreature.DIE]:
 						continue
 
 					if band_index == 0: 
-						# TODO - absolute grid army positions
-						if abs(creature.real_pos.x - (battlefronts[lane_index] - (army_dir * lane_offset))) < END_POS_DELTA: 
-							creature.connect("attack", self, "_on_creature_attack")
-							creature.set_state(StateCreature.FIGHT, army_dir)
-							creature.connect("death", self, "_creature_death")
+						if abs(creature.real_pos.x - (battlefronts[lane_index] - (army_dir * lane_offset))) < END_POS_DELTA:
+							creature.set_state(StateCreature.AWAIT_FIGHT, army_dir)
+							
+						if creature.state == StateCreature.AWAIT_FIGHT: 
+							if front_enemy.state in [StateCreature.AWAIT_FIGHT, StateCreature.FIGHT]:
+								creature.connect("attack", self, "_on_creature_attack")
+								creature.set_state(StateCreature.FIGHT, army_dir)
+								creature.connect("death", self, "_creature_death")
+							# TODO - absolute grid army positions
 					else: # Not a frontline unit 
 						var goal_x = battlefronts[lane_index] - (army_dir * (lane_offset + band_index * BAND_SEP))
 						
