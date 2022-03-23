@@ -1,6 +1,7 @@
 extends Node2D
 
 signal defeat
+signal attack(lane)
 
 var ArmyGrid = preload("res://desert_strike/ArmyGrid.gd")
 
@@ -13,6 +14,7 @@ var battlefronts = []
 
 onready var army_grid = ArmyGrid.new()
 
+# TODO Special parallax converter subobject for grid army positions to real positions. 
 
 enum Dir {
 	LEFT = -1,
@@ -75,12 +77,9 @@ func _process(delta):
 						continue
 						
 					if band_index == 0: 
-
-						# var front_enemy_pos = front_enemy.real_pos.x
 						# TODO - absolute grid army positions
 						if abs(creature.real_pos.x - (battlefronts[lane_index] - (army_dir * lane_offset))) < END_POS_DELTA: 
-							# connect signal for attack
-							creature.connect("attack", front_enemy, "take_damage")
+							creature.connect("attack", self, "_on_creature_attack")
 							creature.set_state(StateCreature.FIGHT, army_dir)
 							creature.connect("death", self, "_creature_death")
 					else: # Not a frontline unit 
@@ -92,6 +91,17 @@ func _process(delta):
 		StateArmy.DIE:
 			pass
 
+func _on_creature_attack(attacker): 
+	# TODO different behaviour for melee vs ranged vs reach etc.
+	# TODO When you have melee, reach, range need a way for attackers to know if there is a target
+	# TODO need a way to know how to pick a good target, etc.	
+	
+	# The other army will know to attack the frontline of its lane
+	emit_signal("attack", attacker.lane)
+	
+func _on_get_attacked(lane): 
+	get_frontline_at_lane(lane).take_damage()
+		
 func get_pos():
 	# TODO Optimize this
 	# TODO only needs the frontline
@@ -111,12 +121,12 @@ func add_creature():
 	var creature = Creature.instance()
 	creature.set_rng(rng)
 	army_grid.add_creature(creature)
-	var z_pos = (creature.band_lane.y * DISTANCE_BETWEEN_LANES) + 3 
+	var z_pos = (creature.lane * DISTANCE_BETWEEN_LANES) + 3 
 	creature.real_pos.z = z_pos
 	add_child(creature)
 	creature.dir = army_dir
 	creature.real_pos.x = (-army_dir * ARMY_HALF_SEP) \
-			+ (-army_dir * creature.band_lane.x * STARTING_BAND_SEP) + rng.randf_range(-2, 2)
+			+ (-army_dir * creature.band * STARTING_BAND_SEP) + rng.randf_range(-2, 2)
 	parallax_engine.add_object_to_parallax_world(creature)
 	
 

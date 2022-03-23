@@ -25,6 +25,8 @@ func _process(delta):
 			battlefronts.append(battlefront_base + offset)
 		$ArmyHuman.fight(battlefronts, funcref($ArmyGlut, 'get_frontline_at_lane'))
 		$ArmyGlut.fight(battlefronts, funcref($ArmyHuman, 'get_frontline_at_lane'))
+		$ArmyHuman.connect("attack", $ArmyGlut, "_on_get_attacked")
+		$ArmyGlut.connect("attack", $ArmyHuman, "_on_get_attacked")
 
 func _human_defeat():
 	$ArmyGlut.idle()

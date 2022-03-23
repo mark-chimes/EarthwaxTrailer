@@ -1,5 +1,5 @@
 extends "res://parallax/util/ParallaxObject.gd"
-signal attack
+signal attack(this)
 
 var HealthBar = preload("res://desert_strike/HealthBar.tscn")
 var DebugLabel = preload("res://desert_strike/DebugLabel.tscn")
@@ -7,7 +7,8 @@ var DebugLabel = preload("res://desert_strike/DebugLabel.tscn")
 signal death
 var rng
 
-var band_lane = Vector2(0,0) # TODO Change to two variables
+var band
+var lane
 
 enum Dir {
 	LEFT = -1,
@@ -30,7 +31,7 @@ var mute = true
 var health = 10
 onready var health_bar = HealthBar.instance()
 var MAX_HEALTH = 10
-var show_health = false
+var show_health = true
 
 var time_between_attacks = 3
 
@@ -44,8 +45,9 @@ func _ready():
 	debug_label.position.y = -96
 	#update_debug_label_with_state()
 	
-func set_band_lane(band, lane): 
-	band_lane = Vector2(band, lane)
+func set_band_lane(new_band, new_lane): 
+	band = new_band
+	lane = new_lane
 
 func init_health_bar(): 
 	add_child(health_bar)
@@ -118,7 +120,7 @@ func set_state(new_state, new_dir):
 func prepare_attack_strike(): 
 	yield(get_tree().create_timer(time_between_attacks), "timeout")
 	if state == State.FIGHT: 
-		emit_signal("attack")
+		emit_signal("attack", self)
 	if state != State.FIGHT: # has to be checked again after attack signal
 		return
 	$AnimatedSprite.connect("animation_finished", self, "attack_anim_finish")
@@ -127,6 +129,7 @@ func prepare_attack_strike():
 	prepare_attack_strike()
 
 func take_damage(): 
+	# TODO variable amounts of damage
 	health -= 3
 	if health <= 0: 
 		health = 0
