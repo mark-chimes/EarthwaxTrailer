@@ -16,15 +16,22 @@ func _ready():
 	rng.randomize()
 
 func _process(delta):
-	if abs($ArmyHuman.get_pos() - $ArmyGlut.get_pos()) < BATTLE_SEP && $ArmyHuman.get_state() != State.FIGHT && $ArmyHuman.get_state() != State.DIE:
+	if not $ArmyHuman.has_creatures() or not $ArmyGlut.has_creatures(): 
+		return
+	
+	if $ArmyHuman.get_state() == State.FIGHT or $ArmyHuman.get_state() == State.DIE\
+			or $ArmyGlut.get_state() == State.FIGHT or $ArmyGlut.get_state() == State.DIE:
+		return
+	
+	if abs($ArmyHuman.get_pos() - $ArmyGlut.get_pos()) < BATTLE_SEP:
 		var battlefront_base = ($ArmyHuman.get_pos() + $ArmyGlut.get_pos())/2
 		var battlefronts = []
 		# TODO RANDOM
 		for i in range(0,NUM_LANES): 
 			var offset = rng.randf_range(-0.2, 0.2)
 			battlefronts.append(battlefront_base + offset)
-		$ArmyHuman.fight(battlefronts, funcref($ArmyGlut, 'get_frontline_at_lane'))
-		$ArmyGlut.fight(battlefronts, funcref($ArmyHuman, 'get_frontline_at_lane'))
+		$ArmyHuman.fight(battlefronts, $ArmyGlut.army_grid)
+		$ArmyGlut.fight(battlefronts, $ArmyHuman.army_grid)
 		$ArmyHuman.connect("attack", $ArmyGlut, "_on_get_attacked")
 		$ArmyGlut.connect("attack", $ArmyHuman, "_on_get_attacked")
 

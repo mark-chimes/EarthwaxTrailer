@@ -9,10 +9,11 @@ var ArmyGrid = preload("res://desert_strike/ArmyGrid.gd")
 var Creature
 onready var parallax_engine = get_parent().get_parent().get_node("ParallaxEngine")
 onready var rng = RandomNumberGenerator.new()
-var frontline_func = null
+
 var battlefronts = []
 
 onready var army_grid = ArmyGrid.new()
+var enemy_army_grid
 
 # TODO Special parallax converter subobject for grid army positions to real positions. 
 
@@ -52,7 +53,7 @@ var army_dir = Dir.RIGHT
 func initialize_army(): 
 	rng.set_seed(hash("42069"))
 	army_grid.initialize(NUM_LANES)
-	for i in range(0, NUM_LANES + 12):
+	for i in range(0, NUM_LANES + 4):
 		add_creature()
 	state = StateArmy.WALK
 	for creature in army_grid.get_all_creatures():
@@ -68,14 +69,21 @@ func _process(delta):
 			for lane_index in range(NUM_LANES): 
 				# var lane = army_grid.get_lane(lane_index)
 				var lane_offset = FIGHT_SEP + lane_index*1.0/10
-				var front_enemy = frontline_func.call_func(lane_index)
 				
+				if not enemy_army_grid.has_frontline_at_lane(lane_index): 
+					# No frontline enemy so this whole lane idles
+					for creature in army_grid.get_lane(lane_index):
+						creature.set_state(StateCreature.IDLE, army_dir)
+					continue # go to next lane
+					
+				var front_enemy = enemy_army_grid.get_frontline_at_lane(lane_index)
+
 				for band_index in range(army_grid.get_lane_length(lane_index)):
 					var creature = army_grid.get_creature_band_lane(band_index, lane_index)
 					
 					if not creature.state == StateCreature.WALK:
 						continue
-						
+
 					if band_index == 0: 
 						# TODO - absolute grid army positions
 						if abs(creature.real_pos.x - (battlefronts[lane_index] - (army_dir * lane_offset))) < END_POS_DELTA: 
@@ -99,13 +107,18 @@ func _on_creature_attack(attacker):
 	# The other army will know to attack the frontline of its lane
 	emit_signal("attack", attacker.lane, attacker.damage)
 	
-func _on_get_attacked(lane, damage): 
-	get_frontline_at_lane(lane).take_damage(damage)
+func _on_get_attacked(lane_index, damage): 
+	# TODO should not even be getting attacked if there is no frontline
+	if not enemy_army_grid.has_frontline_at_lane(lane_index): 
+		printerr("Null frontline creature being attacked in lane " + str(lane_index))
+		return	
+	var frontline_creature = enemy_army_grid.get_frontline_at_lane(lane_index)
+	army_grid.get_frontline_at_lane(lane_index).take_damage(damage)
 		
 func get_pos():
 	# TODO Optimize this
 	# TODO only needs the frontline
-	var creatures = army_grid.get_all_creatures()
+	var creatures = army_grid.get_front_creatures()
 	var front_pos = creatures[0].real_pos.x
 	if army_dir == Dir.RIGHT:
 		for creature in creatures: 
@@ -119,7 +132,6 @@ func get_pos():
 
 func add_creature():
 	var creature = Creature.instance()
-	creature.set_rng(rng)
 	army_grid.add_creature(creature)
 	var z_pos = (creature.lane * DISTANCE_BETWEEN_LANES) + 3 
 	creature.real_pos.z = z_pos
@@ -130,28 +142,39 @@ func add_creature():
 	parallax_engine.add_object_to_parallax_world(creature)
 	
 
-func fight(new_battlefronts, new_frontline_func):
+func fight(new_battlefronts, new_enemy_army_grid):
 	battlefronts = new_battlefronts
-	frontline_func = new_frontline_func
+	enemy_army_grid = new_enemy_army_grid
 	state = StateArmy.FIGHT
 
 func get_state():
 	return state
 	
-func _creature_death(): 
-	dead_creatures += 1
-	if dead_creatures >= defeat_threshold: 
-		emit_signal("defeat")
-		# TODO remove creatures from array
-		# TODO Rout
+func _creature_death(dead_creature):
+	dead_creature.disconnect("attack", self, "_on_creature_attack")
+	dead_creature.disconnect("death", self, "_creature_death")
 
+	# TODO this is just frontline, should also care about band
+	var lane_index =  dead_creature.lane
+	var lane = army_grid.get_lane(lane_index)
+	lane.pop_front()
+	for creature in lane: 
+		creature.set_state(StateCreature.WALK, army_dir)
+	
+	# TODO defeat and routing mechanics: 
+	if not has_creatures(): 
+		emit_signal("defeat")
+		
 func idle():
 	state = StateArmy.IDLE
 	for creature in army_grid.get_all_creatures():
 		creature.set_state(state, army_dir)
 
-func get_frontline_at_lane(lane_num): 
-	# TODO What happens when creatures are removed from the array?
-	# TODO optimize this
-	return army_grid.get_creature_band_lane(0, lane_num)
+func has_creatures(): 
+	return army_grid.has_creatures()
 	
+#func get_frontline_at_lane(lane_num): 
+#	# TODO What happens when creatures are removed from the array?
+#	# TODO optimize this
+#	return army_grid.get_creature_band_lane(0, lane_num)
+#

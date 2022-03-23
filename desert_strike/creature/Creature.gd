@@ -1,11 +1,11 @@
 extends "res://parallax/util/ParallaxObject.gd"
 signal attack(this)
+signal death(this)
 
 var HealthBar = preload("res://desert_strike/HealthBar.tscn")
 var DebugLabel = preload("res://desert_strike/DebugLabel.tscn")
 
-signal death
-var rng
+onready var rng = RandomNumberGenerator.new()
 var damage
 
 var band
@@ -40,12 +40,13 @@ var is_debug = true
 onready var debug_label = DebugLabel.instance()
 
 func _ready(): 
+	rng.randomize()
 	init_health_bar()
 	add_child(debug_label)
 	debug_label.position.x = 0
 	debug_label.position.y = -96
 	#update_debug_label_with_state()
-	
+
 func set_band_lane(new_band, new_lane): 
 	band = new_band
 	lane = new_lane
@@ -55,13 +56,12 @@ func init_health_bar():
 	health_bar.init_health_bar(MAX_HEALTH)
 	if not show_health: 
 		health_bar.visible = false
-
+func hide_health(): 
+	show_health = false
+	health_bar.visible = false
+	
 func update_health_bar(new_health): 
 	health_bar.update_health(new_health)
-
-func set_rng(new_rng): 
-	rng = new_rng
-	rng.randomize()
 
 func _process(delta):
 	match state:
@@ -90,7 +90,7 @@ func update_debug_label_with_state():
 		State.IDLE:
 			 label_text = "idle"
 		State.DIE: 	
-			label_text = "die"
+			label_text = "" # Don't show labels for the dead
 	set_debug_label(label_text)
 
 func set_state(new_state, new_dir):
@@ -114,11 +114,12 @@ func set_state(new_state, new_dir):
 		State.DIE:
 			$AnimatedSprite.play("die")
 			$AnimatedSprite.flip_h = (dir != sprite_dir)
-			emit_signal("death")
+			emit_signal("death", self)
 			play_sound_death()
 			yield($AnimatedSprite, "animation_finished")
 			$AnimatedSprite.frame = $AnimatedSprite.frames.get_frame_count("die")
 			$AnimatedSprite.playing = false
+			hide_health()
 	$AnimatedSprite.flip_h = (dir != sprite_dir)
 	
 func prepare_attack_strike(): 
