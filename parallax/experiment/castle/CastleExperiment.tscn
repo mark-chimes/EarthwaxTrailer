@@ -28,7 +28,7 @@ scale = Vector2( 1, -1 )
 z_index = -1800
 
 [node name="FPSCounter" type="Node2D" parent="."]
-position = Vector2( 120, 64 )
+position = Vector2( 600, 300 )
 script = ExtResource( 2 )
 
 [node name="Label" type="Label" parent="FPSCounter"]

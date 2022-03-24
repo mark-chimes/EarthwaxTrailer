@@ -9,7 +9,7 @@ var adding_band_index = 0
 
 func initialize(init_num_lanes): 
 	num_lanes = init_num_lanes
-	for i in range(0, num_lanes): 
+	for _i in range(0, num_lanes): 
 		creature_lanes.append([])
 		
 func get_lane(lane_index): 

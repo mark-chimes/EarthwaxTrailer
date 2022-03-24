@@ -1,8 +1,8 @@
 extends Node2D
 
-enum State {
-	WALK,
-	FIGHT,
+enum StateArmy {
+	MARCH,
+	BATTLE,
 	IDLE,
 	DIE,
 }
@@ -11,7 +11,7 @@ const BATTLE_SEP = 10
 const NUM_LANES = 4
 onready var rng = RandomNumberGenerator.new()
 
-const TIME_BETWEEN_WAVES = 10
+const TIME_BETWEEN_WAVES = 500
 var wave_timer = 0 
 
 func _ready():
@@ -31,8 +31,8 @@ func _process(delta):
 	else: 
 		wave_timer += delta
 	
-	if $ArmyHuman.get_state() == State.FIGHT or $ArmyHuman.get_state() == State.DIE\
-			or $ArmyGlut.get_state() == State.FIGHT or $ArmyGlut.get_state() == State.DIE:
+	if $ArmyHuman.get_state() == StateArmy.BATTLE or $ArmyHuman.get_state() == StateArmy.DIE\
+			or $ArmyGlut.get_state() == StateArmy.BATTLE or $ArmyGlut.get_state() == StateArmy.DIE:
 		return
 	
 	
@@ -44,8 +44,12 @@ func _process(delta):
 		for i in range(0,NUM_LANES): 
 			var offset = rng.randf_range(-0.2, 0.2)
 			battlefronts.append(battlefront_base + offset)
-		$ArmyHuman.fight(battlefronts, $ArmyGlut.army_grid)
-		$ArmyGlut.fight(battlefronts, $ArmyHuman.army_grid)
+		$ArmyHuman.battle(battlefronts, $ArmyGlut.army_grid)
+		$ArmyGlut.battle(battlefronts, $ArmyHuman.army_grid)
+		$ArmyHuman.connect("front_line_ready", $ArmyGlut, "_on_front_line_ready")
+		$ArmyGlut.connect("front_line_ready", $ArmyHuman, "_on_front_line_ready")
+		$ArmyHuman.connect("creature_death", $ArmyGlut, "_on_enemy_creature_death")
+		$ArmyGlut.connect("creature_death", $ArmyHuman, "_on_enemy_creature_death")
 		$ArmyHuman.connect("attack", $ArmyGlut, "_on_get_attacked")
 		$ArmyGlut.connect("attack", $ArmyHuman, "_on_get_attacked")
 

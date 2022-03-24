@@ -1,6 +1,7 @@
 extends "res://parallax/util/ParallaxObject.gd"
 signal attack(this)
 signal death(this)
+signal creature_positioned(this)
 
 var HealthBar = preload("res://desert_strike/HealthBar.tscn")
 var DebugLabel = preload("res://desert_strike/DebugLabel.tscn")
@@ -17,6 +18,7 @@ enum Dir {
 }
 
 enum State {
+	MARCH,
 	WALK,
 	AWAIT_FIGHT,
 	FIGHT,
@@ -33,12 +35,14 @@ var mute = true
 var health = 10
 onready var health_bar = HealthBar.instance()
 var MAX_HEALTH = 10
-var show_health = true
+var show_health = false
 const WALK_SPEED = 5
+const END_POS_DELTA = 0.1
 
 var time_between_attacks = 3
+var walk_target_x
 
-var is_debug = true
+var is_debug = false
 onready var debug_label = DebugLabel.instance()
 
 func _ready(): 
@@ -67,7 +71,12 @@ func update_health_bar(new_health):
 
 func _process(delta):
 	match state:
+		State.MARCH:
+			real_pos.x += delta * WALK_SPEED * dir
 		State.WALK:
+			if dir * (walk_target_x - real_pos.x ) < END_POS_DELTA:
+				emit_signal("creature_positioned", self)
+				return
 			real_pos.x += delta * WALK_SPEED * dir
 		State.AWAIT_FIGHT: 
 			pass
@@ -87,6 +96,8 @@ func update_debug_label_with_state():
 	
 	var label_text
 	match state:
+		State.MARCH:
+			label_text = "march"
 		State.WALK: 
 			label_text = "walk"
 		State.AWAIT_FIGHT: 
@@ -109,6 +120,8 @@ func set_state(new_state, new_dir):
 	update_debug_label_with_state()
 	dir = new_dir
 	match state:
+		State.MARCH:
+			$AnimatedSprite.play("walk")
 		State.WALK:
 			$AnimatedSprite.play("walk")
 		State.AWAIT_FIGHT:
@@ -175,3 +188,12 @@ func play_sound_attack():
 		return
 	var sounds = $SoundAttack.get_children()
 	sounds[rng.randi() % sounds.size()].play()
+
+func walk_to(new_walk_target_x):
+	walk_target_x = new_walk_target_x
+	var new_dir
+	if new_walk_target_x > real_pos.x:
+		new_dir = Dir.RIGHT
+	else:
+		new_dir = Dir.LEFT
+	set_state(State.WALK, new_dir)

@@ -2,6 +2,8 @@ extends Node2D
 
 signal defeat
 signal attack(lane, damage)
+signal front_line_ready(lane)
+signal creature_death(lane)
 
 var ArmyGrid = preload("res://desert_strike/ArmyGrid.gd")
 
@@ -23,6 +25,7 @@ enum Dir {
 }
 
 enum StateCreature {
+	MARCH,
 	WALK,
 	AWAIT_FIGHT,
 	FIGHT,
@@ -31,14 +34,15 @@ enum StateCreature {
 }
 
 enum StateArmy {
-	WALK,
-	FIGHT,
+	MARCH,
+	BATTLE,
 	IDLE,
 	DIE,
 }
 
 var state = StateArmy.IDLE
 
+const BANDS_SPAWNED = 1
 const NUM_LANES = 4
 const DISTANCE_BETWEEN_LANES = 4
 const ARMY_HALF_SEP = 20
@@ -54,11 +58,11 @@ var army_dir = Dir.RIGHT
 func initialize_army(): 
 	rng.set_seed(hash("42069"))
 	army_grid.initialize(NUM_LANES)
-	state = StateArmy.WALK
-	for i in range(0, NUM_LANES):
+	state = StateArmy.MARCH
+	for i in range(0, NUM_LANES * BANDS_SPAWNED):
 		add_creature()
 	for creature in army_grid.get_all_creatures():
-		creature.set_state(StateCreature.WALK, army_dir)
+		creature.set_state(StateCreature.MARCH, army_dir)
 
 func add_new_creatures(num_creatures): 
 	var new_creatures = [] 
@@ -73,57 +77,25 @@ func add_new_creatures(num_creatures):
 				+ (-army_dir * creature.band * STARTING_BAND_SEP) + rng.randf_range(-2, 2)
 		parallax_engine.add_object_to_parallax_world(creature)	
 		new_creatures.append(creature)
+		creature.connect("creature_positioned", self, "_on_creature_positioned")
+		creature.connect("attack", self, "_on_creature_attack")
+		creature.connect("death", self, "_creature_death")
 		
 	for creature in new_creatures:
-		creature.set_state(StateCreature.WALK, army_dir)
+		if state == StateArmy.BATTLE:
+			position_creature(creature)
+		else:
+			creature.set_state(StateCreature.MARCH, army_dir)
 
 func _process(delta):
 	match state:
-		StateArmy.WALK:
+		StateArmy.MARCH:
 			pass
 		StateArmy.IDLE:
 			for creature in army_grid.get_all_creatures(): 
 				creature.set_state(StateCreature.IDLE, army_dir)
-		StateArmy.FIGHT:
-			for lane_index in range(NUM_LANES): 
-				# var lane = army_grid.get_lane(lane_index)
-				var lane_offset = FIGHT_SEP + lane_index*1.0/10
-				
-				if not enemy_army_grid.has_frontline_at_lane(lane_index): 
-					# No frontline enemy so this whole lane idles
-					for creature in army_grid.get_lane(lane_index):
-						creature.set_state(StateCreature.IDLE, army_dir)
-					continue # go to next lane
-					
-				var front_enemy = enemy_army_grid.get_frontline_at_lane(lane_index)
-
-				for band_index in range(army_grid.get_lane_length(lane_index)):
-					var creature = army_grid.get_creature_band_lane(band_index, lane_index)
-					
-					if creature.state in [ StateCreature.FIGHT, StateCreature.DIE]:
-						continue
-
-					if band_index == 0: 
-#						if creature.state == StateCreature.FIGHT:
-#							if not enemy_army_grid.has_frontline_at_lane(lane_index): 
-#								creature.set_state(StateCreature.IDLE, army_dir)
-#								continue
-							
-						if abs(creature.real_pos.x - (battlefronts[lane_index] - (army_dir * lane_offset))) < END_POS_DELTA:
-							creature.set_state(StateCreature.AWAIT_FIGHT, army_dir)
-							
-						if creature.state == StateCreature.AWAIT_FIGHT: 
-							if front_enemy.state in [StateCreature.AWAIT_FIGHT, StateCreature.FIGHT]:
-								creature.connect("attack", self, "_on_creature_attack")
-								creature.set_state(StateCreature.FIGHT, army_dir)
-								creature.connect("death", self, "_creature_death")
-							# TODO - absolute grid army positions
-					else: # Not a frontline unit 
-						var goal_x = battlefronts[lane_index] - (army_dir * (lane_offset + band_index * BAND_SEP))
-						
-						if abs(creature.real_pos.x - goal_x) < END_POS_DELTA: 
-							creature.set_state(StateCreature.IDLE, army_dir)
-							
+		StateArmy.BATTLE:
+			pass
 		StateArmy.DIE:
 			pass
 
@@ -171,16 +143,22 @@ func add_creature():
 	creature.real_pos.x = (-army_dir * ARMY_HALF_SEP) \
 			+ (-army_dir * creature.band * STARTING_BAND_SEP) + rng.randf_range(-2, 2)
 	parallax_engine.add_object_to_parallax_world(creature)
+	creature.connect("creature_positioned", self, "_on_creature_positioned")
+	creature.connect("attack", self, "_on_creature_attack")
+	creature.connect("death", self, "_creature_death")
 
-func fight(new_battlefronts, new_enemy_army_grid):
+func battle(new_battlefronts, new_enemy_army_grid):
+	state = StateArmy.BATTLE
 	battlefronts = new_battlefronts
 	enemy_army_grid = new_enemy_army_grid
-	state = StateArmy.FIGHT
+	for creature in army_grid.get_all_creatures():
+		position_creature(creature)
 
 func get_state():
 	return state
 	
 func _creature_death(dead_creature):
+	emit_signal("creature_death", dead_creature.lane)
 	dead_creature.disconnect("attack", self, "_on_creature_attack")
 	dead_creature.disconnect("death", self, "_creature_death")
 
@@ -189,7 +167,8 @@ func _creature_death(dead_creature):
 	var lane = army_grid.get_lane(lane_index)
 	lane.pop_front()
 	for creature in lane: 
-		creature.set_state(StateCreature.WALK, army_dir)
+		creature.band -= 1
+		position_creature(creature)
 	
 	# TODO defeat and routing mechanics: 
 	if not has_creatures(): 
@@ -200,8 +179,39 @@ func idle():
 	for creature in army_grid.get_all_creatures():
 		creature.set_state(state, army_dir)
 
+func position_creature(creature):
+	var target_walk_x = get_target_x_from_band_lane(creature.band, creature.lane)
+	creature.walk_to(target_walk_x)
+
+func _on_creature_positioned(creature):
+	if creature.band == 0:
+		var enemy_creature = enemy_army_grid.get_frontline_at_lane(creature.lane)
+		if enemy_creature.state == StateCreature.AWAIT_FIGHT:
+			creature_fight(creature)
+		else:
+			creature.set_state(StateCreature.AWAIT_FIGHT, army_dir)
+		emit_signal("front_line_ready", creature.lane)
+	else:
+		creature.set_state(StateCreature.IDLE, army_dir)
+
 func has_creatures(): 
 	return army_grid.has_creatures()
+
+func get_target_x_from_band_lane(band, lane):
+	var lane_offset = FIGHT_SEP + lane*1.0/10
+	return battlefronts[lane] - (army_dir * (lane_offset + band * BAND_SEP))
+
+func _on_front_line_ready(ready_lane):
+	var creature = army_grid.get_frontline_at_lane(ready_lane)
+	if creature.state == StateCreature.AWAIT_FIGHT:
+		creature_fight(creature)
+	
+func creature_fight(creature):
+	creature.set_state(StateCreature.FIGHT, army_dir)
+	
+func _on_enemy_creature_death(lane):
+	var creature = army_grid.get_frontline_at_lane(lane)
+	creature.set_state(StateCreature.AWAIT_FIGHT, army_dir)
 	
 #func get_frontline_at_lane(lane_num): 
 #	# TODO What happens when creatures are removed from the array?
