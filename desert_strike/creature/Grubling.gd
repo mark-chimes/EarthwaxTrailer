@@ -5,5 +5,7 @@ func _ready():
 	mute = true
 	var purple = Color8(122, 0, 180, 75)
 	health_bar.set_color(purple)
-	time_between_attacks = 2
-	damage = rng.randi_range(5,10) # For testing
+	time_between_attacks = 3
+	melee_damage = rng.randi_range(3,7)
+	ranged_damage = 0
+	priority = 10

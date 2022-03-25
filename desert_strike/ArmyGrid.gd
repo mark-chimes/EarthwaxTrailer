@@ -6,10 +6,13 @@ var num_lanes = 0
 
 var adding_lane_index = 0
 var adding_band_index = 0
+var rng
 
 func initialize(init_num_lanes): 
+	rng = RandomNumberGenerator.new()
+	rng.randomize()
 	num_lanes = init_num_lanes
-	for i in range(0, num_lanes): 
+	for _i in range(0, num_lanes): 
 		creature_lanes.append([])
 		
 func get_lane(lane_index): 
@@ -81,3 +84,13 @@ func has_creatures():
 		if len(lane) > 0:
 			return true
 	return false
+
+# TODO this should be handled in a battle API not in army grid
+# TODO Change how range works to take the creature's position into account
+func get_archery_target(lane_index, attack_range): 
+	var lane = creature_lanes[lane_index] 
+	if len(lane) == 0: 
+		return null # no valid target
+	var max_shot = min(len(lane)-1, attack_range)
+	var target_index = rng.randi_range(0, max_shot) 
+	return lane[target_index]
