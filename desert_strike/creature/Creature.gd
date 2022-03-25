@@ -43,7 +43,9 @@ const END_POS_DELTA = 0.1
 var time_between_attacks = 3
 var walk_target_x
 
-var is_debug = true
+var is_debug_state = false
+var is_debug_band_lane = false
+var is_debug_target_x = false
 onready var debug_label = DebugLabel.instance()
 
 func _ready(): 
@@ -52,7 +54,8 @@ func _ready():
 	add_child(debug_label)
 	debug_label.position.x = 0
 	debug_label.position.y = -96
-	# update_debug_label_with_state()
+	update_debug_with_target_x()
+	update_debug_label_with_state()
 	update_debug_with_band_lane()
 
 func set_band_lane(new_band, new_lane): 
@@ -101,10 +104,20 @@ func set_debug_label(label_text):
 		debug_label.get_node("Label").text = label_text
 	
 func update_debug_with_band_lane(): 
+	if not is_debug_band_lane: 
+		return 
 	set_debug_label(str(band) + ", " + str(lane))
 
+func update_debug_with_target_x(): 
+	if not is_debug_target_x: 
+		return 
+	if walk_target_x == null: 
+		return
+	var decimaled_float = stepify(walk_target_x, 0.01)	
+	set_debug_label(str(decimaled_float))
+
 func update_debug_label_with_state(): 
-	if not is_debug: 
+	if not is_debug_state: 
 		return 
 	
 	var label_text
@@ -130,7 +143,8 @@ func set_state(new_state, new_dir):
 		return
 	state = new_state
 	
-	# update_debug_label_with_state()
+	update_debug_label_with_state()
+	update_debug_with_target_x()
 	dir = new_dir
 	match state:
 		State.MARCH:
