@@ -225,10 +225,15 @@ func prepare_attack_strike():
 		return
 	if is_ranged and band != 0: 
 		$AnimatedSprite.play("ranged_attack_strike")
+		fire_ranged_projectile()
 	else:
 		$AnimatedSprite.play("attack_strike")
 	play_sound_attack()
 	prepare_attack_strike()
+
+func fire_ranged_projectile():
+	# Overload this
+	pass
 
 func hurt_anim(): 
 	# TODO we want some hurt effects that go on top of the sprite
