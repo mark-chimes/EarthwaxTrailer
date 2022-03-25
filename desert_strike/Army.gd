@@ -122,7 +122,6 @@ func create_and_add_creature(creatures_arr, CreatureType):
 		creature.connect("fire_projectile", self, "_on_creature_fire_projectile")
 		
 func _on_creature_fire_projectile(archer_pos, target_band, target_lane, projectile): 
-	print("ADDING PROJECTILE")
 	var start_x = archer_pos.x
 	
 	var lane_offset = FIGHT_SEP + target_lane*1.0/10

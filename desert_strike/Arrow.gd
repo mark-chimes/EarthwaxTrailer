@@ -22,7 +22,6 @@ func _process(delta):
 		
 	real_pos.x += delta*horizontal_speed
 	real_pos.y += delta*vertical_speed
-	print("real_pos_y: " + str(real_pos.y))
 	vertical_speed += vertical_acc * delta
 	var next_frame = floor(real_pos.x / rot_dist)
 	get_node("AnimatedSprite").frame = next_frame
