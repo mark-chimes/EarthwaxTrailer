@@ -64,6 +64,7 @@ func _ready():
 	update_debug_with_target_x()
 	update_debug_label_with_state()
 	update_debug_with_band_lane()
+	$AnimatedSprite.connect("animation_finished", self, "_on_animation_finished")
 
 func set_band_lane(new_band, new_lane): 
 	band = new_band
@@ -169,7 +170,6 @@ func set_state(new_state, new_dir):
 		State.AWAIT_FIGHT:
 			$AnimatedSprite.play("idle")
 		State.FIGHT:
-			$AnimatedSprite.connect("animation_finished", self, "attack_prep_anim_finish")
 			if is_ranged and band != 0: 
 				$AnimatedSprite.play("ranged_attack_prep")
 			else:
@@ -188,22 +188,9 @@ func set_state(new_state, new_dir):
 			hide_health()
 			hide_debug()
 	$AnimatedSprite.flip_h = (dir != sprite_dir)
-	
-func prepare_attack_strike(): 
-	yield(get_tree().create_timer(time_between_attacks), "timeout")
-	if state == State.FIGHT: 
-		emit_signal("attack", self)
-	if state != State.FIGHT: # has to be checked again after attack signal
-		return
-	$AnimatedSprite.connect("animation_finished", self, "attack_anim_finish")
-	if is_ranged and band != 0: 
-		$AnimatedSprite.play("ranged_attack_strike")
-	else:
-		$AnimatedSprite.play("attack_strike")
-	play_sound_attack()
-	prepare_attack_strike()
 
 func take_damage(the_damage): 
+	hurt_anim()
 	health -= the_damage
 	if health <= 0: 
 		health = 0
@@ -211,8 +198,47 @@ func take_damage(the_damage):
 			set_state(State.DIE, dir)
 	update_health_bar(health)
 
+func _on_animation_finished():
+	match $AnimatedSprite.get_animation():
+		"ranged_attack_strike":
+			attack_strike_anim_finish()
+		"attack_strike":
+			attack_strike_anim_finish()
+		"ranged_attack_hold":
+			pass
+		"attack_hold": 
+			pass
+		"ranged_attack_prep":
+			attack_prep_anim_finish()
+		"attack_prep":
+			attack_prep_anim_finish()
+
+func prepare_attack_strike(): 
+	yield(get_tree().create_timer(time_between_attacks), "timeout")
+	if state == State.FIGHT: 
+		emit_signal("attack", self)
+	if state != State.FIGHT: # has to be checked again after attack signal
+		return
+	if is_ranged and band != 0: 
+		$AnimatedSprite.play("ranged_attack_strike")
+	else:
+		$AnimatedSprite.play("attack_strike")
+	play_sound_attack()
+	prepare_attack_strike()
+
+func hurt_anim(): 
+	# TODO we want some hurt effects that go on top of the sprite
+	pass
+	
+func attack_strike_anim_finish(): 
+	if state != State.FIGHT: 
+		return
+	if is_ranged and band != 0: 
+		$AnimatedSprite.play("ranged_attack_prep")
+	else:
+		$AnimatedSprite.play("attack_prep")
+
 func attack_prep_anim_finish(): 
-	$AnimatedSprite.disconnect("animation_finished", self, "attack_prep_anim_finish")
 	if state != State.FIGHT: 
 		return
 	if is_ranged and band != 0: 
@@ -221,10 +247,8 @@ func attack_prep_anim_finish():
 		$AnimatedSprite.play("attack_hold")
 
 func attack_anim_finish(): 
-	$AnimatedSprite.disconnect("animation_finished", self, "attack_anim_finish")
 	if state != State.FIGHT: 
 		return
-	$AnimatedSprite.connect("animation_finished", self, "attack_prep_anim_finish")
 	if is_ranged and band != 0: 
 		$AnimatedSprite.play("ranged_attack_prep")
 	else: 
