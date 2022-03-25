@@ -74,10 +74,9 @@ func _on_creature_attack(attacker):
 		emit_signal("attack", 0, attacker.lane, attacker.melee_damage)
 	
 func _on_get_attacked(band_index, lane_index, damage): 
-	# TODO should not even be getting attacked if there is no frontline
 	if not army_grid.has_creature_at(band_index, lane_index): 
 		printerr("Null creature being attacked in band_lane (" + str(band_index) + ", " + str(lane_index) + ")")
-		return	
+		return
 	army_grid.get_creature_band_lane(band_index, lane_index).take_damage(damage)
 		
 func get_pos():
@@ -101,8 +100,8 @@ func add_new_creatures(CreatureType, num_creatures):
 		sort_and_position_army()
 	else:
 		for creature in new_creatures:
-			creature.set_state(StateCreature.MARCH, army_dir)	
-		sort_creatures()
+			creature.set_state(StateCreature.MARCH, army_dir)
+		# sort_creatures()
 	return new_creatures
 
 func create_and_add_creature(creatures_arr, CreatureType): 
@@ -118,7 +117,7 @@ func create_and_add_creature(creatures_arr, CreatureType):
 	creatures_arr.append(creature)
 	creature.connect("creature_positioned", self, "_on_creature_positioned")
 	creature.connect("attack", self, "_on_creature_attack")
-	creature.connect("death", self, "_creature_death")
+	creature.connect("death", self, "_on_creature_death")
 
 func battle(new_battlefronts, new_enemy_army_grid):
 	state = StateArmy.BATTLE
@@ -129,17 +128,17 @@ func battle(new_battlefronts, new_enemy_army_grid):
 func get_state():
 	return state
 	
-func _creature_death(dead_creature):
+func _on_creature_death(dead_creature):
 	emit_signal("creature_death", dead_creature.band, dead_creature.lane)
 	dead_creature.disconnect("attack", self, "_on_creature_attack")
 	dead_creature.disconnect("death", self, "_creature_death")
 
-	# TODO this is just frontline, should also care about back creatures dying
 	var lane_index =  dead_creature.lane
 	var band_index = dead_creature.band
 	var lane = army_grid.get_lane(lane_index)
 	
 	lane.remove(band_index)
+	# move everyone behind me forwards
 	for i in range(band_index, len(lane)): 
 		var creature = lane[i]
 		creature.set_band(i)
@@ -160,10 +159,11 @@ func position_creature(creature):
 
 func _on_creature_positioned(creature):
 	if creature.band == 0:
-		var enemy_creature = enemy_army_grid.get_frontline_at_lane(creature.lane)
-		if enemy_creature == null: 
+		if not enemy_army_grid.has_frontline_at_lane(creature.lane): 
 			creature.set_state(StateCreature.IDLE, army_dir)
 			return
+		var enemy_creature = enemy_army_grid.get_frontline_at_lane(creature.lane)
+
 		if enemy_creature.state == StateCreature.AWAIT_FIGHT:
 			creature_fight(creature)
 		else:

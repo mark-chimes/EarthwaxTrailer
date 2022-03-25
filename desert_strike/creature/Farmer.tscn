@@ -263,7 +263,7 @@ script = ExtResource( 5 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 2, 2 )
 frames = SubResource( 32 )
-animation = "die"
+animation = "attack_hold"
 playing = true
 offset = Vector2( 0, -26 )
 
