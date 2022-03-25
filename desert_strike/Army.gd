@@ -59,33 +59,6 @@ func initialize_army():
 	rng.set_seed(hash("42069"))
 	army_grid.initialize(NUM_LANES)
 	state = StateArmy.MARCH
-	for i in range(0, NUM_LANES * BANDS_SPAWNED):
-		add_creature()
-	for creature in army_grid.get_all_creatures():
-		creature.set_state(StateCreature.MARCH, army_dir)
-
-func add_new_creatures(num_creatures): 
-	var new_creatures = [] 
-	for i in range(0, num_creatures):
-		var creature = Creature.instance()
-		army_grid.add_creature_to_shortest_lane(creature)
-		var z_pos = (creature.lane * DISTANCE_BETWEEN_LANES) + 3 
-		creature.real_pos.z = z_pos
-		add_child(creature)
-		creature.dir = army_dir
-		creature.real_pos.x = (-army_dir * ARMY_HALF_SEP) \
-				+ (-army_dir * creature.band * STARTING_BAND_SEP) + rng.randf_range(-2, 2)
-		parallax_engine.add_object_to_parallax_world(creature)	
-		new_creatures.append(creature)
-		creature.connect("creature_positioned", self, "_on_creature_positioned")
-		creature.connect("attack", self, "_on_creature_attack")
-		creature.connect("death", self, "_creature_death")
-		
-	for creature in new_creatures:
-		if state == StateArmy.BATTLE:
-			position_creature(creature)
-		else:
-			creature.set_state(StateCreature.MARCH, army_dir)
 
 func _process(delta):
 	match state:
@@ -133,19 +106,30 @@ func get_pos():
 				front_pos = creature.real_pos.x
 	return front_pos
 
-func add_creature():
-	var creature = Creature.instance()
-	army_grid.add_creature(creature)
+func add_new_creatures(CreatureType, num_creatures): 
+	var new_creatures = [] 
+	for i in range(0, num_creatures):
+		create_and_add_creature(new_creatures, CreatureType)
+	return new_creatures
+
+func create_and_add_creature(creatures_arr, CreatureType): 
+	var creature = CreatureType.instance()
+	army_grid.add_creature_to_shortest_lane(creature)
 	var z_pos = (creature.lane * DISTANCE_BETWEEN_LANES) + 3 
 	creature.real_pos.z = z_pos
 	add_child(creature)
 	creature.dir = army_dir
 	creature.real_pos.x = (-army_dir * ARMY_HALF_SEP) \
 			+ (-army_dir * creature.band * STARTING_BAND_SEP) + rng.randf_range(-2, 2)
-	parallax_engine.add_object_to_parallax_world(creature)
+	parallax_engine.add_object_to_parallax_world(creature)	
+	creatures_arr.append(creature)
 	creature.connect("creature_positioned", self, "_on_creature_positioned")
 	creature.connect("attack", self, "_on_creature_attack")
 	creature.connect("death", self, "_creature_death")
+	if state == StateArmy.BATTLE:
+		position_creature(creature)
+	else:
+		creature.set_state(StateCreature.MARCH, army_dir)
 
 func battle(new_battlefronts, new_enemy_army_grid):
 	state = StateArmy.BATTLE

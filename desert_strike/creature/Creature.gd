@@ -11,6 +11,7 @@ var damage
 
 var band
 var lane
+var priority = 0
 
 enum Dir {
 	LEFT = -1,

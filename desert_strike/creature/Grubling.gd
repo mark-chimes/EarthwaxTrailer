@@ -7,3 +7,4 @@ func _ready():
 	health_bar.set_color(purple)
 	time_between_attacks = 3
 	damage = rng.randi_range(3,7) # For testing
+	priority = 10
