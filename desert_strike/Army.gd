@@ -110,6 +110,12 @@ func add_new_creatures(CreatureType, num_creatures):
 	var new_creatures = [] 
 	for i in range(0, num_creatures):
 		create_and_add_creature(new_creatures, CreatureType)
+	if state == StateArmy.BATTLE:
+		sort_and_position_army()
+	else:
+		for creature in new_creatures:
+			creature.set_state(StateCreature.MARCH, army_dir)	
+		sort_creatures()
 	return new_creatures
 
 func create_and_add_creature(creatures_arr, CreatureType): 
@@ -126,17 +132,12 @@ func create_and_add_creature(creatures_arr, CreatureType):
 	creature.connect("creature_positioned", self, "_on_creature_positioned")
 	creature.connect("attack", self, "_on_creature_attack")
 	creature.connect("death", self, "_creature_death")
-	if state == StateArmy.BATTLE:
-		position_creature(creature)
-	else:
-		creature.set_state(StateCreature.MARCH, army_dir)
 
 func battle(new_battlefronts, new_enemy_army_grid):
 	state = StateArmy.BATTLE
 	battlefronts = new_battlefronts
 	enemy_army_grid = new_enemy_army_grid
-	for creature in army_grid.get_all_creatures():
-		position_creature(creature)
+	sort_and_position_army()
 
 func get_state():
 	return state
@@ -146,14 +147,14 @@ func _creature_death(dead_creature):
 	dead_creature.disconnect("attack", self, "_on_creature_attack")
 	dead_creature.disconnect("death", self, "_creature_death")
 
-	# TODO this is just frontline, should also care about band
+	# TODO this is just frontline, should also care about back creatures dying
 	var lane_index =  dead_creature.lane
 	var lane = army_grid.get_lane(lane_index)
 	lane.pop_front()
 	for creature in lane: 
-		creature.band -= 1
-		position_creature(creature)
-	
+		creature.set_band(creature.band - 1)
+	sort_and_position_lane(lane)
+
 	# TODO defeat and routing mechanics: 
 	if not has_creatures(): 
 		emit_signal("defeat")
@@ -196,9 +197,48 @@ func creature_fight(creature):
 func _on_enemy_creature_death(lane):
 	var creature = army_grid.get_frontline_at_lane(lane)
 	creature.set_state(StateCreature.AWAIT_FIGHT, army_dir)
+
+func sort_and_position_army(): 
+	for lane in army_grid.creature_lanes: # TODO get this variable better? 
+		sort_and_position_lane(lane)
+
+func sort_and_position_lane(lane): 
+	sort_lane(lane)
+	for creature in lane: 
+		position_creature(creature)
 	
-#func get_frontline_at_lane(lane_num): 
-#	# TODO What happens when creatures are removed from the array?
-#	# TODO optimize this
-#	return army_grid.get_creature_band_lane(0, lane_num)
-#
+# TODO this sorting code should probably be handled elsewhere?
+func sort_creatures(): 
+	for lane in army_grid.creature_lanes: # TODO get this variable better? 
+		sort_lane(lane)
+
+func sort_lane(lane): 
+	# we'll just use bubble sort for now since array size is small
+	# bubble sort is also a stable sort
+	
+	# if there is just one element it's already sorted
+	if len(lane) <= 1: 
+		return
+	
+	var n = len(lane)
+	for i in range(n-1): 
+		for j in range(0, n-i-1): 
+			if should_creature_1_be_further_back(lane[j], lane[j + 1]):
+				var temp = lane[j]
+				lane[j] = lane[j + 1]
+				lane[j].set_band(j)
+				lane[j + 1] = temp
+				lane[j + 1].set_band(j+1)
+				
+func should_creature_1_be_further_back(creature1, creature2): 
+	# higher priority to the front
+	# but front is a lower index
+	if creature1.state in [StateCreature.FIGHT, StateCreature.AWAIT_FIGHT]\
+			and not creature2.state in [StateCreature.FIGHT, StateCreature.AWAIT_FIGHT]:
+		return false
+		
+	if not creature1.state in [StateCreature.FIGHT, StateCreature.AWAIT_FIGHT]\
+			and creature2.state in [StateCreature.FIGHT, StateCreature.AWAIT_FIGHT]: 
+		return true
+		
+	return creature1.priority < creature2.priority
