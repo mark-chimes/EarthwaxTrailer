@@ -3,7 +3,7 @@ extends Node2D
 signal defeat
 signal attack(band, lane, damage)
 signal front_line_ready(lane)
-signal creature_death(lane)
+signal creature_death(band, lane)
 
 var ArmyGrid = preload("res://desert_strike/ArmyGrid.gd")
 
@@ -59,18 +59,6 @@ func initialize_army():
 	rng.set_seed(hash("42069"))
 	army_grid.initialize(NUM_LANES)
 	state = StateArmy.MARCH
-
-func _process(delta):
-	match state:
-		StateArmy.MARCH:
-			pass
-		StateArmy.IDLE:
-			for creature in army_grid.get_all_creatures(): 
-				creature.set_state(StateCreature.IDLE, army_dir)
-		StateArmy.BATTLE:
-			pass
-		StateArmy.DIE:
-			pass
 
 func _on_creature_attack(attacker): 
 	if attacker.is_ranged and attacker.band != 0:
@@ -142,7 +130,7 @@ func get_state():
 	return state
 	
 func _creature_death(dead_creature):
-	emit_signal("creature_death", dead_creature.lane)
+	emit_signal("creature_death", dead_creature.band, dead_creature.lane)
 	dead_creature.disconnect("attack", self, "_on_creature_attack")
 	dead_creature.disconnect("death", self, "_creature_death")
 
@@ -151,8 +139,6 @@ func _creature_death(dead_creature):
 	var band_index = dead_creature.band
 	var lane = army_grid.get_lane(lane_index)
 	
-	print("Lane has length: " + str(len(lane)))
-	print("Trying to remove: " + str(band_index))
 	lane.remove(band_index)
 	for i in range(band_index, len(lane)): 
 		var creature = lane[i]
@@ -175,6 +161,9 @@ func position_creature(creature):
 func _on_creature_positioned(creature):
 	if creature.band == 0:
 		var enemy_creature = enemy_army_grid.get_frontline_at_lane(creature.lane)
+		if enemy_creature == null: 
+			creature.set_state(StateCreature.IDLE, army_dir)
+			return
 		if enemy_creature.state == StateCreature.AWAIT_FIGHT:
 			creature_fight(creature)
 		else:
@@ -184,7 +173,6 @@ func _on_creature_positioned(creature):
 		if creature.is_ranged: 
 			var enemy_creature = enemy_army_grid.get_archery_target(creature.lane, creature.attack_range)
 			if enemy_creature == null:
-				print("No archery target for " + str(creature.band) + ", " + str(creature.lane))
 				creature.set_state(StateCreature.IDLE, army_dir)
 				return
 			# TODO wait for enemy to get into position etc. 
@@ -201,22 +189,24 @@ func get_target_x_from_band_lane(band, lane):
 
 func _on_front_line_ready(ready_lane):
 	var creature = army_grid.get_frontline_at_lane(ready_lane)
-	if creature.state == StateCreature.AWAIT_FIGHT:
-		creature_fight(creature)
+	if creature.is_positioned(): 
+		if creature.state == StateCreature.AWAIT_FIGHT:
+			creature_fight(creature)
+	else: 
+		position_creature(creature)
 	
 func creature_fight(creature):
 	creature.set_state(StateCreature.FIGHT, army_dir)
 	
 func creature_fire_arrow(creature, enemy_band, enemy_lane):
-	print("Archer " + str(creature.band) + ", " + str(creature.lane) + " firing at " + str(enemy_band) + ", " + str(enemy_lane))
 	enemy_band > enemy_lane # Try to crash if this is null
 	creature.set_archery_target_band_lane(enemy_band, enemy_lane) 
 	creature.set_state(StateCreature.FIGHT, army_dir)
 	
-func _on_enemy_creature_death(lane):
-	var creature = army_grid.get_frontline_at_lane(lane)
-	creature.set_state(StateCreature.AWAIT_FIGHT, army_dir)
-
+func _on_enemy_creature_death(band_index, lane_index):
+	if band_index == 0: 
+		sort_and_position_lane(army_grid.get_lane(lane_index))
+		
 func sort_and_position_army(): 
 	for lane in army_grid.creature_lanes: # TODO get this variable better? 
 		sort_and_position_lane(lane)

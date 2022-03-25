@@ -22,8 +22,6 @@ func get_lane_length(lane_index):
 	return len(creature_lanes[lane_index])
 
 func has_creature_at(band_index, lane_index): 
-	print("Checking for creature at: " + str(band_index) + ", " + str(lane_index))
-	print("Creature lanes size: " + str(len(creature_lanes)))
 	if lane_index >= len(creature_lanes): 
 		return false
 	var lane = creature_lanes[lane_index]
@@ -92,7 +90,6 @@ func has_creatures():
 func get_archery_target(lane_index, attack_range): 
 	var lane = creature_lanes[lane_index] 
 	if len(lane) == 0: 
-		print("Attacker at lane " + str(lane_index) + " with range " + str(attack_range) + " has no valid target")
 		return null # no valid target
 	var max_shot = min(len(lane)-1, attack_range)
 	var target_index = rng.randi_range(0, max_shot) 

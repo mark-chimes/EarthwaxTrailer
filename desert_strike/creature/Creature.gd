@@ -95,7 +95,7 @@ func _process(delta):
 		State.MARCH:
 			real_pos.x += delta * WALK_SPEED * dir
 		State.WALK:
-			if dir * (walk_target_x - real_pos.x ) < END_POS_DELTA:
+			if is_positioned():
 				emit_signal("creature_positioned", self)
 				return
 			real_pos.x += delta * WALK_SPEED * dir
@@ -107,6 +107,9 @@ func _process(delta):
 			pass
 		State.DIE:
 			pass
+			
+func is_positioned(): 
+	return abs(walk_target_x - real_pos.x ) < END_POS_DELTA
 	
 func hide_debug(): 
 	debug_label.visible = false
@@ -118,7 +121,7 @@ func set_debug_label(label_text):
 func update_debug_with_band_lane(): 
 	if not is_debug_band_lane: 
 		return 
-	set_debug_label(str(band) + ", " + str(lane))
+	set_debug_label(str(band))# + ", " + str(lane))
 
 func update_debug_with_target_x(): 
 	if not is_debug_target_x: 
@@ -178,6 +181,8 @@ func set_state(new_state, new_dir):
 		State.IDLE:
 			$AnimatedSprite.play("idle")
 		State.DIE:
+			hide_debug()
+			hide_health()
 			$AnimatedSprite.play("die")
 			$AnimatedSprite.flip_h = (dir != sprite_dir)
 			emit_signal("death", self)
@@ -185,8 +190,7 @@ func set_state(new_state, new_dir):
 			yield($AnimatedSprite, "animation_finished")
 			$AnimatedSprite.frame = $AnimatedSprite.frames.get_frame_count("die")
 			$AnimatedSprite.playing = false
-			hide_health()
-			hide_debug()
+
 	$AnimatedSprite.flip_h = (dir != sprite_dir)
 
 func take_damage(the_damage): 
