@@ -14,7 +14,7 @@ func spawn_first_wave():
 
 func spawn_new_wave(): 
 	add_new_creatures(Farmer, 2)
-	add_new_creatures(Archer, 2)
+	add_new_creatures(Archer, 4)
 
 
 

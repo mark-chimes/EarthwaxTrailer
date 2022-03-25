@@ -1,9 +1,8 @@
 extends Node2D
 
 signal defeat
-signal attack(lane, damage)
+signal attack(band, lane, damage)
 signal front_line_ready(lane)
-signal archer_ready(creature)
 signal creature_death(lane)
 
 var ArmyGrid = preload("res://desert_strike/ArmyGrid.gd")
@@ -74,27 +73,24 @@ func _process(delta):
 			pass
 
 func _on_creature_attack(attacker): 
-	# TODO different behaviour for melee vs ranged vs reach etc.
-	# TODO When you have melee, reach, range need a way for attackers to know if there is a target
-	# TODO need a way to know how to pick a good target, etc.	
-	
-	if attacker.is_ranged:
-		# TODO special ranged attack
-		emit_signal("attack", attacker.lane, attacker.damage)
+	if attacker.is_ranged and attacker.band != 0:
+		# Ranged attack
+		if attacker.ranged_target_band == null or attacker.ranged_target_lane == null: 
+			printerr("Ranged attacker at " + str(attacker.band) + ", " + str(attacker.lane) + " targeting null")
+			
+		if not enemy_army_grid.has_creature_at(attacker.ranged_target_band, attacker.ranged_target_lane):
+			return
+		emit_signal("attack", attacker.ranged_target_band, attacker.ranged_target_lane, attacker.ranged_damage)
 	else: 	
-		# The other army will know to attack the frontline of its lane
-		emit_signal("attack", attacker.lane, attacker.damage)
+		# melee attack so band is 0
+		emit_signal("attack", 0, attacker.lane, attacker.melee_damage)
 	
-func _on_get_attacked(lane_index, damage): 
+func _on_get_attacked(band_index, lane_index, damage): 
 	# TODO should not even be getting attacked if there is no frontline
-#	if not enemy_army_grid.has_frontline_at_lane(lane_index): 
-#		printerr("Null frontline creature being attacked in lane " + str(lane_index))
-#		return	
-	#var frontline_creature = enemy_army_grid.get_frontline_at_lane(lane_index)
-	if not army_grid.has_frontline_at_lane(lane_index): 
-		printerr("Null frontline creature being attacked in lane " + str(lane_index))
+	if not army_grid.has_creature_at(band_index, lane_index): 
+		printerr("Null creature being attacked in band_lane (" + str(band_index) + ", " + str(lane_index) + ")")
 		return	
-	army_grid.get_frontline_at_lane(lane_index).take_damage(damage)
+	army_grid.get_creature_band_lane(band_index, lane_index).take_damage(damage)
 		
 func get_pos():
 	var creatures = army_grid.get_front_creatures()
@@ -152,10 +148,15 @@ func _creature_death(dead_creature):
 
 	# TODO this is just frontline, should also care about back creatures dying
 	var lane_index =  dead_creature.lane
+	var band_index = dead_creature.band
 	var lane = army_grid.get_lane(lane_index)
-	lane.pop_front()
-	for creature in lane: 
-		creature.set_band(creature.band - 1)
+	
+	print("Lane has length: " + str(len(lane)))
+	print("Trying to remove: " + str(band_index))
+	lane.remove(band_index)
+	for i in range(band_index, len(lane)): 
+		var creature = lane[i]
+		creature.set_band(i)
 	sort_and_position_lane(lane)
 
 	# TODO defeat and routing mechanics: 
@@ -165,7 +166,7 @@ func _creature_death(dead_creature):
 func idle():
 	state = StateArmy.IDLE
 	for creature in army_grid.get_all_creatures():
-		creature.set_state(state, army_dir)
+		creature.set_state(StateCreature.IDLE, army_dir)
 
 func position_creature(creature):
 	var target_walk_x = get_target_x_from_band_lane(creature.band, creature.lane)
@@ -181,14 +182,13 @@ func _on_creature_positioned(creature):
 		emit_signal("front_line_ready", creature.lane)
 	else:
 		if creature.is_ranged: 
-			# TODO - attacking frontline for now, will attack others later
-			var enemy_creature = enemy_army_grid.get_frontline_at_lane(creature.lane)
-			# TODO is this the right thing to check? 
-			if enemy_creature.state != StateCreature.WALK: 
-				creature_fight(creature)
-			else:
-				creature.set_state(StateCreature.AWAIT_FIGHT, army_dir)
-			emit_signal("archer_ready", creature)
+			var enemy_creature = enemy_army_grid.get_archery_target(creature.lane, creature.attack_range)
+			if enemy_creature == null:
+				print("No archery target for " + str(creature.band) + ", " + str(creature.lane))
+				creature.set_state(StateCreature.IDLE, army_dir)
+				return
+			# TODO wait for enemy to get into position etc. 
+			creature_fire_arrow(creature, enemy_creature.band, enemy_creature.lane)
 		else: 
 			creature.set_state(StateCreature.IDLE, army_dir)
 
@@ -205,6 +205,12 @@ func _on_front_line_ready(ready_lane):
 		creature_fight(creature)
 	
 func creature_fight(creature):
+	creature.set_state(StateCreature.FIGHT, army_dir)
+	
+func creature_fire_arrow(creature, enemy_band, enemy_lane):
+	print("Archer " + str(creature.band) + ", " + str(creature.lane) + " firing at " + str(enemy_band) + ", " + str(enemy_lane))
+	enemy_band > enemy_lane # Try to crash if this is null
+	creature.set_archery_target_band_lane(enemy_band, enemy_lane) 
 	creature.set_state(StateCreature.FIGHT, army_dir)
 	
 func _on_enemy_creature_death(lane):

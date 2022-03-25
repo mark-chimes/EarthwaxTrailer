@@ -7,9 +7,13 @@ var HealthBar = preload("res://desert_strike/HealthBar.tscn")
 var DebugLabel = preload("res://desert_strike/DebugLabel.tscn")
 
 onready var rng = RandomNumberGenerator.new()
-var damage
+var melee_damage
+var ranged_damage
 
 var is_ranged = false # TODO 
+var attack_range = 0
+var ranged_target_band
+var ranged_target_lane
 
 var band
 var lane
@@ -45,7 +49,7 @@ const END_POS_DELTA = 0.1
 var time_between_attacks = 3
 var walk_target_x
 
-var show_health = true
+var show_health = false
 var is_debug_state = false
 var is_debug_band_lane = false
 var is_debug_target_x = false
@@ -77,10 +81,11 @@ func init_health_bar():
 	health_bar.init_health_bar(MAX_HEALTH)
 	if not show_health: 
 		health_bar.visible = false
+		
 func hide_health(): 
 	show_health = false
 	health_bar.visible = false
-	
+
 func update_health_bar(new_health): 
 	health_bar.update_health(new_health)
 
@@ -101,6 +106,9 @@ func _process(delta):
 			pass
 		State.DIE:
 			pass
+	
+func hide_debug(): 
+	debug_label.visible = false
 
 func set_debug_label(label_text): 
 	if debug_label != null:
@@ -139,6 +147,10 @@ func update_debug_label_with_state():
 			label_text = "" # Don't show labels for the dead
 	set_debug_label(label_text)
 
+func  set_archery_target_band_lane(band_index, lane_index): 
+	ranged_target_band = band_index
+	ranged_target_lane = lane_index
+	
 func set_state(new_state, new_dir):
 	# This part is temporary. Should be removed when dead creatures no longer get
 	# state information from the army
@@ -158,7 +170,10 @@ func set_state(new_state, new_dir):
 			$AnimatedSprite.play("idle")
 		State.FIGHT:
 			$AnimatedSprite.connect("animation_finished", self, "attack_prep_anim_finish")
-			$AnimatedSprite.play("attack_prep")
+			if is_ranged and band != 0: 
+				$AnimatedSprite.play("ranged_attack_prep")
+			else:
+				$AnimatedSprite.play("attack_prep")
 			prepare_attack_strike()
 		State.IDLE:
 			$AnimatedSprite.play("idle")
@@ -171,6 +186,7 @@ func set_state(new_state, new_dir):
 			$AnimatedSprite.frame = $AnimatedSprite.frames.get_frame_count("die")
 			$AnimatedSprite.playing = false
 			hide_health()
+			hide_debug()
 	$AnimatedSprite.flip_h = (dir != sprite_dir)
 	
 func prepare_attack_strike(): 
@@ -180,7 +196,10 @@ func prepare_attack_strike():
 	if state != State.FIGHT: # has to be checked again after attack signal
 		return
 	$AnimatedSprite.connect("animation_finished", self, "attack_anim_finish")
-	$AnimatedSprite.play("attack_strike")
+	if is_ranged and band != 0: 
+		$AnimatedSprite.play("ranged_attack_strike")
+	else:
+		$AnimatedSprite.play("attack_strike")
 	play_sound_attack()
 	prepare_attack_strike()
 
@@ -188,7 +207,7 @@ func take_damage(the_damage):
 	health -= the_damage
 	if health <= 0: 
 		health = 0
-		if state == State.FIGHT:
+		if state != State.DIE:
 			set_state(State.DIE, dir)
 	update_health_bar(health)
 
@@ -196,15 +215,21 @@ func attack_prep_anim_finish():
 	$AnimatedSprite.disconnect("animation_finished", self, "attack_prep_anim_finish")
 	if state != State.FIGHT: 
 		return
-	$AnimatedSprite.play("attack_hold")
+	if is_ranged and band != 0: 
+		$AnimatedSprite.play("ranged_attack_hold")
+	else:
+		$AnimatedSprite.play("attack_hold")
 
 func attack_anim_finish(): 
 	$AnimatedSprite.disconnect("animation_finished", self, "attack_anim_finish")
 	if state != State.FIGHT: 
 		return
 	$AnimatedSprite.connect("animation_finished", self, "attack_prep_anim_finish")
-	$AnimatedSprite.play("attack_prep")
-	
+	if is_ranged and band != 0: 
+		$AnimatedSprite.play("ranged_attack_prep")
+	else: 
+		$AnimatedSprite.play("attack_prep")
+		
 func play_sound_death():
 	if mute: 
 		return
