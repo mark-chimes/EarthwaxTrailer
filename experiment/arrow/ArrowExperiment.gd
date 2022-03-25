@@ -20,7 +20,7 @@ func _ready():
 		yield(get_tree().create_timer(time_between_attacks), "timeout")
 		arrow_to_target($End3)
 		yield(get_tree().create_timer(time_between_waves), "timeout")
-		
+
 func arrow_to_target(target): 
 	arrow = Arrow.instance()
 	var start_x = start.position.x
@@ -41,3 +41,12 @@ func arrow_to_target(target):
 	arrow.is_flying = true
 	
 	add_child(arrow)
+	fire_arrow_anim()
+	
+func fire_arrow_anim(): 
+	$Archer/AnimatedSprite.play("attack")
+	$Archer/AnimatedSprite.frame = 0
+		
+func _on_AnimatedSprite_animation_finished():
+	if $Archer/AnimatedSprite.animation == "attack":
+		$Archer/AnimatedSprite.play("idle")
