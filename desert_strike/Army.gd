@@ -3,6 +3,7 @@ extends Node2D
 signal defeat
 signal attack(lane, damage)
 signal front_line_ready(lane)
+signal archer_ready(creature)
 signal creature_death(lane)
 
 var ArmyGrid = preload("res://desert_strike/ArmyGrid.gd")
@@ -77,8 +78,12 @@ func _on_creature_attack(attacker):
 	# TODO When you have melee, reach, range need a way for attackers to know if there is a target
 	# TODO need a way to know how to pick a good target, etc.	
 	
-	# The other army will know to attack the frontline of its lane
-	emit_signal("attack", attacker.lane, attacker.damage)
+	if attacker.is_ranged:
+		# TODO special ranged attack
+		emit_signal("attack", attacker.lane, attacker.damage)
+	else: 	
+		# The other army will know to attack the frontline of its lane
+		emit_signal("attack", attacker.lane, attacker.damage)
 	
 func _on_get_attacked(lane_index, damage): 
 	# TODO should not even be getting attacked if there is no frontline
@@ -92,8 +97,6 @@ func _on_get_attacked(lane_index, damage):
 	army_grid.get_frontline_at_lane(lane_index).take_damage(damage)
 		
 func get_pos():
-	# TODO Optimize this
-	# TODO only needs the frontline
 	var creatures = army_grid.get_front_creatures()
 	var front_pos = creatures[0].real_pos.x
 	if army_dir == Dir.RIGHT:
@@ -177,7 +180,17 @@ func _on_creature_positioned(creature):
 			creature.set_state(StateCreature.AWAIT_FIGHT, army_dir)
 		emit_signal("front_line_ready", creature.lane)
 	else:
-		creature.set_state(StateCreature.IDLE, army_dir)
+		if creature.is_ranged: 
+			# TODO - attacking frontline for now, will attack others later
+			var enemy_creature = enemy_army_grid.get_frontline_at_lane(creature.lane)
+			# TODO is this the right thing to check? 
+			if enemy_creature.state != StateCreature.WALK: 
+				creature_fight(creature)
+			else:
+				creature.set_state(StateCreature.AWAIT_FIGHT, army_dir)
+			emit_signal("archer_ready", creature)
+		else: 
+			creature.set_state(StateCreature.IDLE, army_dir)
 
 func has_creatures(): 
 	return army_grid.has_creatures()

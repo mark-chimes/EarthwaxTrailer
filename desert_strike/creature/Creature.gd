@@ -9,6 +9,8 @@ var DebugLabel = preload("res://desert_strike/DebugLabel.tscn")
 onready var rng = RandomNumberGenerator.new()
 var damage
 
+var is_ranged = false # TODO 
+
 var band
 var lane
 var priority = 0
@@ -36,13 +38,14 @@ var mute = true
 var health = 10
 onready var health_bar = HealthBar.instance()
 var MAX_HEALTH = 10
-var show_health = false
+
 const WALK_SPEED = 5
 const END_POS_DELTA = 0.1
 
 var time_between_attacks = 3
 var walk_target_x
 
+var show_health = true
 var is_debug_state = false
 var is_debug_band_lane = false
 var is_debug_target_x = false

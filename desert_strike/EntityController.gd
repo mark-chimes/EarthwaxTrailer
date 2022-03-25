@@ -1,5 +1,7 @@
 extends Node2D
 
+# TODO this is more of a battle controller than an entity controller at this point
+
 enum StateArmy {
 	MARCH,
 	BATTLE,
@@ -34,7 +36,6 @@ func _process(delta):
 	if $ArmyHuman.get_state() == StateArmy.BATTLE or $ArmyHuman.get_state() == StateArmy.DIE\
 			or $ArmyGlut.get_state() == StateArmy.BATTLE or $ArmyGlut.get_state() == StateArmy.DIE:
 		return
-	
 	
 	
 	if abs($ArmyHuman.get_pos() - $ArmyGlut.get_pos()) < BATTLE_SEP:
