@@ -1,4 +1,5 @@
-extends "res://desert_strike/creature/Creature.gd"
+extends "res://experiment/3d_pixel/creature3d/Creature.gd"
+
 
 func _ready(): 
 	sprite_dir = Dir.RIGHT

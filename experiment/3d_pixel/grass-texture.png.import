@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/grub_small_attack.png-079a064559007407d76395707f2415c7.s3tc.stex"
-path.etc2="res://.import/grub_small_attack.png-079a064559007407d76395707f2415c7.etc2.stex"
+path.s3tc="res://.import/grass-texture.png-2c7def76c2d2fea32158cb8b32ac59cb.s3tc.stex"
+path.etc2="res://.import/grass-texture.png-2c7def76c2d2fea32158cb8b32ac59cb.etc2.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc2" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://entity/creature/glut/grub/grub_small_attack.png"
-dest_files=[ "res://.import/grub_small_attack.png-079a064559007407d76395707f2415c7.s3tc.stex", "res://.import/grub_small_attack.png-079a064559007407d76395707f2415c7.etc2.stex" ]
+source_file="res://experiment/3d_pixel/grass-texture.png"
+dest_files=[ "res://.import/grass-texture.png-2c7def76c2d2fea32158cb8b32ac59cb.s3tc.stex", "res://.import/grass-texture.png-2c7def76c2d2fea32158cb8b32ac59cb.etc2.stex" ]
 
 [params]
 
