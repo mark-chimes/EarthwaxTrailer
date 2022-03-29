@@ -118,6 +118,30 @@ func create_and_add_creature(creatures_arr, CreatureType):
 	creature.connect("creature_positioned", self, "_on_creature_positioned")
 	creature.connect("attack", self, "_on_creature_attack")
 	creature.connect("death", self, "_on_creature_death")
+	if creature.is_ranged: 
+		creature.connect("fire_projectile", self, "_on_creature_fire_projectile")
+		
+func _on_creature_fire_projectile(archer_pos, target_band, target_lane, projectile): 
+	var start_x = archer_pos.x
+	
+	var lane_offset = FIGHT_SEP + target_lane*1.0/10
+	var end_x =  battlefronts[target_lane] + (army_dir * (lane_offset + target_band * BAND_SEP))
+	var total_dist = end_x - start_x
+	projectile.real_pos.y = -1.5
+	projectile.real_pos.x = start_x 
+	projectile.real_pos.z = archer_pos.z
+	var frames = 7
+	var travel_time = total_dist / 20.0
+	
+	projectile.horizontal_speed = total_dist / travel_time
+	projectile.end_x = end_x
+	projectile.vertical_speed = -projectile.horizontal_speed
+	projectile.vertical_acc = -2*projectile.vertical_speed / (travel_time)
+	projectile.rot_dist = total_dist / (frames + 1)
+	projectile.is_flying = true
+	
+	add_child(projectile)
+	parallax_engine.add_object_to_parallax_world(projectile)
 
 func battle(new_battlefronts, new_enemy_army_grid):
 	state = StateArmy.BATTLE

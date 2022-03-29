@@ -1,0 +1,137 @@
+[gd_scene load_steps=21 format=2]
+
+[ext_resource path="res://experiment/arrow/Arrow2.tscn" type="PackedScene" id=1]
+[ext_resource path="res://decor/background/mountain/mountain_with_grass.png" type="Texture" id=2]
+[ext_resource path="res://entity/creature/human/farmer/farmer_talk_alert.png" type="Texture" id=3]
+[ext_resource path="res://entity/creature/human/archer/archer_idle.png" type="Texture" id=4]
+[ext_resource path="res://decor/background/water/blue-strip.png" type="Texture" id=5]
+[ext_resource path="res://experiment/arrow/ArrowExperiment.gd" type="Script" id=6]
+[ext_resource path="res://entity/creature/human/archer/archer_loose_arrow.png" type="Texture" id=7]
+
+[sub_resource type="AtlasTexture" id=16]
+atlas = ExtResource( 4 )
+region = Rect2( 0, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = ExtResource( 7 )
+region = Rect2( 128, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=4]
+atlas = ExtResource( 7 )
+region = Rect2( 192, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=5]
+atlas = ExtResource( 7 )
+region = Rect2( 0, 64, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=6]
+atlas = ExtResource( 7 )
+region = Rect2( 64, 64, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=7]
+atlas = ExtResource( 7 )
+region = Rect2( 128, 64, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=8]
+atlas = ExtResource( 7 )
+region = Rect2( 192, 64, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=9]
+atlas = ExtResource( 7 )
+region = Rect2( 0, 128, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=10]
+atlas = ExtResource( 7 )
+region = Rect2( 64, 128, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=11]
+atlas = ExtResource( 7 )
+region = Rect2( 128, 128, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=12]
+atlas = ExtResource( 7 )
+region = Rect2( 192, 128, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=13]
+atlas = ExtResource( 7 )
+region = Rect2( 0, 192, 64, 64 )
+
+[sub_resource type="SpriteFrames" id=14]
+animations = [ {
+"frames": [ SubResource( 16 ) ],
+"loop": true,
+"name": "idle",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ), SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), SubResource( 10 ), SubResource( 11 ), SubResource( 12 ), SubResource( 13 ) ],
+"loop": true,
+"name": "attack",
+"speed": 10.0
+} ]
+
+[node name="ArrowExperiment" type="Node2D"]
+script = ExtResource( 6 )
+time_between_waves = 10.0
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+current = true
+zoom = Vector2( 0.5, 0.5 )
+
+[node name="Background" type="Node2D" parent="."]
+
+[node name="MountainWithGrass" type="Sprite" parent="Background"]
+position = Vector2( 480, 273 )
+scale = Vector2( 2, 2 )
+z_index = -1000
+texture = ExtResource( 2 )
+
+[node name="Blue-strip" type="Sprite" parent="Background"]
+position = Vector2( 480, 513 )
+scale = Vector2( 2, 2 )
+texture = ExtResource( 5 )
+
+[node name="Archer" type="Node2D" parent="."]
+position = Vector2( 83, 479 )
+
+[node name="Sprite" type="Sprite" parent="Archer"]
+visible = false
+scale = Vector2( 2, 2 )
+texture = ExtResource( 4 )
+offset = Vector2( 0, -31 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="Archer"]
+scale = Vector2( 2, 2 )
+frames = SubResource( 14 )
+animation = "idle"
+offset = Vector2( 0, -31 )
+
+[node name="End" type="Node2D" parent="."]
+position = Vector2( 887, 479 )
+
+[node name="Sprite" type="Sprite" parent="End"]
+scale = Vector2( 2, 2 )
+texture = ExtResource( 3 )
+offset = Vector2( 0, -26 )
+
+[node name="End2" type="Node2D" parent="."]
+position = Vector2( 552, 481 )
+
+[node name="Sprite" type="Sprite" parent="End2"]
+scale = Vector2( 2, 2 )
+texture = ExtResource( 3 )
+offset = Vector2( 0, -26 )
+
+[node name="End3" type="Node2D" parent="."]
+position = Vector2( 221, 480 )
+
+[node name="Sprite" type="Sprite" parent="End3"]
+scale = Vector2( 2, 2 )
+texture = ExtResource( 3 )
+offset = Vector2( 0, -26 )
+
+[node name="Arrow" parent="." instance=ExtResource( 1 )]
+visible = false
+position = Vector2( 80, 421 )
+
+[connection signal="animation_finished" from="Archer/AnimatedSprite" to="." method="_on_AnimatedSprite_animation_finished"]
