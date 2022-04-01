@@ -38,6 +38,7 @@ var state = State.IDLE
 var sprite_dir = Dir.RIGHT
 var dir = Dir.RIGHT
 var is_in_combat = false
+var is_ready_to_swap = false
 var mute = true
 
 var health = 10
@@ -100,9 +101,8 @@ func _process(delta):
 			real_pos.x += delta * WALK_SPEED * dir
 		State.WALK:
 			if is_positioned():
-				print("i'm ready to swap", band, lane)
 				emit_signal("creature_positioned", self)
-				check_for_swap()
+				wait_for_swap()
 				return
 			real_pos.x += delta * WALK_SPEED * dir
 		State.AWAIT_FIGHT: 
@@ -113,6 +113,14 @@ func _process(delta):
 			pass
 		State.DIE:
 			pass
+
+func wait_for_swap():
+	yield(get_tree().create_timer(1), "timeout")
+	if not state == State.IDLE:
+		return
+	emit_signal("ready_to_swap", self)
+	is_ready_to_swap = true
+	wait_for_swap()
 
 func check_for_swap():
 	emit_signal("ready_to_swap", self)
@@ -283,6 +291,8 @@ func play_sound_attack():
 	sounds[rng.randi() % sounds.size()].play()
 
 func walk_to(new_walk_target_x):
+	#TODO check we arent in position already
+	is_ready_to_swap = false
 	walk_target_x = new_walk_target_x
 	var new_dir
 	if new_walk_target_x > real_pos.x:
