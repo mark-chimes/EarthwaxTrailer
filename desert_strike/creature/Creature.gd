@@ -2,6 +2,7 @@ extends "res://parallax/util/ParallaxObject.gd"
 signal attack(this)
 signal death(this)
 signal creature_positioned(this)
+signal ready_to_swap(this)
 
 var HealthBar = preload("res://desert_strike/HealthBar.tscn")
 var DebugLabel = preload("res://desert_strike/DebugLabel.tscn")
@@ -99,7 +100,9 @@ func _process(delta):
 			real_pos.x += delta * WALK_SPEED * dir
 		State.WALK:
 			if is_positioned():
+				print("i'm ready to swap", band, lane)
 				emit_signal("creature_positioned", self)
+				check_for_swap()
 				return
 			real_pos.x += delta * WALK_SPEED * dir
 		State.AWAIT_FIGHT: 
@@ -110,6 +113,9 @@ func _process(delta):
 			pass
 		State.DIE:
 			pass
+
+func check_for_swap():
+	emit_signal("ready_to_swap", self)
 			
 func is_positioned(): 
 	return abs(walk_target_x - real_pos.x ) < END_POS_DELTA

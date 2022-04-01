@@ -42,7 +42,7 @@ enum StateArmy {
 
 var state = StateArmy.IDLE
 
-const BANDS_SPAWNED = 1
+const BANDS_SPAWNED = 2
 const NUM_LANES = 4
 const DISTANCE_BETWEEN_LANES = 4
 const ARMY_HALF_SEP = 20
@@ -117,6 +117,7 @@ func create_and_add_creature(creatures_arr, CreatureType):
 	creature.connect("creature_positioned", self, "_on_creature_positioned")
 	creature.connect("attack", self, "_on_creature_attack")
 	creature.connect("death", self, "_on_creature_death")
+	creature.connect("ready_to_swap", self, "_on_creature_ready_to_swap")
 
 func battle(new_battlefronts, new_enemy_army_grid):
 	state = StateArmy.BATTLE
@@ -127,6 +128,16 @@ func battle(new_battlefronts, new_enemy_army_grid):
 func get_state():
 	return state
 	
+func _on_creature_ready_to_swap(creature):
+	if not army_grid.has_creature_at(creature.band + 1, creature.lane):
+		return
+	var other_creature = army_grid.get_creature_band_lane(creature.band + 1, creature.lane)
+	if other_creature.priority >= creature.priority:
+		return
+	army_grid.swap_creatures(creature, other_creature)
+	position_creature(creature)
+	position_creature(other_creature)
+
 func _on_creature_death(dead_creature):
 	emit_signal("creature_death", dead_creature.band, dead_creature.lane)
 	dead_creature.disconnect("attack", self, "_on_creature_attack")

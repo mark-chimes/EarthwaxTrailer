@@ -8,4 +8,3 @@ func _ready():
 	time_between_attacks = 2
 	melee_damage = rng.randi_range(3,7)
 	ranged_damage = 0
-	priority = 10
