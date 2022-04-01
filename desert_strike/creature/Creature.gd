@@ -57,6 +57,9 @@ onready var debug_label = DebugLabel.instance()
 
 func _ready(): 
 	rng.randomize()
+	priority = rng.randi_range(0,255)
+	var color = Color8(priority, 255 - priority, 0, 255)
+	$AnimatedSprite.modulate = color
 	init_health_bar()
 	add_child(debug_label)
 	debug_label.position.x = 0
@@ -196,10 +199,11 @@ func set_state(new_state, new_dir):
 func take_damage(the_damage): 
 	hurt_anim()
 	health -= the_damage
-	if health <= 0: 
-		health = 0
-		if state != State.DIE:
-			set_state(State.DIE, dir)
+#	temporarily removing death to test jostling
+#	if health <= 0: 
+#		health = 0
+#		if state != State.DIE:
+#			set_state(State.DIE, dir)
 	update_health_bar(health)
 
 func _on_animation_finished():
