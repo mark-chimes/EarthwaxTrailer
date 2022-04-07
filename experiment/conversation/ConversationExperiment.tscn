@@ -1,0 +1,31 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://decor/background/mountain/mountain_with_grass.png" type="Texture" id=1]
+[ext_resource path="res://desert_strike/Camera2D.tscn" type="PackedScene" id=2]
+[ext_resource path="res://entity/creature/human/farmer/farmer_talk_alert.png" type="Texture" id=3]
+[ext_resource path="res://experiment/conversation/Speechbox.tscn" type="PackedScene" id=4]
+[ext_resource path="res://experiment/conversation/Speechbox.gd" type="Script" id=5]
+[ext_resource path="res://experiment/conversation/Speaker.gd" type="Script" id=6]
+[ext_resource path="res://experiment/conversation/ConversationExperiment.gd" type="Script" id=7]
+
+[node name="ConversationExperiment" type="Node2D"]
+script = ExtResource( 7 )
+
+[node name="Camera2D" parent="." instance=ExtResource( 2 )]
+
+[node name="MountainWithGrass" type="Sprite" parent="."]
+position = Vector2( 960, 470 )
+scale = Vector2( 2, 2 )
+texture = ExtResource( 1 )
+
+[node name="Speaker" type="Node2D" parent="."]
+position = Vector2( 945, 641 )
+script = ExtResource( 6 )
+
+[node name="FarmerIdleRest" type="Sprite" parent="Speaker"]
+position = Vector2( 0, -52 )
+scale = Vector2( 2, 2 )
+texture = ExtResource( 3 )
+
+[node name="Speechbox" parent="Speaker" instance=ExtResource( 4 )]
+script = ExtResource( 5 )
