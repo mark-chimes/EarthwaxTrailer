@@ -9,3 +9,5 @@ func _ready():
 	melee_damage = rng.randi_range(3,7)
 	ranged_damage = 0
 	priority = 10
+	var light_purple = Color8(180, 120, 220, 255)
+	speech_box.set_font_color(light_purple)

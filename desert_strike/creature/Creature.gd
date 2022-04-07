@@ -284,3 +284,12 @@ func walk_to(new_walk_target_x):
 	else:
 		new_dir = Dir.LEFT
 	set_state(State.WALK, new_dir)
+
+func say(text): 
+	if state == State.DIE:
+		printerr("Attempting to tell dead creature to say:" + text)
+		return
+	speech_box.queue_text(text)
+
+func is_speaking(): 
+	return speech_box.is_speaking()
