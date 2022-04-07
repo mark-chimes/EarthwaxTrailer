@@ -1,5 +1,9 @@
 extends "res://experiment/3d_pixel/creature3d/Creature.gd"
 
+onready var Arrow =  preload("res://experiment/3d_pixel/Arrow.tscn")
+
+signal fire_projectile(archer_pos, target_band, target_lane, projectile)
+
 func _ready(): 
 	sprite_dir = Dir.RIGHT
 	mute = true
@@ -9,3 +13,7 @@ func _ready():
 	priority = 5
 	is_ranged = true
 	attack_range = 3
+
+func fire_ranged_projectile(): 
+	var projectile = Arrow.instance()
+	emit_signal("fire_projectile", real_pos, ranged_target_band, ranged_target_lane, projectile)

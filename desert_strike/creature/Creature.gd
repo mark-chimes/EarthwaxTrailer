@@ -43,7 +43,7 @@ var health = 10
 onready var health_bar = HealthBar.instance()
 var MAX_HEALTH = 10
 
-const WALK_SPEED = 5
+const WALK_SPEED = 10
 const END_POS_DELTA = 0.1
 
 var time_between_attacks = 3

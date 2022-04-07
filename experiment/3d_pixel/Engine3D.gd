@@ -91,10 +91,11 @@ func position_stuff_on_screen(delta):
 
 func object_position_converter(object): 
 	object.translation.x = object.real_pos.x / 10
-	object.translation.y = object.real_pos.y
+	object.translation.y = -object.real_pos.y / 10
 	object.translation.z = object.real_pos.z / 10
 	
 	
+# TODO Rename this
 func add_object_to_parallax_world(object):
 	object_position_converter(object)
 	parallax_objects.append(object)
