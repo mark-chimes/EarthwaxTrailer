@@ -119,7 +119,6 @@ func _on_object_disappear(object):
 	object.queue_free()
 
 func _on_projectile_disappear(projectile): 
-	print("ERASING: " + str(projectile))
 	projectiles.erase(projectile)
 	projectile.queue_free()
 	
