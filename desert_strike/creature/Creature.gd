@@ -5,6 +5,7 @@ signal creature_positioned(this)
 
 var HealthBar = preload("res://desert_strike/HealthBar.tscn")
 var DebugLabel = preload("res://desert_strike/DebugLabel.tscn")
+var SpeechBox = preload("res://speech/SpeechBox.tscn")
 
 onready var rng = RandomNumberGenerator.new()
 var melee_damage
@@ -53,12 +54,15 @@ var show_health = false
 var is_debug_state = false
 var is_debug_band_lane = false
 var is_debug_target_x = false
+var is_speech_possible = true
 onready var debug_label = DebugLabel.instance()
+onready var speech_box = SpeechBox.instance()
 
 func _ready(): 
 	rng.randomize()
 	init_health_bar()
 	add_child(debug_label)
+	add_child(speech_box)
 	debug_label.position.x = 0
 	debug_label.position.y = -96
 	update_debug_with_target_x()
