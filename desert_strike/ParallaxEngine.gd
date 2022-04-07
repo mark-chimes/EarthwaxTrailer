@@ -12,6 +12,8 @@ const Z_UNIT = 0.05 # Separation degree for z
 
 var ParallaxObjectGenerator = preload("res://parallax/util/ParallaxObjectGenerator.gd")
 var object_generator = ParallaxObjectGenerator.new()
+
+# TODO should use a red-black tree instead of an array
 var parallax_objects = []
 var projectiles = []
 
@@ -64,7 +66,11 @@ func position_stuff_on_screen(delta):
 		parallax_obj.visible = true
 		parallax_obj.position.x = z_and_x_to_x_converter(player_real_pos_x, 
 				parallax_obj.real_pos.z, parallax_obj.real_pos.x)
+
 	for parallax_obj in projectiles:
+		parallax_obj.visible = true
+		parallax_obj.position.x = z_and_x_to_x_converter(player_real_pos_x, 
+				parallax_obj.real_pos.z, parallax_obj.real_pos.x)
 		parallax_obj.position.y = y_and_z_to_y_converter(parallax_obj.real_pos.y, parallax_obj.real_pos.z)
 
 func hero_world_movement(delta): 
@@ -100,6 +106,20 @@ func z_and_x_to_x_converter(hero_x_pos, z_pos, x_pos):
 func add_object_to_parallax_world(object):
 	object.position.y = y_and_z_to_y_converter(object.real_pos.y, object.real_pos.z)
 	object.z_index = -object.real_pos.z * 10
-	parallax_objects.append(object)
 	if object.is_projectile: 
 		projectiles.append(object)
+	else:
+		parallax_objects.append(object)
+
+func _on_object_disappear(object): 
+	if object.is_projectile: 
+		_on_projectile_disappear(object)
+		return
+	parallax_objects.erase(object)
+	object.queue_free()
+
+func _on_projectile_disappear(projectile): 
+	print("ERASING: " + str(projectile))
+	projectiles.erase(projectile)
+	projectile.queue_free()
+	

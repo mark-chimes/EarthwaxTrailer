@@ -17,3 +17,4 @@ func _ready():
 func fire_ranged_projectile(): 
 	var projectile = Arrow.instance()
 	emit_signal("fire_projectile", real_pos, ranged_target_band, ranged_target_lane, projectile)
+
