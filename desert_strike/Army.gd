@@ -135,6 +135,7 @@ func _on_creature_fire_projectile(archer_pos, target_band, target_lane, projecti
 	var travel_time = total_dist / 20.0
 	
 	projectile.horizontal_speed = total_dist / travel_time
+	projectile.start_x = start_x
 	projectile.end_x = end_x
 	projectile.vertical_speed = -projectile.horizontal_speed
 	projectile.vertical_acc = -2*projectile.vertical_speed / (travel_time)

@@ -7,6 +7,7 @@ var vertical_acc
 var rot_dist
 var is_flying
 var end_x
+var start_x
 
 const DISAPPEAR_TIME = 3
 
@@ -25,7 +26,7 @@ func _process(delta):
 	real_pos.x += delta*horizontal_speed
 	real_pos.y += delta*vertical_speed
 	vertical_speed += vertical_acc * delta
-	var next_frame = floor(real_pos.x / rot_dist)
+	var next_frame = floor((real_pos.x - start_x) / rot_dist)
 	get_node("AnimatedSprite").frame = next_frame
 
 func disappear_after_timeout(): 
