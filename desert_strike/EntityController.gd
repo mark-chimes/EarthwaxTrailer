@@ -13,6 +13,8 @@ const BATTLE_SEP = 10
 const NUM_LANES = 4
 onready var rng = RandomNumberGenerator.new()
 
+var SpeechSystem = preload("res://desert_strike/SpeechSystem.gd")
+
 const TIME_BETWEEN_WAVES = 15
 var wave_timer = 0 
 
@@ -45,6 +47,12 @@ func _process(delta):
 		for i in range(0,NUM_LANES): 
 			var offset = rng.randf_range(-0.2, 0.2)
 			battlefronts.append(battlefront_base + offset)
+		
+		var speech_system = SpeechSystem.new()
+		$ArmyHuman.set_speech_system(speech_system)
+#		$ArmyGlut.set_speech_system(speech_system)
+		display_test_text()
+		
 		$ArmyHuman.battle(battlefronts, $ArmyGlut.army_grid)
 		$ArmyGlut.battle(battlefronts, $ArmyHuman.army_grid)
 		$ArmyHuman.connect("front_line_ready", $ArmyGlut, "_on_front_line_ready")
@@ -56,3 +64,44 @@ func _process(delta):
 
 func _human_defeat():
 	$ArmyGlut.idle()
+
+func display_test_text(): 
+	$ArmyHuman.say("Hello there!")
+	yield(get_tree().create_timer(2), "timeout")
+	$ArmyHuman.say("Let's wait awhile!")
+	yield(get_tree().create_timer(5), "timeout")
+	$ArmyHuman.say("Now wait a little time")
+	yield(get_tree().create_timer(1), "timeout")
+	$ArmyHuman.say("Wait not much")
+	yield(get_tree().create_timer(0.5), "timeout")
+	$ArmyHuman.say("At all")
+	yield(get_tree().create_timer(0.5), "timeout")
+	$ArmyHuman.say("The first text...")
+	$ArmyHuman.say("...and the second text.")
+	yield(get_tree().create_timer(2), "timeout")
+	$ArmyHuman.say("A")
+	$ArmyHuman.say("Bunch")
+	$ArmyHuman.say("of")
+	$ArmyHuman.say("text")
+	$ArmyHuman.say("at")
+	$ArmyHuman.say("once.")	
+#	yield(get_tree().create_timer(2), "timeout")
+#	$ArmyGlut.say("Now it's our turn!")
+#	yield(get_tree().create_timer(2), "timeout")
+#	$ArmyGlut.say("Wait we're not supposed to be able to speak")
+#	yield(get_tree().create_timer(5), "timeout")
+#	$ArmyGlut.say("Grrrrr")
+#	yield(get_tree().create_timer(1), "timeout")
+#	$ArmyGlut.say("GHlub")
+#	yield(get_tree().create_timer(0.5), "timeout")
+#	$ArmyGlut.say("SSSSSCHHH")
+#	yield(get_tree().create_timer(0.5), "timeout")
+#	$ArmyGlut.say("Gleep")
+#	$ArmyGlut.say("Gloop")
+#	yield(get_tree().create_timer(2), "timeout")
+#	$ArmyGlut.say("Kk")
+#	$ArmyGlut.say("Shtk")
+#	$ArmyGlut.say("Plk")
+#	$ArmyGlut.say("Txt")
+#	$ArmyGlut.say("Nrgle")
+#	$ArmyGlut.say("Glugh")	

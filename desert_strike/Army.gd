@@ -17,6 +17,8 @@ var battlefronts = []
 onready var army_grid = ArmyGrid.new()
 var enemy_army_grid
 
+var speech_system = null
+
 # TODO Special parallax converter subobject for grid army positions to real positions. 
 
 enum Dir {
@@ -252,13 +254,12 @@ func should_creature_1_be_further_back(creature1, creature2):
 		
 	return creature1.priority < creature2.priority
 
+func set_speech_system(new_speech_system): 
+	speech_system = new_speech_system
+	speech_system.set_army_grid(army_grid)
+	speech_system.set_rng(rng)
+
 func say(text): 
-	var all_creatures = army_grid.get_all_creatures()
-	var num_creatures = len(all_creatures)
-	var random_creature_index = rng.randi_range(0, num_creatures-1)
-	var random_creature = all_creatures[random_creature_index]
-	var num_tries = 0 
-	while(random_creature.is_speaking() and num_tries < num_creatures/2): 
-		random_creature_index = rng.randi_range(0, num_creatures-1)
-		random_creature = all_creatures[random_creature_index]
-	random_creature.say(text)
+	if speech_system == null: 
+		return
+	speech_system.say(text)
