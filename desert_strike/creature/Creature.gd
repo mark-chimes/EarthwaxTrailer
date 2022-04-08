@@ -2,6 +2,7 @@ extends "res://parallax/util/ParallaxObject.gd"
 signal attack(this)
 signal death(this)
 signal creature_positioned(this)
+signal done_speaking(this)
 
 var HealthBar = preload("res://desert_strike/HealthBar.tscn")
 var DebugLabel = preload("res://desert_strike/DebugLabel.tscn")
@@ -63,6 +64,7 @@ func _ready():
 	init_health_bar()
 	add_child(debug_label)
 	add_child(speech_box)
+	speech_box.connect("done_speaking", self, "_on_speech_box_done_speaking")
 	debug_label.position.x = 0
 	debug_label.position.y = -96
 	update_debug_with_target_x()
@@ -293,3 +295,6 @@ func say(text):
 
 func is_speaking(): 
 	return speech_box.is_speaking()
+	
+func _on_speech_box_done_speaking(): 
+	emit_signal("done_speaking", self)

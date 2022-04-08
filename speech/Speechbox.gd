@@ -1,5 +1,7 @@
 extends Node2D
 
+signal done_speaking
+
 const WPM = 100.0
 var WPS = WPM / 60.0
 const LPW = 5
@@ -27,6 +29,7 @@ func _process(delta):
 				fade -= delta * FADE_SPEED
 				modulate = Color(1,1,1,fade)
 			else: 
+				emit_signal("done_speaking")
 				visible = false
 		else: 
 			is_speaking = true
