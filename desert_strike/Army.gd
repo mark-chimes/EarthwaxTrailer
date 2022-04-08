@@ -272,3 +272,8 @@ func say(text):
 	if speech_system == null: 
 		return
 	speech_system.say(text)
+
+func say_with_creature(text, filter): 
+	if speech_system == null: 
+		return
+	speech_system.say_with_creature(text, filter)

@@ -28,13 +28,19 @@ func spawn_new_wave():
 func _on_creature_death(dead_creature): 
 	# TODO janky hacky temp code
 	._on_creature_death(dead_creature)
-	if dead_creature.is_ranged: 
+	if is_archer(dead_creature): 
 		dead_archers += 1
 		if dead_archers >= ARCHER_DEATH_TRIGGER_NUM: 
-			say("They are killing our ranged units!")
+			say_with_creature("They are killing our ranged units!", funcref(self, "is_farmer"))
 			dead_archers = 0
 	else: 
 		dead_farmers += 1
 		if dead_farmers >= FARMER_DEATH_TRIGGER_NUM: 
-			say("Our farmers are dying!")
+			say_with_creature("Our farmers are dying!", funcref(self, "is_archer"))
 			dead_farmers = 0
+
+func is_archer(creature): 
+	return creature.is_ranged
+
+func is_farmer(creature): 
+	return not creature.is_ranged

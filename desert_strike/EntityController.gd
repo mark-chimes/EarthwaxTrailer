@@ -15,7 +15,7 @@ onready var rng = RandomNumberGenerator.new()
 
 var SpeechSystem = preload("res://desert_strike/SpeechSystem.gd")
 
-const TIME_BETWEEN_WAVES = 150
+const TIME_BETWEEN_WAVES = 15
 var wave_timer = 0 
 
 func _ready():
