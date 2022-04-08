@@ -137,7 +137,7 @@ func get_state():
 func _on_creature_death(dead_creature):
 	emit_signal("creature_death", dead_creature.band, dead_creature.lane)
 	dead_creature.disconnect("attack", self, "_on_creature_attack")
-	dead_creature.disconnect("creature_death", self, "_creature_death")
+	dead_creature.disconnect("death", self, "_creature_death")
 
 	var lane_index =  dead_creature.lane
 	var band_index = dead_creature.band
