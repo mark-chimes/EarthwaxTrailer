@@ -20,6 +20,10 @@ func say(text):
 	display_text(text)
 	
 func display_text(text):
+	if not army_grid.has_creatures():
+		printerr("Trying to get an empty army to say something")
+		return
+		
 	var all_creatures = army_grid.get_all_creatures()
 	var num_creatures = len(all_creatures)
 	var random_creature_index = rng.randi_range(0, num_creatures-1)

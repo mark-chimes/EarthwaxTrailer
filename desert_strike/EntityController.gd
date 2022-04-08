@@ -15,11 +15,12 @@ onready var rng = RandomNumberGenerator.new()
 
 var SpeechSystem = preload("res://desert_strike/SpeechSystem.gd")
 
-const TIME_BETWEEN_WAVES = 15
+const TIME_BETWEEN_WAVES = 150
 var wave_timer = 0 
 
 func _ready():
 	$ArmyHuman.connect("defeat", self, "_human_defeat")
+	$ArmyGlut.connect("defeat", self, "_glut_defeat")
 	rng.randomize()
 
 func _process(delta):
@@ -58,23 +59,32 @@ func _process(delta):
 		$ArmyGlut.connect("attack", $ArmyHuman, "_on_get_attacked")
 		
 		# SPEECH
-		var speech_system = SpeechSystem.new()
-		$ArmyHuman.set_speech_system(speech_system)
+		var human_speech_system = SpeechSystem.new()
+		var glut_speech_system = SpeechSystem.new()
+		$ArmyHuman.set_speech_system(human_speech_system)
+		$ArmyGlut.set_speech_system(glut_speech_system)
 		$ArmyHuman.connect("many_deaths", self, "_on_many_human_deaths")
 		$ArmyGlut.connect("many_deaths", self, "_on_many_glut_deaths")
 		$ArmyHuman.say("Prepare for battle!")
+		$ArmyGlut.say("GRRR")
 		# $ArmyGlut.set_speech_system(speech_system)
 		# display_test_text()
 		
 
 func _human_defeat():
 	$ArmyGlut.idle()
+	$ArmyGlut.say("jajajajaja")
+	
+func _glut_defeat():
+	$ArmyHuman.idle()
+	$ArmyHuman.say("They are dead! We've won!")
 
 func _on_many_human_deaths(): 
 	$ArmyHuman.say("Many of us have died, but hold the line!")
 	
 func _on_many_glut_deaths(): 
 	$ArmyHuman.say("They can be killed! Their numbers wane!")	
+	$ArmyGlut.say("Blegh")
 
 func display_test_text(): 
 	$ArmyHuman.say("Hello there!")
