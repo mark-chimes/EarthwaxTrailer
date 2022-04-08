@@ -48,11 +48,6 @@ func _process(delta):
 			var offset = rng.randf_range(-0.2, 0.2)
 			battlefronts.append(battlefront_base + offset)
 		
-		var speech_system = SpeechSystem.new()
-		$ArmyHuman.set_speech_system(speech_system)
-#		$ArmyGlut.set_speech_system(speech_system)
-		display_test_text()
-		
 		$ArmyHuman.battle(battlefronts, $ArmyGlut.army_grid)
 		$ArmyGlut.battle(battlefronts, $ArmyHuman.army_grid)
 		$ArmyHuman.connect("front_line_ready", $ArmyGlut, "_on_front_line_ready")
@@ -61,9 +56,25 @@ func _process(delta):
 		$ArmyGlut.connect("creature_death", $ArmyHuman, "_on_enemy_creature_death")
 		$ArmyHuman.connect("attack", $ArmyGlut, "_on_get_attacked")
 		$ArmyGlut.connect("attack", $ArmyHuman, "_on_get_attacked")
+		
+		# SPEECH
+		var speech_system = SpeechSystem.new()
+		$ArmyHuman.set_speech_system(speech_system)
+		$ArmyHuman.connect("many_deaths", self, "_on_many_human_deaths")
+		$ArmyGlut.connect("many_deaths", self, "_on_many_glut_deaths")
+		$ArmyHuman.say("Prepare for battle!")
+		# $ArmyGlut.set_speech_system(speech_system)
+		# display_test_text()
+		
 
 func _human_defeat():
 	$ArmyGlut.idle()
+
+func _on_many_human_deaths(): 
+	$ArmyHuman.say("Many of us have died, but hold the line!")
+	
+func _on_many_glut_deaths(): 
+	$ArmyHuman.say("They can be killed! Their numbers wane!")	
 
 func display_test_text(): 
 	$ArmyHuman.say("Hello there!")

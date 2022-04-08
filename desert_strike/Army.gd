@@ -4,8 +4,12 @@ signal defeat
 signal attack(band, lane, damage)
 signal front_line_ready(lane)
 signal creature_death(band, lane)
+signal many_deaths
 
 var ArmyGrid = preload("res://desert_strike/ArmyGrid.gd")
+
+var num_deaths = 0
+const DEATH_TRIGGER_NUM = 8
 
 # var creature = preload("res://desert_strike/creature/creature.tscn")
 var Creature
@@ -133,7 +137,7 @@ func get_state():
 func _on_creature_death(dead_creature):
 	emit_signal("creature_death", dead_creature.band, dead_creature.lane)
 	dead_creature.disconnect("attack", self, "_on_creature_attack")
-	dead_creature.disconnect("death", self, "_creature_death")
+	dead_creature.disconnect("creature_death", self, "_creature_death")
 
 	var lane_index =  dead_creature.lane
 	var band_index = dead_creature.band
@@ -149,6 +153,11 @@ func _on_creature_death(dead_creature):
 	# TODO defeat and routing mechanics: 
 	if not has_creatures(): 
 		emit_signal("defeat")
+	
+	num_deaths += 1
+	if num_deaths >= DEATH_TRIGGER_NUM: 
+		num_deaths = 0
+		emit_signal("many_deaths")
 		
 func idle():
 	state = StateArmy.IDLE
