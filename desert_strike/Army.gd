@@ -4,8 +4,12 @@ signal defeat
 signal attack(band, lane, damage)
 signal front_line_ready(lane)
 signal creature_death(band, lane)
+signal many_deaths
 
 var ArmyGrid = preload("res://desert_strike/ArmyGrid.gd")
+
+var num_deaths = 0
+const DEATH_TRIGGER_NUM = 8
 
 # var creature = preload("res://desert_strike/creature/creature.tscn")
 var Creature
@@ -17,6 +21,8 @@ var battlefronts = []
 onready var army_grid = ArmyGrid.new()
 var enemy_army_grid
 var use_slow_arrows_on_short_dist = true
+
+var speech_system = null
 
 # TODO Special parallax converter subobject for grid army positions to real positions. 
 
@@ -192,6 +198,11 @@ func _on_creature_death(dead_creature):
 	# TODO defeat and routing mechanics: 
 	if not has_creatures(): 
 		emit_signal("defeat")
+	
+	num_deaths += 1
+	if num_deaths >= DEATH_TRIGGER_NUM: 
+		num_deaths = 0
+		emit_signal("many_deaths")
 		
 func idle():
 	state = StateArmy.IDLE
@@ -272,3 +283,18 @@ func should_creature_1_be_further_back(creature1, creature2):
 		return true
 		
 	return creature1.priority < creature2.priority
+
+func set_speech_system(new_speech_system): 
+	speech_system = new_speech_system
+	speech_system.set_army_grid(army_grid)
+	speech_system.set_rng(rng)
+
+func say(text): 
+	if speech_system == null: 
+		return
+	speech_system.say(text)
+
+func say_with_creature(text, filter): 
+	if speech_system == null: 
+		return
+	speech_system.say_with_creature(text, filter)

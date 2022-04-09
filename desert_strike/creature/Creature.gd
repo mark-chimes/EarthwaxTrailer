@@ -2,11 +2,13 @@ extends "res://parallax/util/ParallaxObject.gd"
 signal attack(this)
 signal death(this)
 signal creature_positioned(this)
+signal done_speaking(this)
 signal disappear(this)
 signal ready_to_swap(this)
 
 var HealthBar = preload("res://desert_strike/HealthBar.tscn")
 var DebugLabel = preload("res://desert_strike/DebugLabel.tscn")
+var SpeechBox = preload("res://speech/SpeechBox.tscn")
 
 onready var rng = RandomNumberGenerator.new()
 var melee_damage
@@ -57,7 +59,9 @@ var show_health = false
 var is_debug_state = false
 var is_debug_band_lane = false
 var is_debug_target_x = false
+var is_speech_possible = true
 onready var debug_label = DebugLabel.instance()
+onready var speech_box = SpeechBox.instance()
 
 func _ready(): 
 	rng.randomize()
@@ -66,6 +70,8 @@ func _ready():
 	$AnimatedSprite.modulate = color
 	init_health_bar()
 	add_child(debug_label)
+	add_child(speech_box)
+	speech_box.connect("done_speaking", self, "_on_speech_box_done_speaking")
 	debug_label.position.x = 0
 	debug_label.position.y = -96
 	update_debug_with_target_x()
@@ -214,11 +220,10 @@ func set_state(new_state, new_dir):
 func take_damage(the_damage): 
 	hurt_anim()
 	health -= the_damage
-#	temporarily removing death to test jostling
-#	if health <= 0: 
-#		health = 0
-#		if state != State.DIE:
-#			set_state(State.DIE, dir)
+	if health <= 0: 
+		health = 0
+		if state != State.DIE:
+			set_state(State.DIE, dir)
 	update_health_bar(health)
 
 func _on_animation_finished():
@@ -238,6 +243,7 @@ func _on_animation_finished():
 
 func prepare_attack_strike(): 
 	yield(get_tree().create_timer(time_between_attacks), "timeout")
+	# TODO needs to cancel this - we need to fix how fighting works
 	if state == State.FIGHT: 
 		emit_signal("attack", self)
 	if state != State.FIGHT: # has to be checked again after attack signal
@@ -306,3 +312,15 @@ func walk_to(new_walk_target_x):
 	else:
 		new_dir = Dir.LEFT
 	set_state(State.WALK, new_dir)
+
+func say(text): 
+	if state == State.DIE:
+		printerr("Attempting to tell dead creature to say:" + text)
+		return
+	speech_box.queue_text(text)
+
+func is_speaking(): 
+	return speech_box.is_speaking()
+	
+func _on_speech_box_done_speaking(): 
+	emit_signal("done_speaking", self)
