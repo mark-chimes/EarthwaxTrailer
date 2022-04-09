@@ -9,6 +9,9 @@ onready var rng = RandomNumberGenerator.new()
 
 
 var SpeechSystem = preload("res://desert_strike/SpeechSystem.gd")
+var BuildingPlace = preload("res://desert_strike/building/BuildingPlace.tscn") 
+onready var parallax_engine = get_parent().get_node("ParallaxEngine")
+
 const TIME_BETWEEN_WAVES = 15
 
 var wave_timer = 0 
@@ -17,11 +20,13 @@ func _ready():
 	$ArmyHuman.connect("defeat", self, "_human_defeat")
 	$ArmyGlut.connect("defeat", self, "_glut_defeat")
 	rng.randomize()
+	create_building_places()
 
 func _process(delta):
-#	if not $ArmyHuman.has_creatures() or not $ArmyGlut.has_creatures(): 
-#		return
-	
+	wave_spawn(delta)
+	battle_start()
+
+func wave_spawn(delta): 
 	# TODO Waves for already-defeated armies.
 	if wave_timer >= TIME_BETWEEN_WAVES: 
 		# new wave
@@ -30,7 +35,9 @@ func _process(delta):
 		wave_timer = 0
 	else: 
 		wave_timer += delta
-	
+		
+func battle_start():
+	# TODO Do we want a separate entity and battle controller? 
 	if $ArmyHuman.get_state() == State.Army.BATTLE or $ArmyHuman.get_state() == State.Army.DIE\
 			or $ArmyGlut.get_state() == State.Army.BATTLE or $ArmyGlut.get_state() == State.Army.DIE:
 		return
@@ -62,7 +69,16 @@ func _process(delta):
 		$ArmyHuman.say("Prepare for battle!")
 		$ArmyGlut.say("GRRR")
 		# $ArmyGlut.set_speech_system(speech_system)
-		# display_test_text()
+		# display_test_text()	
+
+func create_building_places():
+	# TODO Should this function be happening in the entity controller?
+	var building_place = BuildingPlace.instance()
+	building_place.real_pos.z = 9
+	building_place.real_pos.x = -40
+	add_child(building_place)
+	parallax_engine.add_object_to_parallax_world(building_place)
+	building_place.set_parallax_engine(parallax_engine) # TODO this is hacky and wrong
 
 func _human_defeat():
 	$ArmyGlut.say("jajajajaja")
@@ -111,23 +127,3 @@ func display_test_text():
 	$ArmyHuman.say("text")
 	$ArmyHuman.say("at")
 	$ArmyHuman.say("once.")	
-#	yield(get_tree().create_timer(2), "timeout")
-#	$ArmyGlut.say("Now it's our turn!")
-#	yield(get_tree().create_timer(2), "timeout")
-#	$ArmyGlut.say("Wait we're not supposed to be able to speak")
-#	yield(get_tree().create_timer(5), "timeout")
-#	$ArmyGlut.say("Grrrrr")
-#	yield(get_tree().create_timer(1), "timeout")
-#	$ArmyGlut.say("GHlub")
-#	yield(get_tree().create_timer(0.5), "timeout")
-#	$ArmyGlut.say("SSSSSCHHH")
-#	yield(get_tree().create_timer(0.5), "timeout")
-#	$ArmyGlut.say("Gleep")
-#	$ArmyGlut.say("Gloop")
-#	yield(get_tree().create_timer(2), "timeout")
-#	$ArmyGlut.say("Kk")
-#	$ArmyGlut.say("Shtk")
-#	$ArmyGlut.say("Plk")
-#	$ArmyGlut.say("Txt")
-#	$ArmyGlut.say("Nrgle")
-#	$ArmyGlut.say("Glugh")	

@@ -142,7 +142,6 @@ func _on_creature_fire_projectile(archer_pos, target_band, target_lane, projecti
 	add_child(projectile)
 	parallax_engine.add_object_to_parallax_world(projectile)
 	projectile.connect("disappear", parallax_engine, "_on_projectile_disappear")
-
 	
 func battle(new_battlefronts, new_enemy_army_grid):
 	state = State.Army.BATTLE

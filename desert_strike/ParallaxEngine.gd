@@ -26,10 +26,12 @@ var player_real_pos_z = 3
 
 var dir = State.Dir.RIGHT
 
+var is_ready = false
 
 func _ready():
 	dir = State.Dir.NONE
 	object_generator.init_values(self, parallax_objects)
+	is_ready = true
 
 func create_objects_in_rectangle_randoff(object_type, num_x, num_z, x_offset, z_offset, randoff_x,
 		x_distance, z_distance, should_randomize, custom_array): 
