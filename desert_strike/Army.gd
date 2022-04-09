@@ -30,7 +30,7 @@ var speech_system = null
 
 var state = State.Army.IDLE
 
-const BANDS_SPAWNED = 4
+const BANDS_SPAWNED = 1
 const NUM_LANES = 4
 const DISTANCE_BETWEEN_LANES = 4
 const ARMY_HALF_SEP = 20
@@ -69,6 +69,9 @@ func _on_get_attacked(band_index, lane_index, damage):
 		
 func get_pos():
 	var creatures = army_grid.get_front_creatures()
+	if creatures.empty():
+		return ARMY_HALF_SEP
+
 	var front_pos = creatures[0].real_pos.x
 	if army_dir == State.Dir.RIGHT:
 		for creature in creatures: 
@@ -189,6 +192,11 @@ func idle():
 	state = State.Army.IDLE
 	for creature in army_grid.get_all_creatures():
 		creature.set_state(State.Creature.IDLE, army_dir)
+
+func march():
+	state = State.Army.MARCH
+	for creature in army_grid.get_all_creatures():
+		creature.set_state(State.Creature.MARCH, army_dir)
 
 func position_creature(creature):
 	var target_walk_x = get_target_x_from_band_lane(creature.band, creature.lane)

@@ -19,8 +19,8 @@ func _ready():
 	rng.randomize()
 
 func _process(delta):
-	if not $ArmyHuman.has_creatures() or not $ArmyGlut.has_creatures(): 
-		return
+#	if not $ArmyHuman.has_creatures() or not $ArmyGlut.has_creatures(): 
+#		return
 	
 	# TODO Waves for already-defeated armies.
 	if wave_timer >= TIME_BETWEEN_WAVES: 
@@ -34,7 +34,6 @@ func _process(delta):
 	if $ArmyHuman.get_state() == State.Army.BATTLE or $ArmyHuman.get_state() == State.Army.DIE\
 			or $ArmyGlut.get_state() == State.Army.BATTLE or $ArmyGlut.get_state() == State.Army.DIE:
 		return
-	
 	
 	if abs($ArmyHuman.get_pos() - $ArmyGlut.get_pos()) < BATTLE_SEP:
 		var battlefront_base = ($ArmyHuman.get_pos() + $ArmyGlut.get_pos())/2
@@ -64,16 +63,27 @@ func _process(delta):
 		$ArmyGlut.say("GRRR")
 		# $ArmyGlut.set_speech_system(speech_system)
 		# display_test_text()
-		
 
 func _human_defeat():
-	$ArmyGlut.idle()
 	$ArmyGlut.say("jajajajaja")
+	start_marching()
 	
 func _glut_defeat():
-	$ArmyHuman.idle()
 	$ArmyHuman.say("They are dead! We've won!")
+	start_marching()
 
+func start_marching(): 
+	$ArmyHuman.march()
+	$ArmyGlut.march()
+	$ArmyHuman.disconnect("front_line_ready", $ArmyGlut, "_on_front_line_ready")
+	$ArmyGlut.disconnect("front_line_ready", $ArmyHuman, "_on_front_line_ready")
+	$ArmyHuman.disconnect("creature_death", $ArmyGlut, "_on_enemy_creature_death")
+	$ArmyGlut.disconnect("creature_death", $ArmyHuman, "_on_enemy_creature_death")
+	$ArmyHuman.disconnect("attack", $ArmyGlut, "_on_get_attacked")
+	$ArmyGlut.disconnect("attack", $ArmyHuman, "_on_get_attacked")
+	$ArmyHuman.disconnect("many_deaths", self, "_on_many_human_deaths")
+	$ArmyGlut.disconnect("many_deaths", self, "_on_many_glut_deaths")
+	
 func _on_many_human_deaths(): 
 	$ArmyHuman.say("Many of us have died, but hold the line!")
 	
