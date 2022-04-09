@@ -220,11 +220,10 @@ func set_state(new_state, new_dir):
 func take_damage(the_damage): 
 	hurt_anim()
 	health -= the_damage
-#	temporarily removing death to test jostling
-#	if health <= 0: 
-#		health = 0
-#		if state != State.DIE:
-#			set_state(State.DIE, dir)
+	if health <= 0: 
+		health = 0
+		if state != State.DIE:
+			set_state(State.DIE, dir)
 	update_health_bar(health)
 
 func _on_animation_finished():
@@ -244,6 +243,7 @@ func _on_animation_finished():
 
 func prepare_attack_strike(): 
 	yield(get_tree().create_timer(time_between_attacks), "timeout")
+	# TODO needs to cancel this - we need to fix how fighting works
 	if state == State.FIGHT: 
 		emit_signal("attack", self)
 	if state != State.FIGHT: # has to be checked again after attack signal
