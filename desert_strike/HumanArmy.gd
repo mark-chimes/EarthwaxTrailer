@@ -13,7 +13,7 @@ var dead_farmers = 0
 var dead_archers = 0
 
 func _ready(): 
-	army_dir = Dir.RIGHT
+	army_dir = State.Dir.RIGHT
 	initialize_army()
 	spawn_first_wave()
 

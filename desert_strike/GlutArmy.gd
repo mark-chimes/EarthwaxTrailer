@@ -3,7 +3,7 @@ extends "res://desert_strike/Army.gd"
 var Grubling = load("res://desert_strike/creature/Grubling.tscn")
 
 func _ready(): 
-	army_dir = Dir.LEFT
+	army_dir = State.Dir.LEFT
 	initialize_army()
 	spawn_first_wave()
 

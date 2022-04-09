@@ -7,6 +7,7 @@ signal creature_death(band, lane)
 signal many_deaths
 
 var ArmyGrid = preload("res://desert_strike/ArmyGrid.gd")
+var State = preload("res://desert_strike/State.gd")
 
 var num_deaths = 0
 const DEATH_TRIGGER_NUM = 8
@@ -26,28 +27,8 @@ var speech_system = null
 
 # TODO Special parallax converter subobject for grid army positions to real positions. 
 
-enum Dir {
-	LEFT = -1,
-	RIGHT = 1,
-}
 
-enum StateCreature {
-	MARCH,
-	WALK,
-	AWAIT_FIGHT,
-	FIGHT,
-	IDLE,
-	DIE,
-}
-
-enum StateArmy {
-	MARCH,
-	BATTLE,
-	IDLE,
-	DIE,
-}
-
-var state = StateArmy.IDLE
+var state = State.Army.IDLE
 
 const BANDS_SPAWNED = 4
 const NUM_LANES = 4
@@ -60,12 +41,12 @@ const END_POS_DELTA = 0.1
 
 var dead_creatures = 0
 var defeat_threshold = NUM_LANES
-var army_dir = Dir.RIGHT
+var army_dir = State.Dir.RIGHT
 
 func initialize_army(): 
 	rng.set_seed(hash("42069"))
 	army_grid.initialize(NUM_LANES)
-	state = StateArmy.MARCH
+	state = State.Army.MARCH
 
 func _on_creature_attack(attacker): 
 	if attacker.is_ranged and attacker.band != 0:
@@ -89,7 +70,7 @@ func _on_get_attacked(band_index, lane_index, damage):
 func get_pos():
 	var creatures = army_grid.get_front_creatures()
 	var front_pos = creatures[0].real_pos.x
-	if army_dir == Dir.RIGHT:
+	if army_dir == State.Dir.RIGHT:
 		for creature in creatures: 
 			if creature.real_pos.x > front_pos:
 				front_pos = creature.real_pos.x
@@ -103,11 +84,11 @@ func add_new_creatures(CreatureType, num_creatures):
 	var new_creatures = [] 
 	for i in range(0, num_creatures):
 		create_and_add_creature(new_creatures, CreatureType)
-	if state == StateArmy.BATTLE:
+	if state == State.Army.BATTLE:
 		position_army()
 	else:
 		for creature in new_creatures:
-			creature.set_state(StateCreature.MARCH, army_dir)
+			creature.set_state(State.Creature.MARCH, army_dir)
 	return new_creatures
 
 func create_and_add_creature(creatures_arr, CreatureType): 
@@ -161,7 +142,7 @@ func _on_creature_fire_projectile(archer_pos, target_band, target_lane, projecti
 
 	
 func battle(new_battlefronts, new_enemy_army_grid):
-	state = StateArmy.BATTLE
+	state = State.Army.BATTLE
 	battlefronts = new_battlefronts
 	enemy_army_grid = new_enemy_army_grid
 	position_army()
@@ -182,7 +163,7 @@ func _on_creature_ready_to_swap(creature):
 func _on_creature_death(dead_creature):
 	emit_signal("creature_death", dead_creature.band, dead_creature.lane)
 	dead_creature.disconnect("attack", self, "_on_creature_attack")
-	dead_creature.disconnect("death", self, "_creature_death")
+	dead_creature.disconnect("death", self, "_on_creature_death")
 
 	var lane_index =  dead_creature.lane
 	var band_index = dead_creature.band
@@ -205,9 +186,9 @@ func _on_creature_death(dead_creature):
 		emit_signal("many_deaths")
 		
 func idle():
-	state = StateArmy.IDLE
+	state = State.Army.IDLE
 	for creature in army_grid.get_all_creatures():
-		creature.set_state(StateCreature.IDLE, army_dir)
+		creature.set_state(State.Creature.IDLE, army_dir)
 
 func position_creature(creature):
 	var target_walk_x = get_target_x_from_band_lane(creature.band, creature.lane)
@@ -216,25 +197,25 @@ func position_creature(creature):
 func _on_creature_positioned(creature):
 	if creature.band == 0:
 		if not enemy_army_grid.has_frontline_at_lane(creature.lane): 
-			creature.set_state(StateCreature.IDLE, army_dir)
+			creature.set_state(State.Creature.IDLE, army_dir)
 			return
 		var enemy_creature = enemy_army_grid.get_frontline_at_lane(creature.lane)
 
-		if enemy_creature.state == StateCreature.AWAIT_FIGHT:
+		if enemy_creature.state == State.Creature.AWAIT_FIGHT:
 			creature_fight(creature)
 		else:
-			creature.set_state(StateCreature.AWAIT_FIGHT, army_dir)
+			creature.set_state(State.Creature.AWAIT_FIGHT, army_dir)
 		emit_signal("front_line_ready", creature.lane)
 	else:
 		if creature.is_ranged: 
 			var enemy_creature = enemy_army_grid.get_archery_target(creature.lane, creature.attack_range)
 			if enemy_creature == null:
-				creature.set_state(StateCreature.IDLE, army_dir)
+				creature.set_state(State.Creature.IDLE, army_dir)
 				return
 			# TODO wait for enemy to get into position etc. 
 			creature_fire_arrow(creature, enemy_creature.band, enemy_creature.lane)
 		else: 
-			creature.set_state(StateCreature.IDLE, army_dir)
+			creature.set_state(State.Creature.IDLE, army_dir)
 
 func has_creatures(): 
 	return army_grid.has_creatures()
@@ -246,18 +227,18 @@ func get_target_x_from_band_lane(band, lane):
 func _on_front_line_ready(ready_lane):
 	var creature = army_grid.get_frontline_at_lane(ready_lane)
 	if creature.is_positioned(): 
-		if creature.state == StateCreature.AWAIT_FIGHT:
+		if creature.state == State.Creature.AWAIT_FIGHT:
 			creature_fight(creature)
 	else: 
 		position_creature(creature)
 	
 func creature_fight(creature):
-	creature.set_state(StateCreature.FIGHT, army_dir)
+	creature.set_state(State.Creature.FIGHT, army_dir)
 	
 func creature_fire_arrow(creature, enemy_band, enemy_lane):
 	enemy_band > enemy_lane # Try to crash if this is null
 	creature.set_archery_target_band_lane(enemy_band, enemy_lane) 
-	creature.set_state(StateCreature.FIGHT, army_dir)
+	creature.set_state(State.Creature.FIGHT, army_dir)
 	
 func _on_enemy_creature_death(band_index, lane_index):
 	if band_index == 0: 
@@ -274,12 +255,12 @@ func position_lane(lane):
 func should_creature_1_be_further_back(creature1, creature2): 
 	# higher priority to the front
 	# but front is a lower index
-	if creature1.state in [StateCreature.FIGHT, StateCreature.AWAIT_FIGHT]\
-			and not creature2.state in [StateCreature.FIGHT, StateCreature.AWAIT_FIGHT]:
+	if creature1.state in [State.Creature.FIGHT, State.Creature.AWAIT_FIGHT]\
+			and not creature2.state in [State.Creature.FIGHT, State.Creature.AWAIT_FIGHT]:
 		return false
 		
-	if not creature1.state in [StateCreature.FIGHT, StateCreature.AWAIT_FIGHT]\
-			and creature2.state in [StateCreature.FIGHT, StateCreature.AWAIT_FIGHT]: 
+	if not creature1.state in [State.Creature.FIGHT, State.Creature.AWAIT_FIGHT]\
+			and creature2.state in [State.Creature.FIGHT, State.Creature.AWAIT_FIGHT]: 
 		return true
 		
 	return creature1.priority < creature2.priority
