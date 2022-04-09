@@ -115,16 +115,13 @@ func _process(delta):
 			pass
 
 func wait_for_swap():
-	yield(get_tree().create_timer(1), "timeout")
+	yield(get_tree().create_timer(3), "timeout")
 	if not state == State.IDLE:
 		return
 	emit_signal("ready_to_swap", self)
 	is_ready_to_swap = true
 	wait_for_swap()
 
-func check_for_swap():
-	emit_signal("ready_to_swap", self)
-			
 func is_positioned(): 
 	return abs(walk_target_x - real_pos.x ) < END_POS_DELTA
 	

@@ -132,8 +132,6 @@ func _on_creature_ready_to_swap(creature):
 	if not army_grid.has_creature_at(creature.band + 1, creature.lane):
 		return
 	var other_creature = army_grid.get_creature_band_lane(creature.band + 1, creature.lane)
-	if not other_creature.is_ready_to_swap:
-		return
 	if other_creature.priority >= creature.priority:
 		return
 	army_grid.swap_creatures(creature, other_creature)
