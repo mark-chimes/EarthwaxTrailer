@@ -4,7 +4,7 @@ signal done_speaking
 
 const WPM = 100.0
 var WPS = WPM / 60.0
-const LPW = 5
+const LPW = 5.0
 
 var speech_timer = 0
 var fade = 1
@@ -42,7 +42,7 @@ func _process(delta):
 	else:
 		speech_timer -= delta
 
-func is_speaking(): 
+func get_is_speaking(): 
 	return is_speaking
 
 func set_font_color(color): 

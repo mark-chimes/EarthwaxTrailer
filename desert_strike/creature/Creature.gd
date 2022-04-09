@@ -39,6 +39,7 @@ var MAX_HEALTH = 10
 const WALK_SPEED = 5
 const END_POS_DELTA = 0.1
 
+var attack_prep_timer = 0
 var time_between_attacks = 3
 var time_for_corpse_fade = 3
 var walk_target_x
@@ -106,7 +107,10 @@ func _process(delta):
 		State.Creature.IDLE:
 			pass
 		State.Creature.FIGHT:
-			pass
+			attack_prep_timer -= delta
+			if attack_prep_timer <= 0: 
+				do_attack_strike()
+				reset_attack_prep_timer()
 		State.Creature.DIE:
 			pass
 
@@ -166,7 +170,10 @@ func  set_archery_target_band_lane(band_index, lane_index):
 	ranged_target_lane = lane_index
 	
 func set_state(new_state, new_dir):
-	# This part is temporary. Should be removed when dead creatures no longer get
+	if state == State.Creature.FIGHT and new_state != State.Creature.FIGHT: 
+		reset_attack_prep_timer()
+	
+	# This part should be removed when dead creatures no longer get
 	# state information from the army
 	if state == State.Creature.DIE and (new_state in [State.Creature.WALK, State.Creature.AWAIT_FIGHT, State.Creature.FIGHT, State.Creature.IDLE]):
 		return
@@ -183,11 +190,7 @@ func set_state(new_state, new_dir):
 		State.Creature.AWAIT_FIGHT:
 			$AnimatedSprite.play("idle")
 		State.Creature.FIGHT:
-			if is_ranged and band != 0: 
-				$AnimatedSprite.play("ranged_attack_prep")
-			else:
-				$AnimatedSprite.play("attack_prep")
-			prepare_attack_strike()
+			prep_attack()
 		State.Creature.IDLE:
 			$AnimatedSprite.play("idle")
 		State.Creature.DIE:
@@ -229,9 +232,17 @@ func _on_animation_finished():
 		"attack_prep":
 			attack_prep_anim_finish()
 
-func prepare_attack_strike(): 
-	yield(get_tree().create_timer(time_between_attacks), "timeout")
-	# TODO needs to cancel this - we need to fix how fighting works
+func prep_attack(): 
+	if is_ranged and band != 0: 
+		$AnimatedSprite.play("ranged_attack_prep")
+	else:
+		$AnimatedSprite.play("attack_prep")
+	reset_attack_prep_timer()	
+
+func reset_attack_prep_timer(): 
+	attack_prep_timer = time_between_attacks
+
+func do_attack_strike():
 	if state == State.Creature.FIGHT: 
 		emit_signal("attack", self)
 	if state != State.Creature.FIGHT: # has to be checked again after attack signal
@@ -242,7 +253,6 @@ func prepare_attack_strike():
 	else:
 		$AnimatedSprite.play("attack_strike")
 	play_sound_attack()
-	prepare_attack_strike()
 
 func fire_ranged_projectile():
 	# Overload this
@@ -308,7 +318,7 @@ func say(text):
 	speech_box.queue_text(text)
 
 func is_speaking(): 
-	return speech_box.is_speaking()
+	return speech_box.get_is_speaking()
 	
 func _on_speech_box_done_speaking(): 
 	emit_signal("done_speaking", self)

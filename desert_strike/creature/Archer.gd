@@ -7,7 +7,7 @@ signal fire_projectile(archer_pos, target_band, target_lane, projectile)
 func _ready(): 
 	sprite_dir = State.Dir.RIGHT
 	mute = true
-	time_between_attacks = 5 # TODO should be different for melee and range
+	time_between_attacks = 3 # TODO should be different for melee and range
 	ranged_damage = rng.randi_range(2,4)
 	melee_damage = rng.randi_range(1,2)
 	is_ranged = true
