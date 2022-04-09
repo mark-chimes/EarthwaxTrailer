@@ -9,8 +9,8 @@ func _ready():
 	spawn_first_wave()
 
 func spawn_first_wave(): 
-	#add_new_creatures(Farmer, NUM_LANES * BANDS_SPAWNED)
-	add_new_creatures(Archer, NUM_LANES * BANDS_SPAWNED * 8)
+	add_new_creatures(Farmer, NUM_LANES * BANDS_SPAWNED)
+	add_new_creatures(Archer, NUM_LANES * BANDS_SPAWNED)
 
 func spawn_new_wave(): 
 	add_new_creatures(Farmer, 2)

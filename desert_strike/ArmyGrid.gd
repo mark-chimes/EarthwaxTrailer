@@ -94,3 +94,11 @@ func get_archery_target(lane_index, attack_range):
 	var max_shot = min(len(lane)-1, attack_range)
 	var target_index = rng.randi_range(0, max_shot) 
 	return lane[target_index]
+
+func swap_creatures(creature1, creature2):
+	var hold_band = creature1.band
+	var hold_lane = creature1.lane
+	creature_lanes[creature1.lane][creature1.band] = creature2
+	creature_lanes[creature2.lane][creature2.band] = creature1
+	creature1.set_band_lane(creature2.band, creature2.lane)
+	creature2.set_band_lane(hold_band, hold_lane)

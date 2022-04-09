@@ -11,4 +11,4 @@ func spawn_first_wave():
 	add_new_creatures(Grubling, NUM_LANES * BANDS_SPAWNED * 20)
 
 func spawn_new_wave(): 
-	add_new_creatures(Grubling, 5)
+	add_new_creatures(Grubling, 8)

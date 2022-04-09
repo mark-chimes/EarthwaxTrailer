@@ -13,7 +13,7 @@ const BATTLE_SEP = 10
 const NUM_LANES = 4
 onready var rng = RandomNumberGenerator.new()
 
-const TIME_BETWEEN_WAVES = 15
+const TIME_BETWEEN_WAVES = 200000
 var wave_timer = 0 
 
 func _ready():
