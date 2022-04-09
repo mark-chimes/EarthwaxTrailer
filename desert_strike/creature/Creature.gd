@@ -3,6 +3,8 @@ signal attack(this)
 signal death(this)
 signal creature_positioned(this)
 signal done_speaking(this)
+signal disappear(this)
+signal ready_to_swap(this)
 
 var HealthBar = preload("res://desert_strike/HealthBar.tscn")
 var DebugLabel = preload("res://desert_strike/DebugLabel.tscn")
@@ -39,6 +41,7 @@ var state = State.IDLE
 var sprite_dir = Dir.RIGHT
 var dir = Dir.RIGHT
 var is_in_combat = false
+var is_ready_to_swap = false
 var mute = true
 
 var health = 10
@@ -49,6 +52,7 @@ const WALK_SPEED = 5
 const END_POS_DELTA = 0.1
 
 var time_between_attacks = 3
+var time_for_corpse_fade = 3
 var walk_target_x
 
 var show_health = false
@@ -61,6 +65,9 @@ onready var speech_box = SpeechBox.instance()
 
 func _ready(): 
 	rng.randomize()
+	priority = rng.randi_range(0,255)
+	var color = Color8(priority, 255 - priority, 0, 255)
+	$AnimatedSprite.modulate = color
 	init_health_bar()
 	add_child(debug_label)
 	add_child(speech_box)
@@ -103,6 +110,7 @@ func _process(delta):
 		State.WALK:
 			if is_positioned():
 				emit_signal("creature_positioned", self)
+				wait_for_swap()
 				return
 			real_pos.x += delta * WALK_SPEED * dir
 		State.AWAIT_FIGHT: 
@@ -113,7 +121,15 @@ func _process(delta):
 			pass
 		State.DIE:
 			pass
-			
+
+func wait_for_swap():
+	yield(get_tree().create_timer(3), "timeout")
+	if not state == State.IDLE:
+		return
+	emit_signal("ready_to_swap", self)
+	is_ready_to_swap = true
+	wait_for_swap()
+
 func is_positioned(): 
 	return abs(walk_target_x - real_pos.x ) < END_POS_DELTA
 	
@@ -196,16 +212,19 @@ func set_state(new_state, new_dir):
 			yield($AnimatedSprite, "animation_finished")
 			$AnimatedSprite.frame = $AnimatedSprite.frames.get_frame_count("die")
 			$AnimatedSprite.playing = false
-
+			yield(get_tree().create_timer(time_for_corpse_fade), "timeout")
+			emit_signal("disappear", self)
+			
 	$AnimatedSprite.flip_h = (dir != sprite_dir)
 
 func take_damage(the_damage): 
 	hurt_anim()
 	health -= the_damage
-	if health <= 0: 
-		health = 0
-		if state != State.DIE:
-			set_state(State.DIE, dir)
+#	temporarily removing death to test jostling
+#	if health <= 0: 
+#		health = 0
+#		if state != State.DIE:
+#			set_state(State.DIE, dir)
 	update_health_bar(health)
 
 func _on_animation_finished():
@@ -231,10 +250,15 @@ func prepare_attack_strike():
 		return
 	if is_ranged and band != 0: 
 		$AnimatedSprite.play("ranged_attack_strike")
+		fire_ranged_projectile()
 	else:
 		$AnimatedSprite.play("attack_strike")
 	play_sound_attack()
 	prepare_attack_strike()
+
+func fire_ranged_projectile():
+	# Overload this
+	pass
 
 func hurt_anim(): 
 	# TODO we want some hurt effects that go on top of the sprite
@@ -279,6 +303,8 @@ func play_sound_attack():
 	sounds[rng.randi() % sounds.size()].play()
 
 func walk_to(new_walk_target_x):
+	#TODO check we arent in position already
+	is_ready_to_swap = false
 	walk_target_x = new_walk_target_x
 	var new_dir
 	if new_walk_target_x > real_pos.x:

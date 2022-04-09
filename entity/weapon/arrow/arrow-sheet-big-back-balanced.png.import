@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/archer_defend_melee.png-d385e388d29da3f4943ccad8137bdf3a.stex"
+path="res://.import/arrow-sheet-big-back-balanced.png-75262960483cc6ff42ef7db49c620fb0.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://entity/creature/human/archer/archer_defend_melee.png"
-dest_files=[ "res://.import/archer_defend_melee.png-d385e388d29da3f4943ccad8137bdf3a.stex" ]
+source_file="res://entity/weapon/arrow/arrow-sheet-big-back-balanced.png"
+dest_files=[ "res://.import/arrow-sheet-big-back-balanced.png-75262960483cc6ff42ef7db49c620fb0.stex" ]
 
 [params]
 
@@ -28,6 +28,7 @@ process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
+process/normal_map_invert_y=false
 stream=false
 size_limit=0
 detect_3d=true
