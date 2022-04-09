@@ -1,13 +1,7 @@
 extends Node2D
 
 # TODO this is more of a battle controller than an entity controller at this point
-
-enum StateArmy {
-	MARCH,
-	BATTLE,
-	IDLE,
-	DIE,
-}
+var State = preload("res://desert_strike/State.gd")
 
 const BATTLE_SEP = 10
 const NUM_LANES = 4
@@ -37,8 +31,8 @@ func _process(delta):
 	else: 
 		wave_timer += delta
 	
-	if $ArmyHuman.get_state() == StateArmy.BATTLE or $ArmyHuman.get_state() == StateArmy.DIE\
-			or $ArmyGlut.get_state() == StateArmy.BATTLE or $ArmyGlut.get_state() == StateArmy.DIE:
+	if $ArmyHuman.get_state() == State.Army.BATTLE or $ArmyHuman.get_state() == State.Army.DIE\
+			or $ArmyGlut.get_state() == State.Army.BATTLE or $ArmyGlut.get_state() == State.Army.DIE:
 		return
 	
 	

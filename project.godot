@@ -8,6 +8,16 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Object",
+"class": "State",
+"language": "GDScript",
+"path": "res://desert_strike/State.gd"
+} ]
+_global_script_class_icons={
+"State": ""
+}
+
 [application]
 
 config/name="Earthwax"

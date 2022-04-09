@@ -13,6 +13,8 @@ const Z_UNIT = 0.05 # Separation degree for z
 var ParallaxObjectGenerator = preload("res://parallax/util/ParallaxObjectGenerator.gd")
 var object_generator = ParallaxObjectGenerator.new()
 
+var State = preload("res://desert_strike/State.gd")
+
 # TODO should use a red-black tree instead of an array
 var parallax_objects = []
 var projectiles = []
@@ -21,16 +23,12 @@ var projectiles = []
 const SPEED_MOD = 20
 var player_real_pos_x = 0
 var player_real_pos_z = 3
-enum Dir {
-	LEFT = 1,
-	RIGHT = -1,
-	NONE = 0,
-}
-var dir = Dir.RIGHT
+
+var dir = State.Dir.RIGHT
 
 
 func _ready():
-	dir = Dir.NONE
+	dir = State.Dir.NONE
 	object_generator.init_values(self, parallax_objects)
 
 func create_objects_in_rectangle_randoff(object_type, num_x, num_z, x_offset, z_offset, randoff_x,
@@ -75,15 +73,15 @@ func position_stuff_on_screen(delta):
 
 func hero_world_movement(delta): 
 	if Input.is_action_pressed("ui_right"):
-		dir = Dir.RIGHT
+		dir = State.Dir.RIGHT
 	elif Input.is_action_pressed("ui_left"):
-		dir = Dir.LEFT
+		dir = State.Dir.LEFT
 	else:
-		dir = Dir.NONE
+		dir = State.Dir.NONE
 	var speed_mult = SPEED_MOD
 	if Input.is_action_pressed("run"):
 		speed_mult *= 3
-	player_real_pos_x = player_real_pos_x + (delta * dir * speed_mult)
+	player_real_pos_x = player_real_pos_x - (delta * dir * speed_mult)
 
 func z_scale(parallax_obj):
 	var scale_mult = z_to_size_scale_converter(parallax_obj.real_pos.z)
