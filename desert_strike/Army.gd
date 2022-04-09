@@ -16,6 +16,7 @@ var battlefronts = []
 
 onready var army_grid = ArmyGrid.new()
 var enemy_army_grid
+var use_slow_arrows_on_short_dist = true
 
 # TODO Special parallax converter subobject for grid army positions to real positions. 
 
@@ -42,7 +43,7 @@ enum StateArmy {
 
 var state = StateArmy.IDLE
 
-const BANDS_SPAWNED = 6
+const BANDS_SPAWNED = 4
 const NUM_LANES = 4
 const DISTANCE_BETWEEN_LANES = 4
 const ARMY_HALF_SEP = 20
@@ -117,8 +118,42 @@ func create_and_add_creature(creatures_arr, CreatureType):
 	creature.connect("creature_positioned", self, "_on_creature_positioned")
 	creature.connect("attack", self, "_on_creature_attack")
 	creature.connect("death", self, "_on_creature_death")
+	creature.connect("disappear", parallax_engine, "_on_object_disappear")
 	creature.connect("ready_to_swap", self, "_on_creature_ready_to_swap")
+	if creature.is_ranged: 
+		creature.connect("fire_projectile", self, "_on_creature_fire_projectile")
 
+		
+func _on_creature_fire_projectile(archer_pos, target_band, target_lane, projectile): 
+	var start_x = archer_pos.x
+	
+	var lane_offset = FIGHT_SEP + target_lane*1.0/10
+	var end_x =  battlefronts[target_lane] + (army_dir * (lane_offset + target_band * BAND_SEP))
+	var total_dist = end_x - start_x
+	projectile.real_pos.y = -1.5
+	projectile.real_pos.x = start_x 
+	projectile.real_pos.z = archer_pos.z
+	var frames = 7
+	var travel_time
+	if use_slow_arrows_on_short_dist:
+		travel_time = sqrt(total_dist) / 4.0
+	else:
+		travel_time = total_dist / 20.0
+		
+	projectile.horizontal_speed = total_dist / travel_time
+	
+	projectile.start_x = start_x
+	projectile.end_x = end_x
+	projectile.vertical_speed = -projectile.horizontal_speed
+	projectile.vertical_acc = -2*projectile.vertical_speed / (travel_time)
+	projectile.rot_dist = total_dist / (frames + 1)
+	projectile.is_flying = true
+	
+	add_child(projectile)
+	parallax_engine.add_object_to_parallax_world(projectile)
+	projectile.connect("disappear", parallax_engine, "_on_projectile_disappear")
+
+	
 func battle(new_battlefronts, new_enemy_army_grid):
 	state = StateArmy.BATTLE
 	battlefronts = new_battlefronts

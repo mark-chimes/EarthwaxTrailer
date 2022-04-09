@@ -2,6 +2,7 @@ extends "res://parallax/util/ParallaxObject.gd"
 signal attack(this)
 signal death(this)
 signal creature_positioned(this)
+signal disappear(this)
 signal ready_to_swap(this)
 
 var HealthBar = preload("res://desert_strike/HealthBar.tscn")
@@ -49,6 +50,7 @@ const WALK_SPEED = 5
 const END_POS_DELTA = 0.1
 
 var time_between_attacks = 3
+var time_for_corpse_fade = 3
 var walk_target_x
 
 var show_health = false
@@ -204,7 +206,9 @@ func set_state(new_state, new_dir):
 			yield($AnimatedSprite, "animation_finished")
 			$AnimatedSprite.frame = $AnimatedSprite.frames.get_frame_count("die")
 			$AnimatedSprite.playing = false
-
+			yield(get_tree().create_timer(time_for_corpse_fade), "timeout")
+			emit_signal("disappear", self)
+			
 	$AnimatedSprite.flip_h = (dir != sprite_dir)
 
 func take_damage(the_damage): 
@@ -240,10 +244,15 @@ func prepare_attack_strike():
 		return
 	if is_ranged and band != 0: 
 		$AnimatedSprite.play("ranged_attack_strike")
+		fire_ranged_projectile()
 	else:
 		$AnimatedSprite.play("attack_strike")
 	play_sound_attack()
 	prepare_attack_strike()
+
+func fire_ranged_projectile():
+	# Overload this
+	pass
 
 func hurt_anim(): 
 	# TODO we want some hurt effects that go on top of the sprite

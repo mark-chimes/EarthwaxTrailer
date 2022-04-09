@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/mountain.png-11684edcf7de2eaf18252547ef1418fa.stex"
+path="res://.import/arrow-sheet-big.png-5b60822fd3db18c66441562be20ae11c.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://decor/background/mountain/mountain.png"
-dest_files=[ "res://.import/mountain.png-11684edcf7de2eaf18252547ef1418fa.stex" ]
+source_file="res://entity/weapon/arrow/arrow-sheet-big.png"
+dest_files=[ "res://.import/arrow-sheet-big.png-5b60822fd3db18c66441562be20ae11c.stex" ]
 
 [params]
 
