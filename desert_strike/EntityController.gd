@@ -110,6 +110,7 @@ func _on_building_place_building(building_place):
 
 	new_person.real_pos.z = building_place.real_pos.z
 	new_person.real_pos.x = building_place.real_pos.x
+	new_person.set_parallax_engine(parallax_engine)
 	parallax_engine.add_object_to_parallax_world(new_person)
 	add_child(new_person)
 	
