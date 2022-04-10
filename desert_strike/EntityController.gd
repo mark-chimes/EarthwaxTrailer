@@ -7,7 +7,6 @@ const BATTLE_SEP = 10
 const NUM_LANES = 4
 onready var rng = RandomNumberGenerator.new()
 
-
 var SpeechSystem = preload("res://desert_strike/SpeechSystem.gd")
 var BuildingPlace = preload("res://desert_strike/building/BuildingPlace.tscn") 
 var Farm = preload("res://desert_strike/building/Farm.tscn") 
@@ -17,7 +16,7 @@ var ArcherAtHut = preload("res://desert_strike/building/ArcherAtHut.tscn")
 
 onready var parallax_engine = get_parent().get_node("ParallaxEngine")
 
-const TIME_BETWEEN_WAVES = 15
+const TIME_BETWEEN_WAVES = 10
 
 var wave_timer = 0 
 
@@ -100,9 +99,11 @@ func _on_building_place_building(building_place):
 	if building_place.building_state == "farm": 
 		new_building = Farm.instance()
 		new_person = FarmerAtHut.instance()
+		$ArmyHuman.add_farmers_to_spawn(1)
 	else: 
 		new_building = ArcheryTargets.instance()
 		new_person = ArcherAtHut.instance()
+		$ArmyHuman.add_archers_to_spawn(1)
 	new_building.real_pos.z = 48
 	new_building.real_pos.x = building_place.real_pos.x
 	add_child(new_building)
