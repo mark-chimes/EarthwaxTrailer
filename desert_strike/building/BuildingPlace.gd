@@ -41,5 +41,5 @@ func switch_building_state():
 		label_name = "archery range"
 	else: 
 		building_state = "farm"
-		label_name = "farmer's hut"
+		label_name = "farm"
 	$Label.text = "<Up/down> to switch.\n<space> to build " + label_name + "."

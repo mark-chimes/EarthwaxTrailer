@@ -33,9 +33,10 @@ var state = State.Army.IDLE
 const BANDS_SPAWNED = 1
 const NUM_LANES = 4
 const DISTANCE_BETWEEN_LANES = 4
-const ARMY_HALF_SEP = 20
+const ARMY_HALF_SEP = 40
 const BAND_SEP = 3
 const STARTING_BAND_SEP = 8
+const ARMY_START_OFFSET = 60
 const FIGHT_SEP = 1
 const END_POS_DELTA = 0.1
 
@@ -102,7 +103,8 @@ func create_and_add_creature(creatures_arr, CreatureType):
 	add_child(creature)
 	creature.dir = army_dir
 	creature.real_pos.x = (-army_dir * ARMY_HALF_SEP) \
-			+ (-army_dir * creature.band * STARTING_BAND_SEP) + rng.randf_range(-2, 2)
+			+ (-army_dir * creature.band * STARTING_BAND_SEP) + rng.randf_range(-2, 2)\
+			+ ARMY_START_OFFSET
 	parallax_engine.add_object_to_parallax_world(creature)	
 	creatures_arr.append(creature)
 	creature.connect("creature_positioned", self, "_on_creature_positioned")

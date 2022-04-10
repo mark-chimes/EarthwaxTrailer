@@ -77,7 +77,7 @@ func battle_start():
 
 func create_building_places(): 
 	# TODO Should this function be happening in the entity controller?
-	create_building_places_at(range(-40, -121, -30))
+	create_building_places_at(range(0, -121, -25))
 
 func create_building_places_at(x_poses):
 	for x_pos in x_poses: 
