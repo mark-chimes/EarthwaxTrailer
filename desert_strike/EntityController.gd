@@ -10,7 +10,7 @@ onready var rng = RandomNumberGenerator.new()
 
 var SpeechSystem = preload("res://desert_strike/SpeechSystem.gd")
 var BuildingPlace = preload("res://desert_strike/building/BuildingPlace.tscn") 
-var FarmerHut = preload("res://desert_strike/building/FarmerHut.tscn") 
+var Farm = preload("res://desert_strike/building/Farm.tscn") 
 var ArcheryTargets = preload("res://desert_strike/building/ArcheryTargets.tscn") 
 var FarmerAtHut = preload("res://desert_strike/building/FarmerAtHut.tscn") 
 var ArcherAtHut = preload("res://desert_strike/building/ArcherAtHut.tscn") 
@@ -98,7 +98,7 @@ func _on_building_place_building(building_place):
 	var new_building
 	var new_person
 	if building_place.building_state == "farm": 
-		new_building = FarmerHut.instance()
+		new_building = Farm.instance()
 		new_person = FarmerAtHut.instance()
 	else: 
 		new_building = ArcheryTargets.instance()

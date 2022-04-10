@@ -1,1 +1,1 @@
-extends "res://parallax/util/ParallaxObject.gd"
+extends "res://desert_strike/building/PersonAtHut.gd"

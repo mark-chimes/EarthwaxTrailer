@@ -1,15 +1,21 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://decor/stone/Boulder_transparent.png" type="Texture" id=1]
+[ext_resource path="res://entity/creature/human/builder/builder_with_brown_helmet.png" type="Texture" id=1]
 [ext_resource path="res://desert_strike/building/BuildingPlace.gd" type="Script" id=2]
+[ext_resource path="res://entity/creature/human/builder/builder_with_green_helmet.png" type="Texture" id=3]
 
 [node name="BuildingPlace" type="Node2D"]
 script = ExtResource( 2 )
 
-[node name="BoulderTransparent" type="Sprite" parent="."]
+[node name="BrownHelm" type="Sprite" parent="."]
 scale = Vector2( 2, 2 )
 texture = ExtResource( 1 )
-offset = Vector2( 0, -18 )
+offset = Vector2( 0, -30 )
+
+[node name="GreenHelm" type="Sprite" parent="."]
+scale = Vector2( 2, 2 )
+texture = ExtResource( 3 )
+offset = Vector2( 0, -30 )
 
 [node name="Label" type="Label" parent="."]
 margin_left = -76.0
