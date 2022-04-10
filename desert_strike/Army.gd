@@ -30,12 +30,13 @@ var speech_system = null
 
 var state = State.Army.IDLE
 
-const BANDS_SPAWNED = 4
+const BANDS_SPAWNED = 1
 const NUM_LANES = 4
 const DISTANCE_BETWEEN_LANES = 4
-const ARMY_HALF_SEP = 20
+const ARMY_HALF_SEP = 40
 const BAND_SEP = 3
 const STARTING_BAND_SEP = 8
+const ARMY_START_OFFSET = 60
 const FIGHT_SEP = 1
 const END_POS_DELTA = 0.1
 
@@ -69,6 +70,9 @@ func _on_get_attacked(band_index, lane_index, damage):
 		
 func get_pos():
 	var creatures = army_grid.get_front_creatures()
+	if creatures.empty():
+		return ARMY_HALF_SEP
+
 	var front_pos = creatures[0].real_pos.x
 	if army_dir == State.Dir.RIGHT:
 		for creature in creatures: 
@@ -99,7 +103,8 @@ func create_and_add_creature(creatures_arr, CreatureType):
 	add_child(creature)
 	creature.dir = army_dir
 	creature.real_pos.x = (-army_dir * ARMY_HALF_SEP) \
-			+ (-army_dir * creature.band * STARTING_BAND_SEP) + rng.randf_range(-2, 2)
+			+ (-army_dir * creature.band * STARTING_BAND_SEP) + rng.randf_range(-2, 2)\
+			+ ARMY_START_OFFSET
 	parallax_engine.add_object_to_parallax_world(creature)	
 	creatures_arr.append(creature)
 	creature.connect("creature_positioned", self, "_on_creature_positioned")
@@ -139,7 +144,6 @@ func _on_creature_fire_projectile(archer_pos, target_band, target_lane, projecti
 	add_child(projectile)
 	parallax_engine.add_object_to_parallax_world(projectile)
 	projectile.connect("disappear", parallax_engine, "_on_projectile_disappear")
-
 	
 func battle(new_battlefronts, new_enemy_army_grid):
 	state = State.Army.BATTLE
@@ -189,6 +193,11 @@ func idle():
 	state = State.Army.IDLE
 	for creature in army_grid.get_all_creatures():
 		creature.set_state(State.Creature.IDLE, army_dir)
+
+func march():
+	state = State.Army.MARCH
+	for creature in army_grid.get_all_creatures():
+		creature.set_state(State.Creature.MARCH, army_dir)
 
 func position_creature(creature):
 	var target_walk_x = get_target_x_from_band_lane(creature.band, creature.lane)

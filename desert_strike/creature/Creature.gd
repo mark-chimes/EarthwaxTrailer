@@ -55,8 +55,8 @@ onready var speech_box = SpeechBox.instance()
 func _ready(): 
 	rng.randomize()
 	priority = rng.randi_range(0,255)
-	var color = Color8(priority, 255 - priority, 0, 255)
-	$AnimatedSprite.modulate = color
+	#var color = Color8(priority, 255 - priority, 0, 255)
+	#$AnimatedSprite.modulate = color
 	init_health_bar()
 	add_child(debug_label)
 	add_child(speech_box)

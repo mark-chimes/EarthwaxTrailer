@@ -12,18 +12,22 @@ const FARMER_DEATH_TRIGGER_NUM = 4
 var dead_farmers = 0
 var dead_archers = 0
 
+var num_farmers_to_spawn = 4
+var num_archers_to_spawn = 0
+
+
 func _ready(): 
 	army_dir = State.Dir.RIGHT
 	initialize_army()
 	spawn_first_wave()
 
 func spawn_first_wave(): 
-	add_new_creatures(Farmer, NUM_LANES * BANDS_SPAWNED)
-	add_new_creatures(Archer, NUM_LANES * BANDS_SPAWNED)
+	add_new_creatures(Farmer, num_farmers_to_spawn)
+	add_new_creatures(Archer,num_archers_to_spawn)
 
 func spawn_new_wave(): 
-	add_new_creatures(Farmer, 2)
-	add_new_creatures(Archer, 4)
+	add_new_creatures(Farmer, num_farmers_to_spawn)
+	add_new_creatures(Archer, num_archers_to_spawn)
 
 func _on_creature_death(dead_creature): 
 	# TODO janky hacky temp code
@@ -44,3 +48,10 @@ func is_archer(creature):
 
 func is_farmer(creature): 
 	return not creature.is_ranged
+
+func add_farmers_to_spawn(num_extra):
+	num_farmers_to_spawn += num_extra
+
+func add_archers_to_spawn(num_extra):
+	num_archers_to_spawn += num_extra
+		
