@@ -10,6 +10,9 @@ onready var rng = RandomNumberGenerator.new()
 
 var SpeechSystem = preload("res://desert_strike/SpeechSystem.gd")
 var BuildingPlace = preload("res://desert_strike/building/BuildingPlace.tscn") 
+var FarmerHut = preload("res://desert_strike/building/FarmerHut.tscn") 
+var FarmerAtHut = preload("res://desert_strike/building/FarmerAtHut.tscn") 
+
 onready var parallax_engine = get_parent().get_node("ParallaxEngine")
 
 const TIME_BETWEEN_WAVES = 15
@@ -71,15 +74,37 @@ func battle_start():
 		# $ArmyGlut.set_speech_system(speech_system)
 		# display_test_text()	
 
-func create_building_places():
+func create_building_places(): 
 	# TODO Should this function be happening in the entity controller?
+	create_building_places_at(range(-40, -121, -30))
+
+func create_building_places_at(x_poses):
+	for x_pos in x_poses: 
+		create_building_place_at(x_pos)
+
+func create_building_place_at(x_pos): 
 	var building_place = BuildingPlace.instance()
 	building_place.real_pos.z = 9
-	building_place.real_pos.x = -40
+	building_place.real_pos.x = x_pos
 	add_child(building_place)
+	building_place.connect("place_building", self, "_on_building_place_building")
 	parallax_engine.add_object_to_parallax_world(building_place)
 	building_place.set_parallax_engine(parallax_engine) # TODO this is hacky and wrong
+	
 
+func _on_building_place_building(building_place): 
+	var farmer_hut = FarmerHut.instance()
+	farmer_hut.real_pos.z = 48
+	farmer_hut.real_pos.x = building_place.real_pos.x
+	add_child(farmer_hut)
+	parallax_engine.add_object_to_parallax_world(farmer_hut)
+	var farmer_at_hut = FarmerAtHut.instance()
+	farmer_at_hut.real_pos.z = building_place.real_pos.z
+	farmer_at_hut.real_pos.x = building_place.real_pos.x
+	parallax_engine.add_object_to_parallax_world(farmer_at_hut)
+	add_child(farmer_at_hut)
+	parallax_engine.remove_object(building_place)
+	
 func _human_defeat():
 	$ArmyGlut.say("jajajajaja")
 	start_marching()

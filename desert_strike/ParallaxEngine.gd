@@ -111,6 +111,9 @@ func add_object_to_parallax_world(object):
 	else:
 		parallax_objects.append(object)
 
+func remove_object(object): 
+	_on_object_disappear(object)
+
 func _on_object_disappear(object): 
 	if object.is_projectile: 
 		_on_projectile_disappear(object)
