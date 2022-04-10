@@ -11,6 +11,7 @@ func _ready():
 	melee_damage = rng.randi_range(1,2)
 	is_ranged = true
 	attack_range = 30
+	mute = true
 
 func fire_ranged_projectile(): 
 	var projectile = Arrow.instance()

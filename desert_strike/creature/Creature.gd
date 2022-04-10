@@ -30,7 +30,7 @@ var sprite_dir = State.Dir.RIGHT
 var dir = State.Dir.RIGHT
 var is_in_combat = false
 var is_ready_to_swap = false
-var mute = true
+var mute = false
 
 var health = 10
 onready var health_bar = HealthBar.instance()
