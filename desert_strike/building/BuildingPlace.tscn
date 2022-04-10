@@ -10,3 +10,15 @@ script = ExtResource( 2 )
 scale = Vector2( 2, 2 )
 texture = ExtResource( 1 )
 offset = Vector2( 0, -18 )
+
+[node name="Label" type="Label" parent="."]
+margin_left = -76.0
+margin_top = -143.0
+margin_right = 75.0
+margin_bottom = -78.0
+text = "Up/down to switch
+
+Press space to build a farmer hut"
+align = 1
+valign = 2
+autowrap = true

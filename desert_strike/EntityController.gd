@@ -11,7 +11,9 @@ onready var rng = RandomNumberGenerator.new()
 var SpeechSystem = preload("res://desert_strike/SpeechSystem.gd")
 var BuildingPlace = preload("res://desert_strike/building/BuildingPlace.tscn") 
 var FarmerHut = preload("res://desert_strike/building/FarmerHut.tscn") 
+var ArcheryTargets = preload("res://desert_strike/building/ArcheryTargets.tscn") 
 var FarmerAtHut = preload("res://desert_strike/building/FarmerAtHut.tscn") 
+var ArcherAtHut = preload("res://desert_strike/building/ArcherAtHut.tscn") 
 
 onready var parallax_engine = get_parent().get_node("ParallaxEngine")
 
@@ -93,16 +95,24 @@ func create_building_place_at(x_pos):
 	
 
 func _on_building_place_building(building_place): 
-	var farmer_hut = FarmerHut.instance()
-	farmer_hut.real_pos.z = 48
-	farmer_hut.real_pos.x = building_place.real_pos.x
-	add_child(farmer_hut)
-	parallax_engine.add_object_to_parallax_world(farmer_hut)
-	var farmer_at_hut = FarmerAtHut.instance()
-	farmer_at_hut.real_pos.z = building_place.real_pos.z
-	farmer_at_hut.real_pos.x = building_place.real_pos.x
-	parallax_engine.add_object_to_parallax_world(farmer_at_hut)
-	add_child(farmer_at_hut)
+	var new_building
+	var new_person
+	if building_place.building_state == "farm": 
+		new_building = FarmerHut.instance()
+		new_person = FarmerAtHut.instance()
+	else: 
+		new_building = ArcheryTargets.instance()
+		new_person = ArcherAtHut.instance()
+	new_building.real_pos.z = 48
+	new_building.real_pos.x = building_place.real_pos.x
+	add_child(new_building)
+	parallax_engine.add_object_to_parallax_world(new_building)
+
+	new_person.real_pos.z = building_place.real_pos.z
+	new_person.real_pos.x = building_place.real_pos.x
+	parallax_engine.add_object_to_parallax_world(new_person)
+	add_child(new_person)
+	
 	parallax_engine.remove_object(building_place)
 	
 func _human_defeat():
