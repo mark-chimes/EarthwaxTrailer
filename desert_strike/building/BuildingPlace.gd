@@ -1,6 +1,6 @@
 extends "res://parallax/util/ParallaxObject.gd"
 
-signal place_building(this)
+signal place_structure(this)
 
 var parallax_engine
 const SELECTION_WIDTH = 8
@@ -24,8 +24,8 @@ func _process(delta):
 		$GreenHelm.visible = true
 		$Label.visible = true
 		if Input.is_action_just_pressed("ui_accept"):
-			print("Building building")
-			emit_signal("place_building", self)
+			print("Building structure")
+			emit_signal("place_structure", self)
 		if Input.is_action_just_pressed("ui_up") or Input.is_action_just_pressed("ui_down"):
 			switch_building_state()
 	else: 

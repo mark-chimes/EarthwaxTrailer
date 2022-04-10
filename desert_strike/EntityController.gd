@@ -16,7 +16,7 @@ var ArcherAtHut = preload("res://desert_strike/building/ArcherAtHut.tscn")
 
 onready var parallax_engine = get_parent().get_node("ParallaxEngine")
 
-const TIME_BETWEEN_WAVES = 10
+const TIME_BETWEEN_WAVES = 15
 
 var wave_timer = 0 
 
@@ -88,12 +88,11 @@ func create_building_place_at(x_pos):
 	building_place.real_pos.z = 9
 	building_place.real_pos.x = x_pos
 	add_child(building_place)
-	building_place.connect("place_building", self, "_on_building_place_building")
+	building_place.connect("place_structure", self, "_on_building_place_structure")
 	parallax_engine.add_object_to_parallax_world(building_place)
 	building_place.set_parallax_engine(parallax_engine) # TODO this is hacky and wrong
-	
 
-func _on_building_place_building(building_place): 
+func _on_building_place_structure(building_place): 
 	var new_building
 	var new_person
 	if building_place.building_state == "farm": 
@@ -109,6 +108,8 @@ func _on_building_place_building(building_place):
 	add_child(new_building)
 	parallax_engine.add_object_to_parallax_world(new_building)
 
+	new_person.connect("destroy_structure", self, "_on_person_at_hut_destroy_structure")
+	new_person.set_connected_structure(new_building)
 	new_person.real_pos.z = building_place.real_pos.z
 	new_person.real_pos.x = building_place.real_pos.x
 	new_person.set_parallax_engine(parallax_engine)
@@ -116,6 +117,11 @@ func _on_building_place_building(building_place):
 	add_child(new_person)
 	
 	parallax_engine.remove_object(building_place)
+
+func _on_person_at_hut_destroy_structure(person_at_hut): 
+	create_building_place_at(person_at_hut.real_pos.x)
+	parallax_engine.remove_object(person_at_hut.connected_structure)
+	parallax_engine.remove_object(person_at_hut)
 	
 func _human_defeat():
 	$ArmyGlut.say("jajajajaja")

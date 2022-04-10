@@ -1,5 +1,7 @@
 extends "res://parallax/util/ParallaxObject.gd"
 
+signal destroy_structure(this)
+
 onready var LabelForPerson = preload("res://desert_strike/building/LabelForPersonAtHut.tscn")
 var label
 var parallax_engine
@@ -12,6 +14,7 @@ var is_fading = false
 var speech_time = MAX_SPEECH_TIME
 var has_spoken = false
 var fade = 1
+var connected_structure
 
 func _ready(): 
 	label = LabelForPerson.instance()
@@ -25,9 +28,17 @@ func set_label_text(new_text):
 func set_parallax_engine(new_parallax_engine): 
 	parallax_engine = new_parallax_engine
 	
+func set_connected_structure(new_connected_structure): 
+	connected_structure = new_connected_structure
+	
 func _process(delta): 
 	if parallax_engine.player_real_pos_x > -real_pos.x  - SELECTION_WIDTH\
 			 and parallax_engine.player_real_pos_x < -real_pos.x + SELECTION_WIDTH:
+		if Input.is_action_just_pressed("del"):
+			print("Destroying structure")
+			emit_signal("destroy_structure", self)
+			return
+				
 		if not has_spoken:
 			has_spoken = true
 			speech_time = MAX_SPEECH_TIME
