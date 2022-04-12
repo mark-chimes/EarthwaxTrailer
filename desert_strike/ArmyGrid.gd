@@ -48,6 +48,29 @@ func get_all_creatures():
 		for creature in lane: 
 			all_creatures.append(creature)
 	return all_creatures
+	
+# Pass in a list of funcrefs each of which takes in a creature and return a bool
+# If all of the funcrefs return true, then the creature is acceptable 
+func get_creatures_satisfying_all(filters): 
+	var filtered_creatures = []
+	for lane in creature_lanes:
+		for creature in lane: 
+			var satisfies_all_filters = true
+			for filter in filters:
+				if not filter.call_func(creature):
+					satisfies_all_filters = false
+			if satisfies_all_filters:
+				filtered_creatures.append(creature)	
+	return filtered_creatures
+
+# Pass in a single funcref which takes in a creature and returns a bool
+func get_creatures_satisfying(filter): 
+	var filtered_creatures = []
+	for lane in creature_lanes:
+		for creature in lane: 
+			if filter.call_func(creature):
+				filtered_creatures.append(creature)	
+	return filtered_creatures
 
 func get_front_creatures(): 
 	var front_creatures = []
