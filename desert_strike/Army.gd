@@ -99,6 +99,7 @@ func create_and_add_creature(creatures_arr, CreatureType):
 	var creature = CreatureType.instance()
 	army_grid.add_creature_to_shortest_lane(creature)
 	var z_pos = (creature.lane * DISTANCE_BETWEEN_LANES) + 3 
+	creature.parallax_engine = parallax_engine
 	creature.real_pos.z = z_pos
 	add_child(creature)
 	creature.dir = army_dir
@@ -213,7 +214,8 @@ func march():
 
 func position_creature(creature):
 	var target_walk_x = get_target_x_from_band_lane(creature.band, creature.lane)
-	creature.walk_to(target_walk_x)
+	var target_walk_z = get_target_z_from_band_lane(creature.band, creature.lane)
+	creature.walk_to(target_walk_x, target_walk_z)
 
 func _on_creature_positioned(creature):
 	if creature.band == 0:
@@ -244,6 +246,9 @@ func has_creatures():
 func get_target_x_from_band_lane(band, lane):
 	var lane_offset = FIGHT_SEP + lane*1.0/10
 	return battlefronts[lane] - (army_dir * (lane_offset + band * BAND_SEP))
+
+func get_target_z_from_band_lane(band, lane):
+	return (lane * DISTANCE_BETWEEN_LANES) + 3 
 
 func _on_front_line_ready(ready_lane):
 	var creature = army_grid.get_frontline_at_lane(ready_lane)

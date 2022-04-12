@@ -66,6 +66,7 @@ func position_stuff_on_screen(delta):
 		parallax_obj.visible = true
 		parallax_obj.position.x = z_and_x_to_x_converter(player_real_pos_x, 
 				parallax_obj.real_pos.z, parallax_obj.real_pos.x)
+		parallax_obj.position.y = y_and_z_to_y_converter(parallax_obj.real_pos.y, parallax_obj.real_pos.z)
 
 	for parallax_obj in projectiles:
 		parallax_obj.visible = true
@@ -125,3 +126,5 @@ func _on_projectile_disappear(projectile):
 	projectiles.erase(projectile)
 	projectile.queue_free()
 	
+func update_z_index(object):
+	object.z_index = -object.real_pos.z * 10

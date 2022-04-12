@@ -13,6 +13,8 @@ var HealthBar = preload("res://desert_strike/HealthBar.tscn")
 var DebugLabel = preload("res://desert_strike/DebugLabel.tscn")
 var SpeechBox = preload("res://speech/SpeechBox.tscn")
 
+var parallax_engine
+
 onready var rng = RandomNumberGenerator.new()
 var melee_damage
 var ranged_damage
@@ -44,6 +46,7 @@ var attack_prep_timer = 0
 var time_between_attacks = 3
 var time_for_corpse_fade = 3
 var walk_target_x
+var walk_target_z
 
 var show_health = false
 var is_debug_state = false
@@ -108,7 +111,11 @@ func _process(delta):
 			if is_positioned():
 				emit_signal("creature_positioned", self)
 				return
-			real_pos.x += delta * WALK_SPEED * dir
+			if not is_positioned_x():
+				real_pos.x += delta * WALK_SPEED * dir
+			if not is_positioned_z():
+				real_pos.z += delta * WALK_SPEED * dir
+				parallax_engine.update_z_index(self)
 		State.Creature.AWAIT_FIGHT: 
 			pass
 		State.Creature.IDLE:
@@ -151,6 +158,12 @@ func get_booked_by(new_booking_creature):
 	is_booked = true
 
 func is_positioned(): 
+	return is_positioned_z() and is_positioned_x()
+
+func is_positioned_z():
+	return abs(walk_target_z - real_pos.z ) < END_POS_DELTA
+
+func is_positioned_x():
 	return abs(walk_target_x - real_pos.x ) < END_POS_DELTA
 	
 func hide_debug(): 
@@ -335,13 +348,14 @@ func play_sound_attack():
 	var sounds = $SoundAttack.get_children()
 	sounds[rng.randi() % sounds.size()].play()
 
-func walk_to(new_walk_target_x):
+func walk_to(new_walk_target_x, new_walk_target_z):
 	# TODO happen for other states as well (e.g. fighting)
 	is_ready_to_swap = false
 	is_booked = false
 	is_booking = false
 	
 	#TODO check we arent in position already
+	walk_target_z = new_walk_target_z
 	walk_target_x = new_walk_target_x
 	var new_dir
 	if new_walk_target_x > real_pos.x:
