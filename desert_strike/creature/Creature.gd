@@ -41,6 +41,7 @@ var MAX_HEALTH = 10
 
 const WALK_SPEED = 5
 const END_POS_DELTA = 0.1
+const WALK_TO_OFFSET_MAX = 3
 
 var attack_prep_timer = 0
 var time_between_attacks = 3
@@ -52,6 +53,7 @@ var show_health = false
 var is_debug_state = false
 var is_debug_band_lane = false
 var is_debug_target_x = false
+var is_debug_static_position = false
 onready var debug_label = DebugLabel.instance()
 onready var speech_box = SpeechBox.instance()
 
@@ -60,14 +62,14 @@ var is_booked = false
 var is_booking = false
 var booking_creature = null
 
-const SWAP_WAIT_TIME = 3
+const SWAP_WAIT_TIME = 1
 var swap_countdown = 0
 
 func _ready(): 
 	rng.randomize()
 	priority = rng.randi_range(0,255)
 	var color = Color8(255 - priority, priority, 0, 255)
-	$AnimatedSprite.modulate = color
+	#$AnimatedSprite.modulate = color
 	init_health_bar()
 	add_child(debug_label)
 	add_child(speech_box)
@@ -110,15 +112,22 @@ func _process(delta):
 		State.Creature.WALK:
 			if is_positioned():
 				emit_signal("creature_positioned", self)
-				return
-			if not is_positioned_x():
+			elif is_positioned_z():
 				real_pos.x += delta * WALK_SPEED * dir
-			if not is_positioned_z():
+			elif is_positioned_x():
+				if walk_target_z < real_pos.z:
+					real_pos.z -= delta * WALK_SPEED * 1.5
+				else:
+					real_pos.z += delta * WALK_SPEED * 1.5
+				parallax_engine.update_z_index(self)
+			else:
+				real_pos.x += delta * WALK_SPEED * dir * 0.6
 				if walk_target_z < real_pos.z:
 					real_pos.z -= delta * WALK_SPEED
 				else:
 					real_pos.z += delta * WALK_SPEED
 				parallax_engine.update_z_index(self)
+				
 		State.Creature.AWAIT_FIGHT: 
 			pass
 		State.Creature.IDLE:
@@ -136,7 +145,7 @@ func wait_for_swap(delta):
 	if swap_countdown > 0:
 		swap_countdown -= delta
 		return
-	swap_countdown = SWAP_WAIT_TIME
+	swap_countdown = SWAP_WAIT_TIME + rng.randf_range(-1, 1)
 		
 #	if not state == State.Creature.IDLE:
 #		return
@@ -244,7 +253,7 @@ func set_state(new_state, new_dir):
 		State.Creature.FIGHT:
 			prep_attack()
 		State.Creature.IDLE:
-			swap_countdown = SWAP_WAIT_TIME
+			swap_countdown = SWAP_WAIT_TIME + rng.randf_range(-1, 1)
 			$AnimatedSprite.play("idle")
 		State.Creature.DIE:
 			hide_debug()
@@ -359,10 +368,15 @@ func walk_to(new_walk_target_x, new_walk_target_z):
 	is_booking = false
 	
 	#TODO check we arent in position already
-	walk_target_z = new_walk_target_z
-	walk_target_x = new_walk_target_x
+	if is_debug_static_position:
+		walk_target_z = new_walk_target_z
+		walk_target_x = new_walk_target_x
+	else:
+		walk_target_z = new_walk_target_z + rng.randf_range(-WALK_TO_OFFSET_MAX, WALK_TO_OFFSET_MAX)
+		walk_target_x = new_walk_target_x + rng.randf_range(-WALK_TO_OFFSET_MAX, WALK_TO_OFFSET_MAX)
+	update_debug_with_target_x()
 	var new_dir
-	if new_walk_target_x > real_pos.x:
+	if walk_target_x > real_pos.x:
 		new_dir = State.Dir.RIGHT
 	else:
 		new_dir = State.Dir.LEFT
