@@ -49,13 +49,15 @@ var show_health = false
 var is_debug_state = false
 var is_debug_band_lane = false
 var is_debug_target_x = false
-var is_speech_possible = true
 onready var debug_label = DebugLabel.instance()
 onready var speech_box = SpeechBox.instance()
 
 var is_ready_to_swap = false
 var is_booked = false
 var booking_creature = null
+
+var SWAP_WAIT_TIME = 3
+var swap_countdown = 0
 
 func _ready(): 
 	rng.randomize()
@@ -104,13 +106,12 @@ func _process(delta):
 		State.Creature.WALK:
 			if is_positioned():
 				emit_signal("creature_positioned", self)
-				wait_for_swap()
 				return
 			real_pos.x += delta * WALK_SPEED * dir
 		State.Creature.AWAIT_FIGHT: 
 			pass
 		State.Creature.IDLE:
-			pass
+			wait_for_swap(delta)
 		State.Creature.FIGHT:
 			attack_prep_timer -= delta
 			if attack_prep_timer <= 0: 
@@ -119,11 +120,15 @@ func _process(delta):
 		State.Creature.DIE:
 			pass
 
-func wait_for_swap():
+func wait_for_swap(delta):
 	# TODO this yield is a bit of a hacky way to do it
-	yield(get_tree().create_timer(3), "timeout")
-	if not state == State.Creature.IDLE:
+	if swap_countdown > 0:
+		swap_countdown -= delta
 		return
+	swap_countdown = SWAP_WAIT_TIME
+		
+#	if not state == State.Creature.IDLE:
+#		return
 		
 	if is_booked: 
 		emit_signal("swap_with_booking", self, booking_creature)
@@ -131,7 +136,7 @@ func wait_for_swap():
 		
 	is_ready_to_swap = true
 	emit_signal("ready_to_swap", self)
-	wait_for_swap()
+	
 
 func book_swap(other_creature): 
 	if other_creature.is_booked: 
@@ -191,18 +196,25 @@ func  set_archery_target_band_lane(band_index, lane_index):
 	ranged_target_lane = lane_index
 	
 func set_state(new_state, new_dir):
+	update_debug_with_target_x()
+	dir = new_dir
+	$AnimatedSprite.flip_h = (dir != sprite_dir)
+	
+	if state == new_state:
+		return
+		
 	if state == State.Creature.FIGHT and new_state != State.Creature.FIGHT: 
 		reset_attack_prep_timer()
 	
 	# This part should be removed when dead creatures no longer get
 	# state information from the army
-	if state == State.Creature.DIE and (new_state in [State.Creature.WALK, State.Creature.AWAIT_FIGHT, State.Creature.FIGHT, State.Creature.IDLE]):
+	if state == State.Creature.DIE:
 		return
+		
 	state = new_state
-	
+
 	update_debug_label_with_state()
-	update_debug_with_target_x()
-	dir = new_dir
+
 	match state:
 		State.Creature.MARCH:
 			$AnimatedSprite.play("walk")
@@ -213,12 +225,13 @@ func set_state(new_state, new_dir):
 		State.Creature.FIGHT:
 			prep_attack()
 		State.Creature.IDLE:
+			swap_countdown = SWAP_WAIT_TIME
 			$AnimatedSprite.play("idle")
 		State.Creature.DIE:
 			hide_debug()
 			hide_health()
 			$AnimatedSprite.play("die")
-			$AnimatedSprite.flip_h = (dir != sprite_dir)
+			# $AnimatedSprite.flip_h = (dir != sprite_dir)
 			emit_signal("death", self)
 			play_sound_death()
 			yield($AnimatedSprite, "animation_finished")
@@ -226,8 +239,6 @@ func set_state(new_state, new_dir):
 			$AnimatedSprite.playing = false
 			yield(get_tree().create_timer(time_for_corpse_fade), "timeout")
 			emit_signal("disappear", self)
-			
-	$AnimatedSprite.flip_h = (dir != sprite_dir)
 
 func take_damage(the_damage): 
 	hurt_anim()
@@ -323,7 +334,6 @@ func play_sound_attack():
 	sounds[rng.randi() % sounds.size()].play()
 
 func walk_to(new_walk_target_x):
-	
 	# TODO happen for other states as well (e.g. fighting)
 	is_ready_to_swap = false
 	is_booked = false
