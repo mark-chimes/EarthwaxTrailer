@@ -30,7 +30,7 @@ var speech_system = null
 
 var state = State.Army.IDLE
 
-const BANDS_SPAWNED = 1
+const BANDS_SPAWNED = 6
 const NUM_LANES = 4
 const DISTANCE_BETWEEN_LANES = 4
 const ARMY_HALF_SEP = 40
@@ -114,7 +114,6 @@ func create_and_add_creature(creatures_arr, CreatureType):
 	creature.connect("ready_to_swap", self, "_on_creature_ready_to_swap")
 	if creature.is_ranged: 
 		creature.connect("fire_projectile", self, "_on_creature_fire_projectile")
-
 		
 func _on_creature_fire_projectile(archer_pos, target_band, target_lane, projectile): 
 	var start_x = archer_pos.x

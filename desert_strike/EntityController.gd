@@ -16,7 +16,7 @@ var ArcherAtHut = preload("res://desert_strike/building/ArcherAtHut.tscn")
 
 onready var parallax_engine = get_parent().get_node("ParallaxEngine")
 
-const TIME_BETWEEN_WAVES = 15
+const TIME_BETWEEN_WAVES = 200000
 
 var wave_timer = 0 
 

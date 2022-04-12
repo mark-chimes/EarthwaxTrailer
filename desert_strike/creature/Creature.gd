@@ -55,8 +55,8 @@ onready var speech_box = SpeechBox.instance()
 func _ready(): 
 	rng.randomize()
 	priority = rng.randi_range(0,255)
-	#var color = Color8(priority, 255 - priority, 0, 255)
-	#$AnimatedSprite.modulate = color
+	var color = Color8(priority, 255 - priority, 0, 255)
+	$AnimatedSprite.modulate = color
 	init_health_bar()
 	add_child(debug_label)
 	add_child(speech_box)
@@ -211,10 +211,11 @@ func set_state(new_state, new_dir):
 func take_damage(the_damage): 
 	hurt_anim()
 	health -= the_damage
-	if health <= 0: 
-		health = 0
-		if state != State.Creature.DIE:
-			set_state(State.Creature.DIE, dir)
+#	temporarily removing death to test jostling
+#	if health <= 0: 
+#		health = 0
+#		if state != State.DIE:
+#			set_state(State.DIE, dir)
 	update_health_bar(health)
 
 func _on_animation_finished():
