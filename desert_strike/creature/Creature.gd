@@ -60,7 +60,7 @@ var is_booked = false
 var is_booking = false
 var booking_creature = null
 
-var SWAP_WAIT_TIME = 3
+const SWAP_WAIT_TIME = 3
 var swap_countdown = 0
 
 func _ready(): 
@@ -114,7 +114,10 @@ func _process(delta):
 			if not is_positioned_x():
 				real_pos.x += delta * WALK_SPEED * dir
 			if not is_positioned_z():
-				real_pos.z += delta * WALK_SPEED * dir
+				if walk_target_z < real_pos.z:
+					real_pos.z -= delta * WALK_SPEED
+				else:
+					real_pos.z += delta * WALK_SPEED
 				parallax_engine.update_z_index(self)
 		State.Creature.AWAIT_FIGHT: 
 			pass
@@ -161,6 +164,7 @@ func is_positioned():
 	return is_positioned_z() and is_positioned_x()
 
 func is_positioned_z():
+	#todo, return 1, 0 or -1
 	return abs(walk_target_z - real_pos.z ) < END_POS_DELTA
 
 func is_positioned_x():

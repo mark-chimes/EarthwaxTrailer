@@ -156,10 +156,27 @@ func get_state():
 	return state
 	
 func _on_creature_ready_to_swap(creature):
-	if not army_grid.has_creature_at(creature.band + 1, creature.lane):
-		return
-	var other_creature = army_grid.get_creature_band_lane(creature.band + 1, creature.lane)
-	if creature.priority >= other_creature.priority:
+#	if dude behind you is good:
+#		dude = dude behind you
+#	elif dude diagonal is good:
+#		dude = dude diagonal
+#	elif dude otherdiagonal is good:
+#		dude = dude other diagonal
+#	else:
+#		return
+#	dude logic
+##
+#
+#
+#
+	var  other_creature
+	if dude_is_good(creature, creature.band + 1, creature.lane):
+		other_creature = army_grid.get_creature_band_lane(creature.band + 1, creature.lane)
+	elif dude_is_good(creature, creature.band + 1, creature.lane + 1):
+		other_creature = army_grid.get_creature_band_lane(creature.band + 1, creature.lane + 1)
+	elif dude_is_good(creature, creature.band + 1, creature.lane - 1):
+		other_creature = army_grid.get_creature_band_lane(creature.band + 1, creature.lane - 1)
+	else:
 		return
 	if not creature.is_ready_to_swap: 
 		printerr("Asked for swap without being ready")
@@ -171,6 +188,14 @@ func _on_creature_ready_to_swap(creature):
 	army_grid.swap_creatures(creature, other_creature)
 	position_creature(creature)
 	position_creature(other_creature)
+
+func dude_is_good(creature, dudeband, dudelane):
+	if not army_grid.has_creature_at(dudeband, dudelane):
+		return false
+	var dude = army_grid.get_creature_band_lane(dudeband, dudelane)
+	if dude.is_booked or dude.is_booking:
+		return false
+	return dude.priority > creature.priority
 
 func _on_creature_swap_with_booking(booked_creature, booking_creature): 
 	army_grid.swap_creatures(booked_creature, booking_creature)

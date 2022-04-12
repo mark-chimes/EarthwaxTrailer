@@ -22,10 +22,10 @@ func get_lane_length(lane_index):
 	return len(creature_lanes[lane_index])
 
 func has_creature_at(band_index, lane_index): 
-	if lane_index >= len(creature_lanes): 
+	if lane_index >= len(creature_lanes) or lane_index < 0: 
 		return false
 	var lane = creature_lanes[lane_index]
-	return (band_index < len(lane))
+	return (band_index < len(lane) and band_index >= 0)
 
 func get_frontline_at_lane(lane_index): 
 	return get_creature_band_lane(0, lane_index)
