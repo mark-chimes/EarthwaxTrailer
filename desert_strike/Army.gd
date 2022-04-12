@@ -33,10 +33,10 @@ var state = State.Army.IDLE
 const BANDS_SPAWNED = 6
 const NUM_LANES = 4
 const DISTANCE_BETWEEN_LANES = 4
-const ARMY_HALF_SEP = 40
+const ARMY_HALF_SEP = 20
 const BAND_SEP = 3
 const STARTING_BAND_SEP = 8
-const ARMY_START_OFFSET = 60
+const ARMY_START_OFFSET = 40
 const FIGHT_SEP = 1
 const END_POS_DELTA = 0.1
 
@@ -112,6 +112,7 @@ func create_and_add_creature(creatures_arr, CreatureType):
 	creature.connect("death", self, "_on_creature_death")
 	creature.connect("disappear", parallax_engine, "_on_object_disappear")
 	creature.connect("ready_to_swap", self, "_on_creature_ready_to_swap")
+	creature.connect("swap_with_booking", self, "_on_creature_swap_with_booking")
 	if creature.is_ranged: 
 		creature.connect("fire_projectile", self, "_on_creature_fire_projectile")
 		
@@ -157,11 +158,23 @@ func _on_creature_ready_to_swap(creature):
 	if not army_grid.has_creature_at(creature.band + 1, creature.lane):
 		return
 	var other_creature = army_grid.get_creature_band_lane(creature.band + 1, creature.lane)
-	if other_creature.priority >= creature.priority:
+	if creature.priority >= other_creature.priority:
+		return
+	if not creature.is_ready_to_swap: 
+		printerr("Asked for swap without being ready")
+		return
+	if not other_creature.is_ready_to_swap: 
+		creature.book_swap(other_creature)
+		# Book
 		return
 	army_grid.swap_creatures(creature, other_creature)
 	position_creature(creature)
 	position_creature(other_creature)
+
+func _on_creature_swap_with_booking(booked_creature, booking_creature): 
+	army_grid.swap_creatures(booked_creature, booking_creature)
+	position_creature(booked_creature)
+	position_creature(booking_creature)
 
 func _on_creature_death(dead_creature):
 	emit_signal("creature_death", dead_creature.band, dead_creature.lane)

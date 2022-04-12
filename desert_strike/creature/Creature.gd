@@ -5,6 +5,7 @@ signal creature_positioned(this)
 signal done_speaking(this)
 signal disappear(this)
 signal ready_to_swap(this)
+signal swap_with_booking(this, booking_creature)
 
 var State = preload("res://desert_strike/State.gd")
 
@@ -29,7 +30,7 @@ var state = State.Creature.IDLE
 var sprite_dir = State.Dir.RIGHT
 var dir = State.Dir.RIGHT
 var is_in_combat = false
-var is_ready_to_swap = false
+
 var mute = false
 
 var health = 10
@@ -52,10 +53,14 @@ var is_speech_possible = true
 onready var debug_label = DebugLabel.instance()
 onready var speech_box = SpeechBox.instance()
 
+var is_ready_to_swap = false
+var is_booked = false
+var booking_creature = null
+
 func _ready(): 
 	rng.randomize()
 	priority = rng.randi_range(0,255)
-	var color = Color8(priority, 255 - priority, 0, 255)
+	var color = Color8(255 - priority, priority, 0, 255)
 	$AnimatedSprite.modulate = color
 	init_health_bar()
 	add_child(debug_label)
@@ -115,12 +120,28 @@ func _process(delta):
 			pass
 
 func wait_for_swap():
+	# TODO this yield is a bit of a hacky way to do it
 	yield(get_tree().create_timer(3), "timeout")
 	if not state == State.Creature.IDLE:
 		return
-	emit_signal("ready_to_swap", self)
+		
+	if is_booked: 
+		emit_signal("swap_with_booking", self, booking_creature)
+		return
+		
 	is_ready_to_swap = true
+	emit_signal("ready_to_swap", self)
 	wait_for_swap()
+
+func book_swap(other_creature): 
+	if other_creature.is_booked: 
+		return
+	is_ready_to_swap = false
+	other_creature.get_booked_by(self)
+	
+func get_booked_by(new_booking_creature): 
+	booking_creature = new_booking_creature
+	is_booked = true
 
 func is_positioned(): 
 	return abs(walk_target_x - real_pos.x ) < END_POS_DELTA
@@ -302,8 +323,12 @@ func play_sound_attack():
 	sounds[rng.randi() % sounds.size()].play()
 
 func walk_to(new_walk_target_x):
-	#TODO check we arent in position already
+	
+	# TODO happen for other states as well (e.g. fighting)
 	is_ready_to_swap = false
+	is_booked = false
+	
+	#TODO check we arent in position already
 	walk_target_x = new_walk_target_x
 	var new_dir
 	if new_walk_target_x > real_pos.x:
