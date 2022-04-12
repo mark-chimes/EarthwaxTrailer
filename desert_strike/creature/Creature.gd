@@ -54,6 +54,7 @@ onready var speech_box = SpeechBox.instance()
 
 var is_ready_to_swap = false
 var is_booked = false
+var is_booking = false
 var booking_creature = null
 
 var SWAP_WAIT_TIME = 3
@@ -139,9 +140,10 @@ func wait_for_swap(delta):
 	
 
 func book_swap(other_creature): 
-	if other_creature.is_booked: 
+	if other_creature.is_booked or other_creature.is_booking: 
 		return
 	is_ready_to_swap = false
+	is_booking = true
 	other_creature.get_booked_by(self)
 	
 func get_booked_by(new_booking_creature): 
@@ -337,6 +339,7 @@ func walk_to(new_walk_target_x):
 	# TODO happen for other states as well (e.g. fighting)
 	is_ready_to_swap = false
 	is_booked = false
+	is_booking = false
 	
 	#TODO check we arent in position already
 	walk_target_x = new_walk_target_x
