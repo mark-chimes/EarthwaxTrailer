@@ -53,7 +53,7 @@ var show_health = false
 var is_debug_state = false
 var is_debug_band_lane = false
 var is_debug_target_x = false
-var is_debug_static_position = false
+var is_debug_static_position = true
 onready var debug_label = DebugLabel.instance()
 onready var speech_box = SpeechBox.instance()
 
@@ -69,7 +69,7 @@ func _ready():
 	rng.randomize()
 	priority = rng.randi_range(0,255)
 	var color = Color8(255 - priority, priority, 0, 255)
-	#$AnimatedSprite.modulate = color
+	$AnimatedSprite.modulate = color
 	init_health_bar()
 	add_child(debug_label)
 	add_child(speech_box)

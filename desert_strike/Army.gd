@@ -2,7 +2,7 @@ extends Node2D
 
 signal defeat
 signal attack(band, lane, damage)
-signal front_line_ready(lane)
+signal front_line_ready(shared_lane)
 signal creature_death(band, lane)
 signal many_deaths
 
@@ -97,7 +97,7 @@ func add_new_creatures(CreatureType, num_creatures):
 
 func create_and_add_creature(creatures_arr, CreatureType): 
 	var creature = CreatureType.instance()
-	army_grid.add_creature_to_shortest_lane(creature)
+	army_grid.add_creature_to_smallest_lane(creature)
 	var z_pos = (creature.lane * DISTANCE_BETWEEN_LANES) + 3 
 	creature.parallax_engine = parallax_engine
 	creature.real_pos.z = z_pos
@@ -212,12 +212,12 @@ func _on_creature_death(dead_creature):
 	var lane = army_grid.get_lane(lane_index)
 	
 	lane.remove(band_index)
-	# move everyone behind me forwards
-	for i in range(band_index, len(lane)): 
-		var creature = lane[i]
-		creature.set_band(i)
-	position_lane(lane)
-
+	army_grid.remove_creature(band_index, lane_index)
+#	move everyone behind me forwards
+#	for i in range(band_index, len(lane)): 
+#		var creature = lane[i]
+#		creature.set_band(i)
+#	position_lane(lane)
 	# TODO defeat and routing mechanics: 
 	if not has_creatures(): 
 		emit_signal("defeat")
@@ -275,8 +275,8 @@ func get_target_x_from_band_lane(band, lane):
 func get_target_z_from_band_lane(band, lane):
 	return (lane * DISTANCE_BETWEEN_LANES) + 3 
 
-func _on_front_line_ready(ready_lane):
-	var creature = army_grid.get_frontline_at_lane(ready_lane)
+func _on_front_line_ready(shared_lane):
+	var creature = army_grid.get_creature_band_lane(0, shared_lane)
 	if creature.is_positioned(): 
 		if creature.state == State.Creature.AWAIT_FIGHT:
 			creature_fight(creature)
