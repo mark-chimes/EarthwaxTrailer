@@ -97,12 +97,22 @@ func add_creature(creature):
 	creature_lanes[adding_lane_index].append(creature)
 	adding_lane_index += 1
 
+func add_creature_to_lane(creature, lane_index): 
+	var lane = creature_lanes[lane_index]
+	creature.set_band_lane(len(lane), lane_index)
+	lane.append(creature)
+
 func get_num_creatures_in_lane(lane):
 	var num_creatures = 0
 	for creature in lane:
 		if creature != EMPTY_SLOT:
 			num_creatures += 1
 	return num_creatures
+
+func add_empty_slot_to_end_of_lane_DEBUG(lane_index):
+	var lane = creature_lanes[lane_index]
+	lane.append(EMPTY_SLOT)
+	
 
 func add_creature_to_smallest_lane(creature): 
 	var smallest_lane_index = 0

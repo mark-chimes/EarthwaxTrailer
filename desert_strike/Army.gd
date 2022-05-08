@@ -95,6 +95,28 @@ func add_new_creatures(CreatureType, num_creatures):
 			creature.set_state(State.Creature.MARCH, army_dir)
 	return new_creatures
 
+func create_and_add_creature_to_lane_DEBUG(CreatureType, lane_index): 
+	var creature = CreatureType.instance()
+	army_grid.add_creature_to_lane(creature, lane_index)
+	var z_pos = (creature.lane * DISTANCE_BETWEEN_LANES) + 3 
+	creature.parallax_engine = parallax_engine
+	creature.real_pos.z = z_pos
+	add_child(creature)
+	creature.dir = army_dir
+	creature.real_pos.x = (-army_dir * ARMY_HALF_SEP) \
+			+ (-army_dir * creature.band * STARTING_BAND_SEP) + rng.randf_range(-2, 2)\
+			+ ARMY_START_OFFSET
+	parallax_engine.add_object_to_parallax_world(creature)	
+	creature.connect("creature_positioned", self, "_on_creature_positioned")
+	creature.connect("attack", self, "_on_creature_attack")
+	creature.connect("death", self, "_on_creature_death")
+	creature.connect("disappear", parallax_engine, "_on_object_disappear")
+	creature.connect("ready_to_swap", self, "_on_creature_ready_to_swap")
+	creature.connect("swap_with_booking", self, "_on_creature_swap_with_booking")
+	if creature.is_ranged: 
+		creature.connect("fire_projectile", self, "_on_creature_fire_projectile")
+	creature.set_state(State.Creature.MARCH, army_dir)
+
 func create_and_add_creature(creatures_arr, CreatureType): 
 	var creature = CreatureType.instance()
 	army_grid.add_creature_to_smallest_lane(creature)
@@ -296,11 +318,11 @@ func _on_enemy_creature_death(band_index, lane_index):
 		position_lane(army_grid.get_lane(lane_index))
 
 func position_army(): 
-	for lane in army_grid.creature_lanes: # TODO get this variable better? 
-		position_lane(lane)
+	for creature in army_grid.get_all_creatures():
+		position_creature(creature)
 
 func position_lane(lane): 
-	for creature in lane: 
+	for creature in army_grid.get_lane(lane): 
 		position_creature(creature)
 		
 func should_creature_1_be_further_back(creature1, creature2): 
