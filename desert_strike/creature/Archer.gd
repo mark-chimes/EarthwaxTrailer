@@ -7,11 +7,13 @@ signal fire_projectile(archer_pos, target_band, target_lane, projectile)
 func _ready(): 
 	sprite_dir = State.Dir.RIGHT
 	time_between_attacks = 3 # TODO should be different for melee and range
-	ranged_damage = rng.randi_range(2,4)
+	ranged_damage = rng.randi_range(6,10)
 	melee_damage = rng.randi_range(1,2)
 	is_ranged = true
 	attack_range = 30
 	mute = true
+	health = 1000
+	MAX_HEALTH = 1000
 
 func fire_ranged_projectile(): 
 	var projectile = Arrow.instance()

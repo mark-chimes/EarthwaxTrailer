@@ -113,7 +113,6 @@ func add_empty_slot_to_end_of_lane_DEBUG(lane_index):
 	var lane = creature_lanes[lane_index]
 	lane.append(EMPTY_SLOT)
 	
-
 func add_creature_to_smallest_lane(creature): 
 	var smallest_lane_index = 0
 	var smallest_length = get_num_creatures_in_lane(creature_lanes[0])
@@ -154,3 +153,11 @@ func swap_creatures(creature1, creature2):
 	creature_lanes[creature2.lane][creature2.band] = creature1
 	creature1.set_band_lane(creature2.band, creature2.lane)
 	creature2.set_band_lane(hold_band, hold_lane)
+	
+func move_creature_into_empty_slot(creature, slot_band, slot_lane): 
+	creature_lanes[creature.lane][creature.band] = EMPTY_SLOT
+	creature_lanes[slot_lane][slot_band] = creature
+	creature.set_band_lane(slot_band, slot_lane)	
+	
+func remove_creature(band, lane): 
+	creature_lanes[lane][band] = EMPTY_SLOT

@@ -156,7 +156,6 @@ func wait_for_swap(delta):
 		
 	is_ready_to_swap = true
 	emit_signal("ready_to_swap", self)
-	
 
 func book_swap(other_creature): 
 	if other_creature.is_booked or other_creature.is_booking: 
@@ -164,6 +163,14 @@ func book_swap(other_creature):
 	is_ready_to_swap = false
 	is_booking = true
 	other_creature.get_booked_by(self)
+	
+func break_bookings(): 
+	is_ready_to_swap = false
+	is_booked = false
+	is_booking = false
+	if booking_creature != null:
+		booking_creature.break_bookings()
+	booking_creature = null
 	
 func get_booked_by(new_booking_creature): 
 	booking_creature = new_booking_creature
@@ -271,11 +278,10 @@ func set_state(new_state, new_dir):
 func take_damage(the_damage): 
 	hurt_anim()
 	health -= the_damage
-#	temporarily removing death to test jostling
-#	if health <= 0: 
-#		health = 0
-#		if state != State.DIE:
-#			set_state(State.DIE, dir)
+	if health <= 0: 
+		health = 0
+		if state != State.Creature.DIE:
+			set_state(State.Creature.DIE, dir)
 	update_health_bar(health)
 
 func _on_animation_finished():

@@ -232,6 +232,7 @@ func _on_creature_death(dead_creature):
 	var lane_index =  dead_creature.lane
 	var band_index = dead_creature.band
 	var lane = army_grid.get_lane(lane_index)
+	move_creature_into_empty_slot(band_index, lane_index)
 	
 	lane.remove(band_index)
 	army_grid.remove_creature(band_index, lane_index)
@@ -248,7 +249,34 @@ func _on_creature_death(dead_creature):
 	if num_deaths >= DEATH_TRIGGER_NUM: 
 		num_deaths = 0
 		emit_signal("many_deaths")
+
+func move_creature_into_empty_slot(band, lane): 
+	var  creature = null
+	if dude_is_good2(band + 1, lane):
+		creature = army_grid.get_creature_band_lane(band + 1, lane)
+	elif dude_is_good2(band + 1, lane + 1):
+		creature = army_grid.get_creature_band_lane(band + 1, lane + 1)
+	elif dude_is_good2(band + 1, lane - 1):
+		creature = army_grid.get_creature_band_lane(band + 1, lane - 1)
+	if creature == null: 
+		# army_grid.remove_slot(band, lane) # TODO hacky
+		return
+	
+	var new_band = creature.band
+	var new_lane = creature.lane
 		
+	creature.break_bookings()
+	army_grid.move_creature_into_empty_slot(creature, band, lane)
+	position_creature(creature)
+	
+	yield(get_tree().create_timer(0.5), "timeout")
+	move_creature_into_empty_slot(new_band, new_lane)
+
+func dude_is_good2(dudeband, dudelane): 
+	if not army_grid.has_creature_at(dudeband, dudelane):
+		return false
+	return true
+	
 func idle():
 	state = State.Army.IDLE
 	for creature in army_grid.get_all_creatures():
@@ -315,14 +343,15 @@ func creature_fire_arrow(creature, enemy_band, enemy_lane):
 	
 func _on_enemy_creature_death(band_index, lane_index):
 	if band_index == 0: 
-		position_lane(army_grid.get_lane(lane_index))
+		position_lane(lane_index)
+	pass
 
 func position_army(): 
 	for creature in army_grid.get_all_creatures():
 		position_creature(creature)
 
-func position_lane(lane): 
-	for creature in army_grid.get_lane(lane): 
+func position_lane(lane_index): 
+	for creature in army_grid.get_lane(lane_index): 
 		position_creature(creature)
 		
 func should_creature_1_be_further_back(creature1, creature2): 
