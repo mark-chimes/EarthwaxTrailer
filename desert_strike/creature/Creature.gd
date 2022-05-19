@@ -51,7 +51,7 @@ var walk_target_z
 
 var show_health = false
 var is_debug_state = false
-var is_debug_band_lane = false
+var is_debug_band_lane = true
 var is_debug_target_x = false
 var is_debug_static_position = true
 onready var debug_label = DebugLabel.instance()

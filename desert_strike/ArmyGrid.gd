@@ -32,7 +32,7 @@ func has_creature_at(band_index, lane_index):
 	if (band_index >= len(lane) or band_index < 0):
 		#creature not in band
 		return false
-	if lane[band_index] == EMPTY_SLOT:
+	if lane[band_index] == EMPTY_SLOT or lane[band_index] == null:
 		return false
 	return true
 
@@ -129,6 +129,7 @@ func add_creature_to_smallest_lane(creature):
 	
 func has_creatures(): 
 	for lane in creature_lanes: 
+		# TODO should not count empty slots
 		if len(lane) > 0:
 			return true
 	return false
@@ -155,9 +156,27 @@ func swap_creatures(creature1, creature2):
 	creature2.set_band_lane(hold_band, hold_lane)
 	
 func move_creature_into_empty_slot(creature, slot_band, slot_lane): 
-	creature_lanes[creature.lane][creature.band] = EMPTY_SLOT
-	creature_lanes[slot_lane][slot_band] = creature
-	creature.set_band_lane(slot_band, slot_lane)	
-	
+	var creature_band = creature.band
+	var creature_lane = creature.lane
+	creature_lanes[creature_lane][creature_band] = EMPTY_SLOT
+
+	var new_lane = creature_lanes[slot_lane]
+	if slot_band >= len(new_lane):
+		new_lane.append(creature)
+	else: 
+		new_lane[slot_band] = creature
+	creature.set_band_lane(slot_band, slot_lane)
+	remove_empty_slot_if_at_back(creature_band, creature_lane)
+		
 func remove_creature(band, lane): 
 	creature_lanes[lane][band] = EMPTY_SLOT
+	# TODO If the slot can be filled sideways, then remove this 
+	remove_empty_slot_if_at_back(band, lane)
+
+	
+# assumes the band and lane index holds an empty slot
+func remove_empty_slot_if_at_back(band_index, lane_index): 
+	return # TODO REMOVE
+	var lane = creature_lanes[lane_index]
+	if band_index == len(lane) -1: 
+		lane.pop_back()

@@ -191,6 +191,8 @@ func _on_creature_ready_to_swap(creature):
 #
 #
 #
+	if creature == null: 
+		return
 	var  other_creature
 	if dude_is_good(creature, creature.band + 1, creature.lane):
 		other_creature = army_grid.get_creature_band_lane(creature.band + 1, creature.lane)
@@ -215,32 +217,29 @@ func dude_is_good(creature, dudeband, dudelane):
 	if not army_grid.has_creature_at(dudeband, dudelane):
 		return false
 	var dude = army_grid.get_creature_band_lane(dudeband, dudelane)
+	# TODO getting nulls
 	if dude.is_booked or dude.is_booking:
 		return false
 	return dude.priority > creature.priority
 
 func _on_creature_swap_with_booking(booked_creature, booking_creature): 
-	army_grid.swap_creatures(booked_creature, booking_creature)
-	position_creature(booked_creature)
-	position_creature(booking_creature)
+	if booked_creature != null and booking_creature != null: 
+		army_grid.swap_creatures(booked_creature, booking_creature)
+	if booked_creature != null:
+		position_creature(booked_creature)
+	if booking_creature != null:
+		position_creature(booking_creature)
 
 func _on_creature_death(dead_creature):
-	emit_signal("creature_death", dead_creature.band, dead_creature.lane)
+	var band_index = dead_creature.band
+	var lane_index =  dead_creature.lane
+	emit_signal("creature_death", band_index, lane_index)
 	dead_creature.disconnect("attack", self, "_on_creature_attack")
 	dead_creature.disconnect("death", self, "_on_creature_death")
-
-	var lane_index =  dead_creature.lane
-	var band_index = dead_creature.band
-	var lane = army_grid.get_lane(lane_index)
-	move_creature_into_empty_slot(band_index, lane_index)
 	
-	lane.remove(band_index)
 	army_grid.remove_creature(band_index, lane_index)
-#	move everyone behind me forwards
-#	for i in range(band_index, len(lane)): 
-#		var creature = lane[i]
-#		creature.set_band(i)
-#	position_lane(lane)
+	move_creature_into_empty_slot(band_index, lane_index)
+
 	# TODO defeat and routing mechanics: 
 	if not has_creatures(): 
 		emit_signal("defeat")
@@ -261,7 +260,7 @@ func move_creature_into_empty_slot(band, lane):
 	if creature == null: 
 		# army_grid.remove_slot(band, lane) # TODO hacky
 		return
-	
+		
 	var new_band = creature.band
 	var new_lane = creature.lane
 		
@@ -344,7 +343,6 @@ func creature_fire_arrow(creature, enemy_band, enemy_lane):
 func _on_enemy_creature_death(band_index, lane_index):
 	if band_index == 0: 
 		position_lane(lane_index)
-	pass
 
 func position_army(): 
 	for creature in army_grid.get_all_creatures():
