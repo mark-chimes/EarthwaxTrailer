@@ -8,7 +8,7 @@ func _ready():
 	spawn_first_wave_no_gaps()
 
 func spawn_first_wave_no_gaps(): 
-	add_new_creatures(Grubling, 64)
+	add_new_creatures(Grubling, 128)
 
 func spawn_first_wave_with_gaps(): 
 	create_and_add_creature_to_lane_DEBUG(Grubling, 0)

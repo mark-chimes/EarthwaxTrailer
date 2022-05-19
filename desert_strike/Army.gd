@@ -259,6 +259,8 @@ func move_creature_into_empty_slot(band, lane):
 		creature = army_grid.get_creature_band_lane(band + 1, lane - 1)
 	if creature == null: 
 		# army_grid.remove_slot(band, lane) # TODO hacky
+		yield(get_tree().create_timer(0.5), "timeout")
+		move_creature_into_empty_slot(band, lane)
 		return
 		
 	var new_band = creature.band
