@@ -31,6 +31,7 @@ func spawn_new_wave():
 
 func _on_creature_death(dead_creature): 
 	# TODO janky hacky temp code
+	print(dead_creature.debug_name + " human death")
 	._on_creature_death(dead_creature)
 	if is_archer(dead_creature): 
 		dead_archers += 1

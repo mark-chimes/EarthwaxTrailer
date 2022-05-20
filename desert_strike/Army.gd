@@ -84,6 +84,8 @@ func get_pos():
 				front_pos = creature.real_pos.x
 	return front_pos
 
+
+
 func add_new_creatures(CreatureType, num_creatures): 
 	var new_creatures = [] 
 	for i in range(0, num_creatures):
@@ -138,7 +140,10 @@ func create_and_add_creature(creatures_arr, CreatureType):
 	creature.connect("swap_with_booking", self, "_on_creature_swap_with_booking")
 	if creature.is_ranged: 
 		creature.connect("fire_projectile", self, "_on_creature_fire_projectile")
-		
+
+
+	
+
 func _on_creature_fire_projectile(archer_pos, target_band, target_lane, projectile): 
 	var start_x = archer_pos.x
 	
@@ -178,6 +183,7 @@ func get_state():
 	return state
 	
 func _on_creature_ready_to_swap(creature):
+
 #	if dude behind you is good:
 #		dude = dude behind you
 #	elif dude diagonal is good:
@@ -190,7 +196,9 @@ func _on_creature_ready_to_swap(creature):
 ##
 #
 #
-#
+#	
+	if creature.state == State.Creature.DIE: 
+		printerr("Dead creature ready to swap: " + creature.debug_name + "(" + str(creature.band) + ", " + str(creature.lane) + ")")
 	if creature == null: 
 		return
 	var  other_creature
@@ -217,22 +225,30 @@ func dude_is_good(creature, dudeband, dudelane):
 	if not army_grid.has_creature_at(dudeband, dudelane):
 		return false
 	var dude = army_grid.get_creature_band_lane(dudeband, dudelane)
-	# TODO getting nulls
+	# TODO getting freed instances
 	if dude.is_booked or dude.is_booking:
 		return false
 	return dude.priority > creature.priority
 
 func _on_creature_swap_with_booking(booked_creature, booking_creature): 
+
 	if booked_creature != null and booking_creature != null: 
 		army_grid.swap_creatures(booked_creature, booking_creature)
 	if booked_creature != null:
+		if booked_creature.state == State.Creature.DIE: 
+			printerr("booked_creature dead but swapping: " + booked_creature.debug_name + "(" + str(booked_creature.band) + ", " + str(booked_creature.lane) + ")")
 		position_creature(booked_creature)
 	if booking_creature != null:
+		if booking_creature.state == State.Creature.DIE: 
+			printerr("booking_creature dead but swapping: " + booking_creature.debug_name + "(" + str(booking_creature.band) + ", " + str(booking_creature.lane) + ")")
 		position_creature(booking_creature)
 
 func _on_creature_death(dead_creature):
+	# TODO Create and add corpse
+	# create_and_add_corpse(dead_creature.corpse_type)
 	var band_index = dead_creature.band
 	var lane_index =  dead_creature.lane
+	print(dead_creature.debug_name + " army death at (" + str(band_index) + ", " + str(lane_index) + ")")
 	emit_signal("creature_death", band_index, lane_index)
 	dead_creature.disconnect("attack", self, "_on_creature_attack")
 	dead_creature.disconnect("death", self, "_on_creature_death")
@@ -248,8 +264,13 @@ func _on_creature_death(dead_creature):
 	if num_deaths >= DEATH_TRIGGER_NUM: 
 		num_deaths = 0
 		emit_signal("many_deaths")
-
+		
+func create_and_add_corpse(CorpseType): 
+	# TODO add the corpse
+	pass
+	
 func move_creature_into_empty_slot(band, lane): 
+	# print("Army grid moving creature into empty slot at (" + str(band) + ", " + str(lane) + ")")
 	var  creature = null
 	if dude_is_good2(band + 1, lane):
 		creature = army_grid.get_creature_band_lane(band + 1, lane)
@@ -258,11 +279,14 @@ func move_creature_into_empty_slot(band, lane):
 	elif dude_is_good2(band + 1, lane - 1):
 		creature = army_grid.get_creature_band_lane(band + 1, lane - 1)
 	if creature == null: 
+		# print("Found no elible creature at (" + str(band) + ", " + str(lane) + ")")
 		# army_grid.remove_slot(band, lane) # TODO hacky
 		yield(get_tree().create_timer(0.5), "timeout")
+		# print("Trying again (" + str(band) + ", " + str(lane) + ")")
 		move_creature_into_empty_slot(band, lane)
 		return
-		
+	# print("Found creature (" + str(creature) + ")")
+	# print("...with name \"" + creature.debug_name + "\" at position (" + str(creature.band) + ", " + str(creature.lane) + ")")
 	var new_band = creature.band
 	var new_lane = creature.lane
 		
@@ -271,6 +295,7 @@ func move_creature_into_empty_slot(band, lane):
 	position_creature(creature)
 	
 	yield(get_tree().create_timer(0.5), "timeout")
+	# print("Trying after success (" + str(new_band) + ", " + str(new_lane) + ")")
 	move_creature_into_empty_slot(new_band, new_lane)
 
 func dude_is_good2(dudeband, dudelane): 

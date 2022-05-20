@@ -48,16 +48,29 @@ func get_creature_band_lane(band_index, lane_index):
 		return
 	var lane = creature_lanes[lane_index]
 	var creature = lane[band_index]
+	if not is_instance_valid(creature):
+		printerr("Got invalid creature instance at (" + str(band_index) + ", " + str(lane_index) + ")")
 	return creature
 
 func get_all_creatures():
 	# TODO optimize?  
+	
 	var all_creatures = []
-	for lane in creature_lanes:
-		for creature in lane: 
+	for i in range(len(creature_lanes)): 
+		var lane = creature_lanes[i]
+		for j in range(len(lane)):
+			var creature = lane[j]
+			if not is_instance_valid(creature):
+				printerr("Got invalid creature instance at (" + str(j) + ", " + str(i) + ")")
 			if creature != EMPTY_SLOT:
 				all_creatures.append(creature)
 	return all_creatures
+#	var all_creatures = []
+#	for lane in creature_lanes:
+#		for creature in lane: 
+#			if creature != EMPTY_SLOT:
+#				all_creatures.append(creature)
+#	return all_creatures
 	
 # Pass in a list of funcrefs each of which takes in a creature and return a bool
 # If all of the funcrefs return true, then the creature is acceptable 
@@ -148,6 +161,14 @@ func get_archery_target(lane_index, attack_range):
 	return lane[target_index]
 
 func swap_creatures(creature1, creature2):
+	if creature1.state == State.Creature.DIE or creature2.state == State.Creature.DIE:
+		printerr("Trying to swap a live creature with a dead one!")
+		var band1 = creature1.band
+		var lane1 = creature1.lane
+		var band2 = creature2.band
+		var lane2 = creature2.lane
+		printerr("Creature1: " + creature1.debug_name + "(" + str(band1) + ", " + str(lane1) + ")")
+		printerr("Creature2: " + creature2.debug_name + "(" + str(band2) + ", " + str(lane2) + ")")
 	var hold_band = creature1.band
 	var hold_lane = creature1.lane
 	creature_lanes[creature1.lane][creature1.band] = creature2
@@ -169,6 +190,7 @@ func move_creature_into_empty_slot(creature, slot_band, slot_lane):
 	remove_empty_slot_if_at_back(creature_band, creature_lane)
 		
 func remove_creature(band, lane): 
+	print("Army grid setting empty slot at (" + str(band) + ", " + str(lane) + ")")
 	creature_lanes[lane][band] = EMPTY_SLOT
 	# TODO If the slot can be filled sideways, then remove this 
 	remove_empty_slot_if_at_back(band, lane)

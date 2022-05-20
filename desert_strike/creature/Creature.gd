@@ -51,7 +51,7 @@ var walk_target_z
 
 var show_health = false
 var is_debug_state = false
-var is_debug_band_lane = true
+var is_debug_band_lane = false
 var is_debug_target_x = false
 var is_debug_static_position = true
 onready var debug_label = DebugLabel.instance()
@@ -62,11 +62,18 @@ var is_booked = false
 var is_booking = false
 var booking_creature = null
 
+var booking_creature_debug_name = "no_name"
+var booking_creature_debug_band = -1
+var booking_creature_debug_lane = -1
+
 const SWAP_WAIT_TIME = 1
 var swap_countdown = 0
 
+var debug_name = "no_name_set"
+
 func _ready(): 
 	rng.randomize()
+	debug_name = gen_unique_string(rng.randi_range(4,12))
 	priority = rng.randi_range(0,255)
 	var color = Color8(255 - priority, priority, 0, 255)
 	$AnimatedSprite.modulate = color
@@ -80,6 +87,16 @@ func _ready():
 	update_debug_label_with_state()
 	update_debug_with_band_lane()
 	$AnimatedSprite.connect("animation_finished", self, "_on_animation_finished")
+
+var ascii_letters_and_digits = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+func gen_unique_string(length: int) -> String:
+	var result = ""
+	for i in range(length):
+		result += ascii_letters_and_digits[rng.randi_range(0, ascii_letters_and_digits.length()-1)]
+	return result
+
+func debug_string(): 
+	return debug_name + "(" + str(band) + ", " + str(lane) + ")"
 
 func set_band_lane(new_band, new_lane): 
 	band = new_band
@@ -151,10 +168,18 @@ func wait_for_swap(delta):
 #		return
 		
 	if is_booked: 
-		emit_signal("swap_with_booking", self, booking_creature)
-		return
+		if (!booking_creature.get_ref()):
+			printerr(debug_name + "trying to swap but booking creature weakref is gone!")
+			# TODO RETURN?
+		emit_signal("swap_with_booking", self, booking_creature.get_ref())
+		booking_creature.get_ref().booking_creature = null  # TODO correct? 
+		booking_creature = null # TODO correct? 
+		# TODO should we set "is_booked" and "is_booking" to false?
+		return 
 		
 	is_ready_to_swap = true
+	if state == State.Creature.DIE: 
+		printerr("I'm dead but trying to swap!")
 	emit_signal("ready_to_swap", self)
 
 func book_swap(other_creature): 
@@ -162,18 +187,48 @@ func book_swap(other_creature):
 		return
 	is_ready_to_swap = false
 	is_booking = true
+	booking_creature = weakref(other_creature) # TODO is this right?!
 	other_creature.get_booked_by(self)
 	
 func break_bookings(): 
 	is_ready_to_swap = false
 	is_booked = false
 	is_booking = false
-	if booking_creature != null:
-		booking_creature.break_bookings()
-	booking_creature = null
+	# TODO should this be weakref? 
+	if booking_creature == null:
+		return
 	
+	if (!booking_creature.get_ref()):
+		printerr(debug_name + ": Booking creature weakref is gone: " + booking_creature_debug_name) 
+		printerr(debug_name + "(" + str(band) + ", " + str(lane) + ")") 
+		printerr(booking_creature_debug_name + "(" + str(booking_creature_debug_band) + ", " + str(booking_creature_debug_lane) + ")") 
+		booking_creature = null
+		return
+
+	var temp_creature = booking_creature.get_ref()
+	booking_creature = null
+	# print("...with other creature " + str(booking_creature.get_ref()))
+	# print("...with name \"" + booking_creature.get_ref().debug_name + "\"" )
+	temp_creature.break_bookings()
+
+func debug_break_bookings_string(): 
+	print("Dead creature " + debug_string() + " breaking bookings")
+	if (booking_creature != null):
+		if ! booking_creature.get_ref():
+			printerr("Dead creature trying to break booking with dereferenced creature")
+			return
+		var debug_creature = booking_creature.get_ref()
+		if debug_creature == null: 
+			printerr("Trying to break booking with null creature")
+			return
+		print("Dead creature " +  debug_string() + " breaking booking with: " + debug_creature.debug_string())
+
 func get_booked_by(new_booking_creature): 
-	booking_creature = new_booking_creature
+	print(debug_string() + " booked by " + new_booking_creature.debug_string())
+	booking_creature = weakref(new_booking_creature)
+	booking_creature_debug_name = new_booking_creature.debug_name # TODO Debug
+	booking_creature_debug_band = new_booking_creature.band # TODO Debug
+	booking_creature_debug_lane = new_booking_creature.lane # TODO Debug
 	is_booked = true
 
 func is_positioned(): 
@@ -267,13 +322,20 @@ func set_state(new_state, new_dir):
 			hide_health()
 			$AnimatedSprite.play("die")
 			# $AnimatedSprite.flip_h = (dir != sprite_dir)
+			print(debug_name + " gets state die")
 			emit_signal("death", self)
 			play_sound_death()
-			yield($AnimatedSprite, "animation_finished")
-			$AnimatedSprite.frame = $AnimatedSprite.frames.get_frame_count("die")
-			$AnimatedSprite.playing = false
-			yield(get_tree().create_timer(time_for_corpse_fade), "timeout")
+			debug_break_bookings_string()
+			break_bookings()
+			print(debug_string() + " disappears")
 			emit_signal("disappear", self)
+			
+			# TODO create corpse at position
+			# yield($AnimatedSprite, "animation_finished")
+			# $AnimatedSprite.frame = $AnimatedSprite.frames.get_frame_count("die")
+			# $AnimatedSprite.playing = false
+			# yield(get_tree().create_timer(time_for_corpse_fade), "timeout")
+
 
 func take_damage(the_damage): 
 	hurt_anim()
