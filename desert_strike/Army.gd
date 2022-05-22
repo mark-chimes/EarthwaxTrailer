@@ -30,7 +30,7 @@ var speech_system = null
 
 var state = State.Army.IDLE
 
-const BANDS_SPAWNED = 6
+const BANDS_SPAWNED = 1
 const NUM_LANES = 4
 const DISTANCE_BETWEEN_LANES = 4
 const ARMY_HALF_SEP = 20

@@ -25,7 +25,7 @@ func spawn_first_wave():
 	add_new_creatures(Farmer, num_farmers_to_spawn)
 	add_new_creatures(Archer,num_archers_to_spawn)
 
-func spawn_new_wave(): 
+func spawn_new_wave(_wave_num): 
 	add_new_creatures(Farmer, num_farmers_to_spawn)
 	add_new_creatures(Archer, num_archers_to_spawn)
 

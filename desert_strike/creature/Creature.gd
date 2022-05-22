@@ -75,8 +75,8 @@ func _ready():
 	rng.randomize()
 	debug_name = gen_unique_string(rng.randi_range(4,12))
 	priority = rng.randi_range(0,255)
-	var color = Color8(255 - priority, priority, 0, 255)
-	$AnimatedSprite.modulate = color
+	# var color = Color8(255 - priority, priority, 0, 255)
+	# $AnimatedSprite.modulate = color
 	init_health_bar()
 	add_child(debug_label)
 	add_child(speech_box)

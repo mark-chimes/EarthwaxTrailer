@@ -16,16 +16,27 @@ var ArcherAtHut = preload("res://desert_strike/building/ArcherAtHut.tscn")
 
 onready var parallax_engine = get_parent().get_node("ParallaxEngine")
 
-const TIME_BETWEEN_WAVES = 200000
+const TIME_BETWEEN_WAVES = 10
 
 var wave_timer = 0 
+var wave_num = 1
+
+var income_ui = null 
+var money_ui = null 
+# TODO This isn't the right way to do this - should use signals and a parent object
+var income = 0 
+var money = 0
 
 func _ready():
 	$ArmyHuman.connect("defeat", self, "_human_defeat")
 	$ArmyGlut.connect("defeat", self, "_glut_defeat")
 	rng.randomize()
 	create_building_places()
-
+	
+	get_parent().get_node("Clock").seconds_between_waves = TIME_BETWEEN_WAVES
+	adjust_income(4)
+	adjust_money(10)
+	
 func _process(delta):
 	wave_spawn(delta)
 	battle_start()
@@ -34,9 +45,11 @@ func wave_spawn(delta):
 	# TODO Waves for already-defeated armies.
 	if wave_timer >= TIME_BETWEEN_WAVES: 
 		# new wave
-		$ArmyHuman.spawn_new_wave()
-		$ArmyGlut.spawn_new_wave()
+		$ArmyHuman.spawn_new_wave(wave_num)
+		$ArmyGlut.spawn_new_wave(wave_num)
+		wave_num += 1
 		wave_timer = 0
+		adjust_money(income)
 	else: 
 		wave_timer += delta
 		
@@ -77,7 +90,7 @@ func battle_start():
 
 func create_building_places(): 
 	# TODO Should this function be happening in the entity controller?
-	create_building_places_at(range(0, -121, -25))
+	create_building_places_at(range(0, -121, -12))
 
 func create_building_places_at(x_poses):
 	for x_pos in x_poses: 
@@ -93,16 +106,24 @@ func create_building_place_at(x_pos):
 	building_place.set_parallax_engine(parallax_engine) # TODO this is hacky and wrong
 
 func _on_building_place_structure(building_place): 
+
 	var new_building
 	var new_person
 	if building_place.building_state == "farm": 
+		if money < 2: 
+			return
+		adjust_money(-2)
 		new_building = Farm.instance()
 		new_person = FarmerAtHut.instance()
-		$ArmyHuman.add_farmers_to_spawn(1)
+		$ArmyHuman.add_farmers_to_spawn(2)
+		adjust_income(1)
 	else: 
+		if money < 2: 
+			return
+		adjust_money(-2)
 		new_building = ArcheryTargets.instance()
 		new_person = ArcherAtHut.instance()
-		$ArmyHuman.add_archers_to_spawn(1)
+		$ArmyHuman.add_archers_to_spawn(2)
 	new_building.real_pos.z = 48
 	new_building.real_pos.x = building_place.real_pos.x
 	add_child(new_building)
@@ -117,6 +138,18 @@ func _on_building_place_structure(building_place):
 	add_child(new_person)
 	
 	parallax_engine.remove_object(building_place)
+
+func adjust_income(increase): 
+	income += increase
+	if income_ui == null: 
+		income_ui = get_parent().get_node("Income")
+	income_ui.set_income(income)
+
+func adjust_money(increase): 
+	money += increase
+	if money_ui == null: 
+		money_ui = get_parent().get_node("Money")
+	money_ui.set_income(money)
 
 func _on_person_at_hut_destroy_structure(person_at_hut): 
 	create_building_place_at(person_at_hut.real_pos.x)

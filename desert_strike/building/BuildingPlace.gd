@@ -3,7 +3,7 @@ extends "res://parallax/util/ParallaxObject.gd"
 signal place_structure(this)
 
 var parallax_engine
-const SELECTION_WIDTH = 8
+const SELECTION_WIDTH = 4
 
 # TODO building state is very hacky and should not even be here
 var building_state = "archery"
@@ -42,4 +42,4 @@ func switch_building_state():
 	else: 
 		building_state = "farm"
 		label_name = "farm"
-	$Label.text = "<Up/down> to switch.\n<space> to build " + label_name + "."
+	$Label.text = "<Up/down> to switch.\n<space> to build " + label_name + " for 2gp."
