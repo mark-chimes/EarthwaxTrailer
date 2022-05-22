@@ -33,10 +33,10 @@ var state = State.Army.IDLE
 const BANDS_SPAWNED = 1
 const NUM_LANES = 4
 const DISTANCE_BETWEEN_LANES = 4
-const ARMY_HALF_SEP = 20
+const ARMY_HALF_SEP = 40
 const BAND_SEP = 3
 const STARTING_BAND_SEP = 8
-const ARMY_START_OFFSET = 40
+const ARMY_START_OFFSET = 80
 const FIGHT_SEP = 1
 const END_POS_DELTA = 0.1
 
@@ -248,26 +248,40 @@ func _on_creature_death(dead_creature):
 	# create_and_add_corpse(dead_creature.corpse_type)
 	var band_index = dead_creature.band
 	var lane_index =  dead_creature.lane
+	var creature_x = 	dead_creature.real_pos.x
+	var creature_z = 	dead_creature.real_pos.z
+	
+	var CorpseType = dead_creature.get_corpse()
+	create_and_add_corpse(CorpseType, creature_x, creature_z)
+	
 	print(dead_creature.debug_name + " army death at (" + str(band_index) + ", " + str(lane_index) + ")")
 	emit_signal("creature_death", band_index, lane_index)
 	dead_creature.disconnect("attack", self, "_on_creature_attack")
 	dead_creature.disconnect("death", self, "_on_creature_death")
-	
+
 	army_grid.remove_creature(band_index, lane_index)
 	move_creature_into_empty_slot(band_index, lane_index)
 
 	# TODO defeat and routing mechanics: 
 	if not has_creatures(): 
+		print("NO CREATURES!")
 		emit_signal("defeat")
+
+#	num_deaths += 1
+#
+#	if num_deaths >= DEATH_TRIGGER_NUM: 
+#		num_deaths = 0
+#		emit_signal("many_deaths")
+
+
 	
-	num_deaths += 1
-	if num_deaths >= DEATH_TRIGGER_NUM: 
-		num_deaths = 0
-		emit_signal("many_deaths")
-		
-func create_and_add_corpse(CorpseType): 
-	# TODO add the corpse
-	pass
+func create_and_add_corpse(CorpseType, corpse_x, corpse_z): 
+	var corpse = CorpseType.instance()
+	corpse.real_pos.x = corpse_x
+	corpse.real_pos.z = corpse_z
+	add_child(corpse)
+	parallax_engine.add_object_to_parallax_world(corpse)
+	corpse.connect("disappear", parallax_engine, "_on_object_disappear")
 	
 func move_creature_into_empty_slot(band, lane): 
 	# print("Army grid moving creature into empty slot at (" + str(band) + ", " + str(lane) + ")")

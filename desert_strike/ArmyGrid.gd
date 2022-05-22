@@ -141,11 +141,13 @@ func add_creature_to_smallest_lane(creature):
 	lane.append(creature)
 	
 func has_creatures(): 
-	for lane in creature_lanes: 
-		# TODO should not count empty slots
-		if len(lane) > 0:
-			return true
-	return false
+	print("Num Creatures: " + str(len(get_all_creatures())))
+	return len(get_all_creatures()) > 0
+#	for lane in creature_lanes: 
+#		# TODO should not count empty slots
+#		if len(lane) > 0:
+#			return true
+#	return false
 
 # TODO this should be handled in a battle API not in army grid
 # TODO Change how range works to take the creature's position into account

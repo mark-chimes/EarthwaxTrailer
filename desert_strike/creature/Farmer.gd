@@ -1,12 +1,14 @@
 extends "res://desert_strike/creature/Creature.gd"
-
+onready var FarmerCorpse = preload("res://desert_strike/creature/FarmerCorpse.tscn")
 
 func _ready(): 
 	sprite_dir = State.Dir.RIGHT
 	mute = false
-	time_between_attacks = 3
-	melee_damage = 10 #rng.randi_range(2,10)
+	time_between_attacks = rng.randf_range(2,4)
+	melee_damage = rng.randi_range(2,7)
 	ranged_damage = 0
-	health = 1000
-	MAX_HEALTH = 1000
+	health = 10
+	MAX_HEALTH = 10
 	
+func get_corpse(): 
+	return FarmerCorpse

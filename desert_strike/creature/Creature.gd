@@ -49,7 +49,7 @@ var time_for_corpse_fade = 3
 var walk_target_x
 var walk_target_z
 
-var show_health = false
+var show_health = true
 var is_debug_state = false
 var is_debug_band_lane = false
 var is_debug_target_x = false
