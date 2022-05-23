@@ -48,9 +48,11 @@ var time_between_attacks = 3
 var time_for_corpse_fade = 3
 var walk_target_x
 var walk_target_z
+var is_waiting_for_anim = false # waiting for attack animation to finish before moving
 
-var show_health = true
+var show_health = false
 var is_debug_state = false
+var is_debug_anim = true
 var is_debug_band_lane = false
 var is_debug_target_x = false
 var is_debug_static_position = true
@@ -86,6 +88,7 @@ func _ready():
 	update_debug_with_target_x()
 	update_debug_label_with_state()
 	update_debug_with_band_lane()
+	update_debug_label_with_anim()
 	$AnimatedSprite.connect("animation_finished", self, "_on_animation_finished")
 
 var ascii_letters_and_digits = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -144,7 +147,6 @@ func _process(delta):
 				else:
 					real_pos.z += delta * WALK_SPEED
 				parallax_engine.update_z_index(self)
-				
 		State.Creature.AWAIT_FIGHT: 
 			pass
 		State.Creature.IDLE:
@@ -212,7 +214,7 @@ func break_bookings():
 	temp_creature.break_bookings()
 
 func debug_break_bookings_string(): 
-	print("Dead creature " + debug_string() + " breaking bookings")
+	# print("Dead creature " + debug_string() + " breaking bookings")
 	if (booking_creature != null):
 		if ! booking_creature.get_ref():
 			printerr("Dead creature trying to break booking with dereferenced creature")
@@ -221,10 +223,10 @@ func debug_break_bookings_string():
 		if debug_creature == null: 
 			printerr("Trying to break booking with null creature")
 			return
-		print("Dead creature " +  debug_string() + " breaking booking with: " + debug_creature.debug_string())
+		# print("Dead creature " +  debug_string() + " breaking booking with: " + debug_creature.debug_string())
 
 func get_booked_by(new_booking_creature): 
-	print(debug_string() + " booked by " + new_booking_creature.debug_string())
+	# print(debug_string() + " booked by " + new_booking_creature.debug_string())
 	booking_creature = weakref(new_booking_creature)
 	booking_creature_debug_name = new_booking_creature.debug_name # TODO Debug
 	booking_creature_debug_band = new_booking_creature.band # TODO Debug
@@ -261,6 +263,11 @@ func update_debug_with_target_x():
 	var decimaled_float = stepify(walk_target_x, 0.01)	
 	set_debug_label(str(decimaled_float))
 
+func update_debug_label_with_anim(): 
+	if not is_debug_anim:
+		return
+	set_debug_label($AnimatedSprite.get_animation())
+	
 func update_debug_label_with_state(): 
 	if not is_debug_state: 
 		return 
@@ -293,7 +300,7 @@ func set_state(new_state, new_dir):
 	if state == new_state:
 		return
 		
-	if state == State.Creature.FIGHT and new_state != State.Creature.FIGHT: 
+	if new_state == State.Creature.FIGHT: 
 		reset_attack_prep_timer()
 	
 	# This part should be removed when dead creatures no longer get
@@ -302,9 +309,8 @@ func set_state(new_state, new_dir):
 		return
 		
 	state = new_state
-
 	update_debug_label_with_state()
-
+	
 	match state:
 		State.Creature.MARCH:
 			$AnimatedSprite.play("walk")
@@ -318,24 +324,18 @@ func set_state(new_state, new_dir):
 			swap_countdown = SWAP_WAIT_TIME + rng.randf_range(-1, 1)
 			$AnimatedSprite.play("idle")
 		State.Creature.DIE:
+			# TODO death shouldn't really be setting a state at all.
+			# Should just be a separate function entirely.
 			hide_debug()
 			hide_health()
 			$AnimatedSprite.play("die")
 			# $AnimatedSprite.flip_h = (dir != sprite_dir)
-			print(debug_name + " gets state die")
 			emit_signal("death", self)
 			play_sound_death()
 			debug_break_bookings_string()
 			break_bookings()
-			print(debug_string() + " disappears")
 			emit_signal("disappear", self)
-			
-			# TODO create corpse at position
-			# yield($AnimatedSprite, "animation_finished")
-			# $AnimatedSprite.frame = $AnimatedSprite.frames.get_frame_count("die")
-			# $AnimatedSprite.playing = false
-			# yield(get_tree().create_timer(time_for_corpse_fade), "timeout")
-
+	update_debug_label_with_anim()
 
 func take_damage(the_damage): 
 	hurt_anim()
@@ -360,29 +360,31 @@ func _on_animation_finished():
 			attack_prep_anim_finish()
 		"attack_prep":
 			attack_prep_anim_finish()
-
+	update_debug_label_with_anim()
+	
 func prep_attack(): 
 	if is_ranged and band != 0: 
 		$AnimatedSprite.play("ranged_attack_prep")
 	else:
 		$AnimatedSprite.play("attack_prep")
-	reset_attack_prep_timer()	
 
 func reset_attack_prep_timer(): 
 	attack_prep_timer = time_between_attacks
 
 func do_attack_strike():
-	if state == State.Creature.FIGHT: 
-		emit_signal("attack", self)
-	if state != State.Creature.FIGHT: # has to be checked again after attack signal
-		return
+#	if state != State.Creature.FIGHT: # has to be checked again after attack signal
+#		return
 	if is_ranged and band != 0: 
 		$AnimatedSprite.play("ranged_attack_strike")
 		fire_ranged_projectile()
 	else:
 		$AnimatedSprite.play("attack_strike")
 	play_sound_attack()
-
+	update_debug_label_with_anim()
+	if state == State.Creature.FIGHT: 
+		emit_signal("attack", self)
+	update_debug_label_with_anim()
+	
 func fire_ranged_projectile():
 	# Overload this
 	pass
@@ -394,10 +396,16 @@ func hurt_anim():
 func attack_strike_anim_finish(): 
 	if state != State.Creature.FIGHT: 
 		return
+	if is_waiting_for_anim: 
+		print("Animation finished.")
+		is_waiting_for_anim = false
+		walk_to_walk_target_ignoring_anim()
+			
 	if is_ranged and band != 0: 
 		$AnimatedSprite.play("ranged_attack_prep")
 	else:
 		$AnimatedSprite.play("attack_prep")
+	
 
 func attack_prep_anim_finish(): 
 	if state != State.Creature.FIGHT: 
@@ -430,18 +438,29 @@ func play_sound_attack():
 	sounds[rng.randi() % sounds.size()].play()
 
 func walk_to(new_walk_target_x, new_walk_target_z):
-	# TODO happen for other states as well (e.g. fighting)
-	is_ready_to_swap = false
-	is_booked = false
-	is_booking = false
-	
-	#TODO check we arent in position already
 	if is_debug_static_position:
 		walk_target_z = new_walk_target_z
 		walk_target_x = new_walk_target_x
 	else:
 		walk_target_z = new_walk_target_z + rng.randf_range(-WALK_TO_OFFSET_MAX, WALK_TO_OFFSET_MAX)
 		walk_target_x = new_walk_target_x + rng.randf_range(-WALK_TO_OFFSET_MAX, WALK_TO_OFFSET_MAX)
+	
+	if state == State.Creature.FIGHT: 
+		var anim = $AnimatedSprite.get_animation()
+		if anim == "attack_strike" or anim == "ranged_attack_strike": 
+			print("Waiting for animation to finish")
+			is_waiting_for_anim = true
+			return
+			
+	walk_to_walk_target_ignoring_anim()
+
+func walk_to_walk_target_ignoring_anim():
+	# TODO happen for other states as well (e.g. fighting)
+	is_ready_to_swap = false
+	is_booked = false
+	is_booking = false
+	
+	#TODO check we arent in position already
 	update_debug_with_target_x()
 	var new_dir
 	if walk_target_x > real_pos.x:

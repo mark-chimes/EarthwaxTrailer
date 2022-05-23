@@ -141,7 +141,6 @@ func add_creature_to_smallest_lane(creature):
 	lane.append(creature)
 	
 func has_creatures(): 
-	print("Num Creatures: " + str(len(get_all_creatures())))
 	return len(get_all_creatures()) > 0
 #	for lane in creature_lanes: 
 #		# TODO should not count empty slots
@@ -192,7 +191,6 @@ func move_creature_into_empty_slot(creature, slot_band, slot_lane):
 	remove_empty_slot_if_at_back(creature_band, creature_lane)
 		
 func remove_creature(band, lane): 
-	print("Army grid setting empty slot at (" + str(band) + ", " + str(lane) + ")")
 	creature_lanes[lane][band] = EMPTY_SLOT
 	# TODO If the slot can be filled sideways, then remove this 
 	remove_empty_slot_if_at_back(band, lane)

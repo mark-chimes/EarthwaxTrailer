@@ -254,7 +254,7 @@ func _on_creature_death(dead_creature):
 	var CorpseType = dead_creature.get_corpse()
 	create_and_add_corpse(CorpseType, creature_x, creature_z)
 	
-	print(dead_creature.debug_name + " army death at (" + str(band_index) + ", " + str(lane_index) + ")")
+	# print(dead_creature.debug_name + " army death at (" + str(band_index) + ", " + str(lane_index) + ")")
 	emit_signal("creature_death", band_index, lane_index)
 	dead_creature.disconnect("attack", self, "_on_creature_attack")
 	dead_creature.disconnect("death", self, "_on_creature_death")
@@ -335,11 +335,11 @@ func position_creature(creature):
 func _on_creature_positioned(creature):
 	if creature.band == 0:
 		if not enemy_army_grid.has_frontline_at_lane(creature.lane): 
-			creature.set_state(State.Creature.IDLE, army_dir)
+			creature.set_state(State.Creature.AWAIT_FIGHT, army_dir)
 			return
 		var enemy_creature = enemy_army_grid.get_frontline_at_lane(creature.lane)
 
-		if enemy_creature.state == State.Creature.AWAIT_FIGHT:
+		if enemy_creature.state == State.Creature.AWAIT_FIGHT or enemy_creature.state == State.Creature.IDLE:
 			creature_fight(creature)
 		else:
 			creature.set_state(State.Creature.AWAIT_FIGHT, army_dir)

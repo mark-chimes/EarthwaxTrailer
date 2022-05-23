@@ -11,6 +11,7 @@ func _ready():
 	var light_purple = Color8(180, 120, 220, 255)
 	speech_box.set_font_color(light_purple)
 	mute = true
+	hide_debug()
 	
 func get_corpse(): 
 	return GrublingCorpse
