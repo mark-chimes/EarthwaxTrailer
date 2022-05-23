@@ -301,19 +301,15 @@ func _on_creature_death(dead_creature):
 	dead_creature.disconnect("death", self, "_on_creature_death")
 
 	army_grid.remove_creature(band_index, lane_index)
-	move_creature_into_empty_slot(band_index, lane_index)
 
 	# TODO defeat and routing mechanics: 
 	if not has_creatures(): 
 		print("NO CREATURES!")
 		emit_signal("defeat")
 
-#	num_deaths += 1
-#
-#	if num_deaths >= DEATH_TRIGGER_NUM: 
-#		num_deaths = 0
-#		emit_signal("many_deaths")
-
+	# TODO hacky
+	yield(get_tree().create_timer(3), "timeout")
+	move_creature_into_empty_slot(band_index, lane_index)
 
 	
 func create_and_add_corpse(CorpseType, corpse_x, corpse_z): 

@@ -28,5 +28,6 @@ script = ExtResource( 1 )
 scale = Vector2( 2, 2 )
 frames = SubResource( 2 )
 animation = "dying"
+frame = 1
 playing = true
-offset = Vector2( 0, -10 )
+offset = Vector2( 0, -32 )
