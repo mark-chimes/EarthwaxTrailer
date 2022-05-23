@@ -75,13 +75,10 @@ func _on_enemy_projectile_attack(enemy_projectile):
 		var potential_lane = army_grid.get_lane(lane_index)
 		for potential_target in potential_lane: 
 			if abs(potential_target.real_pos.x - enemy_projectile.real_pos.x) <= 2:
-				print("Found alternate target " + potential_target.debug_string() + " at: " + str(potential_target.real_pos.x))
 				potential_target.take_damage(enemy_projectile.ranged_damage)
 				potential_target.attach_projectile(enemy_projectile)
 				return
-		print("No alternate target found.")
 		return
-	print("Arrow hit target (" + str(target.band) + ", " +  str(target.lane) + ") at "+ str(target.real_pos.x) + " when projectile was at " + str(enemy_projectile.real_pos.x) + ".")
 	target.take_damage(enemy_projectile.ranged_damage)
 	target.attach_projectile(enemy_projectile)
 	
@@ -310,7 +307,6 @@ func _on_creature_death(dead_creature):
 	# TODO hacky
 	yield(get_tree().create_timer(3), "timeout")
 	move_creature_into_empty_slot(band_index, lane_index)
-
 	
 func create_and_add_corpse(CorpseType, corpse_x, corpse_z): 
 	var corpse = CorpseType.instance()
@@ -404,6 +400,7 @@ func _on_front_line_ready(shared_lane):
 	var creature = army_grid.get_creature_band_lane(0, shared_lane)
 	if creature.is_positioned(): 
 		if creature.state == State.Creature.AWAIT_FIGHT:
+		if creature.state == State.Creature.AWAIT_FIGHT or creature.state == State.Creature.IDLE:
 			creature_fight(creature)
 	else: 
 		position_creature(creature)
@@ -411,7 +408,7 @@ func _on_front_line_ready(shared_lane):
 func creature_fight(creature):
 	creature.set_state(State.Creature.FIGHT, army_dir)
 
-func _on_enemy_creature_death(band_index, lane_index):
+func _death(band_index, lane_index):
 	if band_index == 0: 
 		position_lane(lane_index)
 

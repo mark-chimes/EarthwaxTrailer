@@ -54,7 +54,7 @@ var walk_target_z
 var is_waiting_for_anim = false # waiting for attack animation to finish before moving
 
 var show_health = false
-var is_debug_state = false
+var is_debug_state = true
 var is_debug_anim = false
 var is_debug_band_lane = false
 var is_debug_target_x = false
@@ -194,13 +194,22 @@ func wait_for_swap(delta):
 #		return
 		
 	if is_booked: 
+		if booking_creature == null: 
+			printerr(debug_name + "trying to swap but booking creature is null")
 		if (!booking_creature.get_ref()):
 			printerr(debug_name + "trying to swap but booking creature weakref is gone!")
 			# TODO RETURN?
 		emit_signal("swap_with_booking", self, booking_creature.get_ref())
-		booking_creature.get_ref().booking_creature = null  # TODO correct? 
+		
+		# TODO need to make sure this doesn't crash anything
+		if booking_creature != null: 
+			booking_creature.get_ref().booking_creature = null  # TODO correct? 
+		else: 
+			printerr("Trying to nullify already null booking creature")
+		is_booked = false
+		is_booking = false
+			
 		booking_creature = null # TODO correct? 
-		# TODO should we set "is_booked" and "is_booking" to false?
 		return 
 		
 	is_ready_to_swap = true
@@ -313,7 +322,6 @@ func update_debug_label_with_state():
 	set_debug_label(label_text)
 
 func set_archery_target_band_lane(band_index, lane_index): 
-	print("set_archery_target_band_lane: (" + str(band_index) + ", " + str(lane_index) + ")")
 	ranged_target_band = band_index
 	ranged_target_lane = lane_index
 	
@@ -397,11 +405,8 @@ func reset_attack_prep_timer():
 	attack_prep_timer = time_between_attacks
 
 func do_attack_strike():
-#	if state != State.Creature.FIGHT: # has to be checked again after attack signal
-#		return
 	if is_ranged and band != 0: 
 		emit_signal("get_ranged_target", self)
-		print("Finished emitting signal")
 		$AnimatedSprite.play("ranged_attack_strike")
 		fire_ranged_projectile()
 	else:
@@ -424,9 +429,9 @@ func attack_strike_anim_finish():
 	if state != State.Creature.FIGHT: 
 		return
 	if is_waiting_for_anim: 
-		print("Animation finished.")
 		is_waiting_for_anim = false
 		walk_to_walk_target_ignoring_anim()
+		return
 			
 	if is_ranged and band != 0: 
 		$AnimatedSprite.play("ranged_attack_prep")
@@ -475,7 +480,6 @@ func walk_to(new_walk_target_x, new_walk_target_z):
 	if state == State.Creature.FIGHT: 
 		var anim = $AnimatedSprite.get_animation()
 		if anim == "attack_strike" or anim == "ranged_attack_strike": 
-			print("Waiting for animation to finish")
 			is_waiting_for_anim = true
 			return
 			

@@ -47,8 +47,6 @@ func wave_spawn(delta):
 		# new wave
 		$ArmyHuman.spawn_new_wave(wave_num)
 		$ArmyGlut.spawn_new_wave(wave_num)
-		#$ArmyHuman.position_army()
-		#$ArmyGlut.position_army()
 		wave_num += 1
 		wave_timer = 0
 		adjust_money(income)
