@@ -71,7 +71,6 @@ func _on_enemy_projectile_attack(enemy_projectile):
 		return
 	var target = army_grid.get_creature_band_lane(band_index, lane_index)
 	if abs(target.real_pos.x - enemy_projectile.real_pos.x) > 2: 
-		print("Arrow missed target (" + str(target.band) + ", " +  str(target.lane) + ") at "+ str(target.real_pos.x) + " when projectile was at " + str(enemy_projectile.real_pos.x) + ".")
 		var potential_lane = army_grid.get_lane(lane_index)
 		for potential_target in potential_lane: 
 			if abs(potential_target.real_pos.x - enemy_projectile.real_pos.x) <= 2:
@@ -366,6 +365,9 @@ func position_creature(creature):
 	creature.walk_to(target_walk_x, target_walk_z)
 
 func _on_creature_positioned(creature):
+	reconsider_state(creature)
+
+func reconsider_state(creature): 
 	if creature.band == 0:
 		if not enemy_army_grid.has_frontline_at_lane(creature.lane): 
 			creature.set_state(State.Creature.AWAIT_FIGHT, army_dir)
@@ -382,9 +384,7 @@ func _on_creature_positioned(creature):
 			# TODO wait for enemy to get into position etc. 
 			creature.set_state(State.Creature.FIGHT, army_dir)
 		else: 
-			creature.set_state(State.Creature.IDLE, army_dir)
-
-
+			creature.set_state(State.Creature.IDLE, army_dir)	
 
 func has_creatures(): 
 	return army_grid.has_creatures()
@@ -399,7 +399,6 @@ func get_target_z_from_band_lane(band, lane):
 func _on_front_line_ready(shared_lane):
 	var creature = army_grid.get_creature_band_lane(0, shared_lane)
 	if creature.is_positioned(): 
-		if creature.state == State.Creature.AWAIT_FIGHT:
 		if creature.state == State.Creature.AWAIT_FIGHT or creature.state == State.Creature.IDLE:
 			creature_fight(creature)
 	else: 
@@ -408,9 +407,12 @@ func _on_front_line_ready(shared_lane):
 func creature_fight(creature):
 	creature.set_state(State.Creature.FIGHT, army_dir)
 
-func _death(band_index, lane_index):
+func _on_enemy_creature_death(band_index, lane_index):
 	if band_index == 0: 
-		position_lane(lane_index)
+		if lane_index == 0: 
+		if army_grid.has_creature_at(0, lane_index):
+			var creature = army_grid.get_creature_band_lane(0, lane_index)
+			reconsider_state(creature)
 
 func position_army(): 
 	for creature in army_grid.get_all_creatures():

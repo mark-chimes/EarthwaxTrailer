@@ -54,9 +54,9 @@ var walk_target_z
 var is_waiting_for_anim = false # waiting for attack animation to finish before moving
 
 var show_health = false
-var is_debug_state = true
+var is_debug_state = false
 var is_debug_anim = false
-var is_debug_band_lane = false
+var is_debug_band_lane = true
 var is_debug_target_x = false
 var is_debug_static_position = true
 onready var debug_label = DebugLabel.instance()
@@ -203,7 +203,8 @@ func wait_for_swap(delta):
 		
 		# TODO need to make sure this doesn't crash anything
 		if booking_creature != null: 
-			booking_creature.get_ref().booking_creature = null  # TODO correct? 
+			if booking_creature.get_ref() != null:
+				booking_creature.get_ref().booking_creature = null  # TODO correct? 
 		else: 
 			printerr("Trying to nullify already null booking creature")
 		is_booked = false
