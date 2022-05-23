@@ -12,9 +12,8 @@ const FARMER_DEATH_TRIGGER_NUM = 4
 var dead_farmers = 0
 var dead_archers = 0
 
-var num_farmers_to_spawn = 1
-var num_archers_to_spawn = 1
-
+var num_farmers_to_spawn = 4
+var num_archers_to_spawn = 4
 
 func _ready(): 
 	army_dir = State.Dir.RIGHT

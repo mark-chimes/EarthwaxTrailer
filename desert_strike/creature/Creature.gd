@@ -25,6 +25,7 @@ var min_attack_range = 0
 var attack_range = 0
 var ranged_target_band
 var ranged_target_lane
+var attached_projectile = null
 
 var band
 var lane
@@ -54,7 +55,7 @@ var is_waiting_for_anim = false # waiting for attack animation to finish before 
 
 var show_health = false
 var is_debug_state = false
-var is_debug_anim = true
+var is_debug_anim = false
 var is_debug_band_lane = false
 var is_debug_target_x = false
 var is_debug_static_position = true
@@ -132,6 +133,8 @@ func _process(delta):
 		State.Creature.MARCH:
 			real_pos.x += delta * WALK_SPEED * dir
 		State.Creature.WALK:
+			if is_instance_valid(attached_projectile):
+				update_projectile_pos(delta)
 			if is_positioned():
 				emit_signal("creature_positioned", self)
 			elif is_positioned_z():
@@ -160,6 +163,25 @@ func _process(delta):
 				reset_attack_prep_timer()
 		State.Creature.DIE:
 			pass
+
+func update_projectile_pos(delta): 
+	if is_positioned():
+		return
+	elif is_positioned_z():
+		attached_projectile.real_pos.x += delta * WALK_SPEED * dir
+	elif is_positioned_x():
+		if walk_target_z < real_pos.z:
+			attached_projectile.real_pos.z -= delta * WALK_SPEED * 1.5
+		else:
+			attached_projectile.real_pos.z += delta * WALK_SPEED * 1.5
+			parallax_engine.update_z_index(attached_projectile)
+	else:
+		attached_projectile.real_pos.x += delta * dir * WALK_SPEED * 0.6
+		if walk_target_z < real_pos.z:
+			attached_projectile.real_pos.z -= delta * WALK_SPEED
+		else:
+			attached_projectile.real_pos.z += delta * WALK_SPEED
+		parallax_engine.update_z_index(attached_projectile)	
 
 func wait_for_swap(delta):
 	# TODO this yield is a bit of a hacky way to do it
@@ -485,3 +507,10 @@ func is_speaking():
 	
 func _on_speech_box_done_speaking(): 
 	emit_signal("done_speaking", self)
+
+func attach_projectile(projectile): 
+	if is_instance_valid(attached_projectile): 
+		projectile.disappear_immediately()
+	if abs(projectile.real_pos.x - real_pos.x) > 2:
+		projectile.real_pos.x = real_pos.x
+	attached_projectile = projectile

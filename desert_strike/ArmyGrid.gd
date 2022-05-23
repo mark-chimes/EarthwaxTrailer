@@ -129,13 +129,13 @@ func add_empty_slot_to_end_of_lane_DEBUG(lane_index):
 func add_creature_to_smallest_lane(creature): 
 	var smallest_lane_index = 0
 	var smallest_length = get_num_creatures_in_lane(creature_lanes[0])
-	
+
 	for lane_index in range(len(creature_lanes)): 
 		var lane = creature_lanes[lane_index]
 		if get_num_creatures_in_lane(lane) < smallest_length:
 			smallest_lane_index = lane_index
 			smallest_length = get_num_creatures_in_lane(creature_lanes[lane_index])
-			
+	
 	var lane = creature_lanes[smallest_lane_index]
 	creature.set_band_lane(len(lane), smallest_lane_index)
 	lane.append(creature)
@@ -150,13 +150,16 @@ func has_creatures():
 
 # TODO this should be handled in a battle API not in army grid
 # TODO Change how range works to take the creature's position into account
-func get_archery_target(lane_index, attack_range): 
+# TODO maybe just return a position ?
+func get_archery_target(lane_index, min_range, attack_range): 
 	var lane = creature_lanes[lane_index] 
 	if len(lane) == 0: 
 		return null # no valid target
 	
 	var max_shot = min(len(lane)-1, attack_range)
-	var target_index = rng.randi_range(0, max_shot) 
+	if min_range > max_shot:
+		return null
+	var target_index = rng.randi_range(min_range, max_shot) 
 	if lane[target_index] == EMPTY_SLOT:
 		return null
 	return lane[target_index]

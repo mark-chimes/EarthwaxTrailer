@@ -40,3 +40,5 @@ func disappear_after_timeout():
 	yield(get_tree().create_timer(DISAPPEAR_TIME), "timeout")
 	emit_signal("disappear", self)
 
+func disappear_immediately(): 
+	emit_signal("disappear", self)

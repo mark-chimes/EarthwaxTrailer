@@ -77,12 +77,14 @@ func _on_enemy_projectile_attack(enemy_projectile):
 			if abs(potential_target.real_pos.x - enemy_projectile.real_pos.x) <= 2:
 				print("Found alternate target " + potential_target.debug_string() + " at: " + str(potential_target.real_pos.x))
 				potential_target.take_damage(enemy_projectile.ranged_damage)
+				potential_target.attach_projectile(enemy_projectile)
 				return
 		print("No alternate target found.")
 		return
 	print("Arrow hit target (" + str(target.band) + ", " +  str(target.lane) + ") at "+ str(target.real_pos.x) + " when projectile was at " + str(enemy_projectile.real_pos.x) + ".")
 	target.take_damage(enemy_projectile.ranged_damage)
-
+	target.attach_projectile(enemy_projectile)
+	
 func get_pos():
 	var creatures = army_grid.get_front_creatures()
 	if creatures.empty():
