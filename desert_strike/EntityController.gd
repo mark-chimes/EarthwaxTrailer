@@ -16,7 +16,7 @@ var ArcherAtHut = preload("res://desert_strike/building/ArcherAtHut.tscn")
 
 onready var parallax_engine = get_parent().get_node("ParallaxEngine")
 
-const TIME_BETWEEN_WAVES = 20
+const TIME_BETWEEN_WAVES = 2
 
 var wave_timer = 0 
 var wave_num = 1
@@ -47,8 +47,8 @@ func wave_spawn(delta):
 		# new wave
 		$ArmyHuman.spawn_new_wave(wave_num)
 		$ArmyGlut.spawn_new_wave(wave_num)
-		$ArmyHuman.position_army()
-		$ArmyGlut.position_army()
+		#$ArmyHuman.position_army()
+		#$ArmyGlut.position_army()
 		wave_num += 1
 		wave_timer = 0
 		adjust_money(income)

@@ -106,7 +106,8 @@ func add_new_creatures(CreatureType, num_creatures):
 	for i in range(0, num_creatures):
 		create_and_add_creature(new_creatures, CreatureType)
 	if state == State.Army.BATTLE:
-		position_army()
+		for creature in new_creatures:
+			position_creature(creature)
 	else:
 		for creature in new_creatures:
 			creature.set_state(State.Creature.MARCH, army_dir)
