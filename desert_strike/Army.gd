@@ -2,6 +2,7 @@ extends Node2D
 
 signal defeat
 signal attack(band, lane, damage)
+signal projectile_attack(projectile)
 signal front_line_ready(shared_lane)
 signal creature_death(band, lane)
 signal many_deaths
@@ -33,10 +34,10 @@ var state = State.Army.IDLE
 const BANDS_SPAWNED = 1
 const NUM_LANES = 4
 const DISTANCE_BETWEEN_LANES = 4
-const ARMY_HALF_SEP = 40
+const ARMY_HALF_SEP = 10
 const BAND_SEP = 3
 const STARTING_BAND_SEP = 8
-const ARMY_START_OFFSET = 80
+const ARMY_START_OFFSET = 40
 const FIGHT_SEP = 1
 const END_POS_DELTA = 0.1
 
@@ -51,13 +52,7 @@ func initialize_army():
 
 func _on_creature_attack(attacker): 
 	if attacker.is_ranged and attacker.band != 0:
-		# Ranged attack
-		if attacker.ranged_target_band == null or attacker.ranged_target_lane == null: 
-			printerr("Ranged attacker at " + str(attacker.band) + ", " + str(attacker.lane) + " targeting null")
-			
-		if not enemy_army_grid.has_creature_at(attacker.ranged_target_band, attacker.ranged_target_lane):
-			return
-		emit_signal("attack", attacker.ranged_target_band, attacker.ranged_target_lane, attacker.ranged_damage)
+		return
 	else: 	
 		# melee attack so band is 0
 		emit_signal("attack", 0, attacker.lane, attacker.melee_damage)
@@ -67,7 +62,27 @@ func _on_get_attacked(band_index, lane_index, damage):
 		printerr("Null creature being attacked in band_lane (" + str(band_index) + ", " + str(lane_index) + ")")
 		return
 	army_grid.get_creature_band_lane(band_index, lane_index).take_damage(damage)
-		
+
+func _on_enemy_projectile_attack(enemy_projectile): 
+	var band_index = enemy_projectile.ranged_target_band
+	var lane_index = enemy_projectile.ranged_target_lane
+	
+	if not army_grid.has_creature_at(band_index, lane_index): 
+		return
+	var target = army_grid.get_creature_band_lane(band_index, lane_index)
+	if abs(target.real_pos.x - enemy_projectile.real_pos.x) > 2: 
+		print("Arrow missed target (" + str(target.band) + ", " +  str(target.lane) + ") at "+ str(target.real_pos.x) + " when projectile was at " + str(enemy_projectile.real_pos.x) + ".")
+		var potential_lane = army_grid.get_lane(lane_index)
+		for potential_target in potential_lane: 
+			if abs(potential_target.real_pos.x - enemy_projectile.real_pos.x) <= 2:
+				print("Found alternate target " + potential_target.debug_string() + " at: " + str(potential_target.real_pos.x))
+				potential_target.take_damage(enemy_projectile.ranged_damage)
+				return
+		print("No alternate target found.")
+		return
+	print("Arrow hit target (" + str(target.band) + ", " +  str(target.lane) + ") at "+ str(target.real_pos.x) + " when projectile was at " + str(enemy_projectile.real_pos.x) + ".")
+	target.take_damage(enemy_projectile.ranged_damage)
+
 func get_pos():
 	var creatures = army_grid.get_front_creatures()
 	if creatures.empty():
@@ -83,8 +98,6 @@ func get_pos():
 			if creature.real_pos.x < front_pos:
 				front_pos = creature.real_pos.x
 	return front_pos
-
-
 
 func add_new_creatures(CreatureType, num_creatures): 
 	var new_creatures = [] 
@@ -111,6 +124,7 @@ func create_and_add_creature_to_lane_DEBUG(CreatureType, lane_index):
 	parallax_engine.add_object_to_parallax_world(creature)	
 	creature.connect("creature_positioned", self, "_on_creature_positioned")
 	creature.connect("attack", self, "_on_creature_attack")
+	creature.connect("get_ranged_target", self, "_on_creature_get_ranged_target")
 	creature.connect("death", self, "_on_creature_death")
 	creature.connect("disappear", parallax_engine, "_on_object_disappear")
 	creature.connect("ready_to_swap", self, "_on_creature_ready_to_swap")
@@ -134,6 +148,7 @@ func create_and_add_creature(creatures_arr, CreatureType):
 	creatures_arr.append(creature)
 	creature.connect("creature_positioned", self, "_on_creature_positioned")
 	creature.connect("attack", self, "_on_creature_attack")
+	creature.connect("get_ranged_target", self, "_on_creature_get_ranged_target")
 	creature.connect("death", self, "_on_creature_death")
 	creature.connect("disappear", parallax_engine, "_on_object_disappear")
 	creature.connect("ready_to_swap", self, "_on_creature_ready_to_swap")
@@ -141,18 +156,35 @@ func create_and_add_creature(creatures_arr, CreatureType):
 	if creature.is_ranged: 
 		creature.connect("fire_projectile", self, "_on_creature_fire_projectile")
 
+func _on_creature_get_ranged_target(creature): 
+	var enemy_creature = enemy_army_grid.get_archery_target(creature.lane, creature.min_attack_range, creature.attack_range)
+	if enemy_creature == null:
+		creature.set_archery_target_band_lane(creature.min_attack_range, creature.lane) 
+		# creature.set_state(State.Creature.IDLE, army_dir)
+		return
+	var enemy_band = enemy_creature.band
+	var enemy_lane = enemy_creature.lane
+	creature.set_archery_target_band_lane(enemy_band, enemy_lane) 
 
-	
-
-func _on_creature_fire_projectile(archer_pos, target_band, target_lane, projectile): 
-	var start_x = archer_pos.x
+func _on_creature_fire_projectile(creature, projectile): 
+	var start_x = creature.real_pos.x
+	var target_band = projectile.ranged_target_band
+	var target_lane = projectile.ranged_target_lane
 	
 	var lane_offset = FIGHT_SEP + target_lane*1.0/10
-	var end_x =  battlefronts[target_lane] + (army_dir * (lane_offset + target_band * BAND_SEP))
+	var end_x
+	var target_creature = null
+		
+	if enemy_army_grid.has_creature_at(target_band, target_lane): 
+		target_creature = enemy_army_grid.get_creature_band_lane(target_band, target_lane)
+		end_x = target_creature.real_pos.x
+	else: 
+		end_x = battlefronts[target_lane] + (army_dir * (lane_offset + target_band * BAND_SEP))
+	
 	var total_dist = end_x - start_x
 	projectile.real_pos.y = -1.5
 	projectile.real_pos.x = start_x 
-	projectile.real_pos.z = archer_pos.z
+	projectile.real_pos.z = creature.real_pos.z
 	var frames = 7
 	var travel_time
 	if use_slow_arrows_on_short_dist:
@@ -160,10 +192,10 @@ func _on_creature_fire_projectile(archer_pos, target_band, target_lane, projecti
 	else:
 		travel_time = total_dist / 20.0
 		
-	projectile.horizontal_speed = total_dist / travel_time
-	
 	projectile.start_x = start_x
 	projectile.end_x = end_x
+	projectile.horizontal_speed = total_dist / travel_time
+
 	projectile.vertical_speed = -projectile.horizontal_speed
 	projectile.vertical_acc = -2*projectile.vertical_speed / (travel_time)
 	projectile.rot_dist = total_dist / (frames + 1)
@@ -171,8 +203,13 @@ func _on_creature_fire_projectile(archer_pos, target_band, target_lane, projecti
 	
 	add_child(projectile)
 	parallax_engine.add_object_to_parallax_world(projectile)
+	projectile.connect("attack", self, "_on_projectile_attack")
 	projectile.connect("disappear", parallax_engine, "_on_projectile_disappear")
+
 	
+func _on_projectile_attack(projectile): 
+	emit_signal("projectile_attack", projectile)
+
 func battle(new_battlefronts, new_enemy_army_grid):
 	state = State.Army.BATTLE
 	battlefronts = new_battlefronts
@@ -257,6 +294,7 @@ func _on_creature_death(dead_creature):
 	# print(dead_creature.debug_name + " army death at (" + str(band_index) + ", " + str(lane_index) + ")")
 	emit_signal("creature_death", band_index, lane_index)
 	dead_creature.disconnect("attack", self, "_on_creature_attack")
+	dead_creature.disconnect("get_ranged_target", self, "_on_creature_get_ranged_target")
 	dead_creature.disconnect("death", self, "_on_creature_death")
 
 	army_grid.remove_creature(band_index, lane_index)
@@ -346,14 +384,12 @@ func _on_creature_positioned(creature):
 		emit_signal("front_line_ready", creature.lane)
 	else:
 		if creature.is_ranged: 
-			var enemy_creature = enemy_army_grid.get_archery_target(creature.lane, creature.attack_range)
-			if enemy_creature == null:
-				creature.set_state(State.Creature.IDLE, army_dir)
-				return
 			# TODO wait for enemy to get into position etc. 
-			creature_fire_arrow(creature, enemy_creature.band, enemy_creature.lane)
+			creature.set_state(State.Creature.FIGHT, army_dir)
 		else: 
 			creature.set_state(State.Creature.IDLE, army_dir)
+
+
 
 func has_creatures(): 
 	return army_grid.has_creatures()
@@ -375,12 +411,7 @@ func _on_front_line_ready(shared_lane):
 	
 func creature_fight(creature):
 	creature.set_state(State.Creature.FIGHT, army_dir)
-	
-func creature_fire_arrow(creature, enemy_band, enemy_lane):
-	enemy_band > enemy_lane # Try to crash if this is null
-	creature.set_archery_target_band_lane(enemy_band, enemy_lane) 
-	creature.set_state(State.Creature.FIGHT, army_dir)
-	
+
 func _on_enemy_creature_death(band_index, lane_index):
 	if band_index == 0: 
 		position_lane(lane_index)

@@ -2,6 +2,7 @@ extends "res://parallax/util/ParallaxObject.gd"
 signal attack(this)
 signal death(this)
 signal creature_positioned(this)
+signal get_ranged_target(this)
 signal done_speaking(this)
 signal disappear(this)
 signal ready_to_swap(this)
@@ -20,6 +21,7 @@ var melee_damage
 var ranged_damage
 
 var is_ranged = false # TODO 
+var min_attack_range = 0
 var attack_range = 0
 var ranged_target_band
 var ranged_target_lane
@@ -288,7 +290,8 @@ func update_debug_label_with_state():
 			label_text = "" # Don't show labels for the dead
 	set_debug_label(label_text)
 
-func  set_archery_target_band_lane(band_index, lane_index): 
+func set_archery_target_band_lane(band_index, lane_index): 
+	print("set_archery_target_band_lane: (" + str(band_index) + ", " + str(lane_index) + ")")
 	ranged_target_band = band_index
 	ranged_target_lane = lane_index
 	
@@ -375,6 +378,8 @@ func do_attack_strike():
 #	if state != State.Creature.FIGHT: # has to be checked again after attack signal
 #		return
 	if is_ranged and band != 0: 
+		emit_signal("get_ranged_target", self)
+		print("Finished emitting signal")
 		$AnimatedSprite.play("ranged_attack_strike")
 		fire_ranged_projectile()
 	else:

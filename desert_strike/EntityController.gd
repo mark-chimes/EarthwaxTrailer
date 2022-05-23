@@ -16,7 +16,7 @@ var ArcherAtHut = preload("res://desert_strike/building/ArcherAtHut.tscn")
 
 onready var parallax_engine = get_parent().get_node("ParallaxEngine")
 
-const TIME_BETWEEN_WAVES = 25
+const TIME_BETWEEN_WAVES = 200
 
 var wave_timer = 0 
 var wave_num = 1
@@ -77,6 +77,8 @@ func battle_start():
 		$ArmyGlut.connect("creature_death", $ArmyHuman, "_on_enemy_creature_death")
 		$ArmyHuman.connect("attack", $ArmyGlut, "_on_get_attacked")
 		$ArmyGlut.connect("attack", $ArmyHuman, "_on_get_attacked")
+		$ArmyHuman.connect("projectile_attack", $ArmyGlut, "_on_enemy_projectile_attack")
+		$ArmyGlut.connect("projectile_attack", $ArmyHuman, "_on_enemy_projectile_attack")
 		
 		# SPEECH
 		var human_speech_system = SpeechSystem.new()
@@ -175,6 +177,8 @@ func start_marching():
 	$ArmyGlut.disconnect("creature_death", $ArmyHuman, "_on_enemy_creature_death")
 	$ArmyHuman.disconnect("attack", $ArmyGlut, "_on_get_attacked")
 	$ArmyGlut.disconnect("attack", $ArmyHuman, "_on_get_attacked")
+	$ArmyHuman.disconnect("projectile_attack", $ArmyGlut, "_on_enemy_projectile_attack")
+	$ArmyGlut.disconnect("projectile_attack", $ArmyHuman, "_on_enemy_projectile_attack")
 	$ArmyHuman.disconnect("many_deaths", self, "_on_many_human_deaths")
 	$ArmyGlut.disconnect("many_deaths", self, "_on_many_glut_deaths")
 	

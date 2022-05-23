@@ -5,10 +5,10 @@ func _ready():
 	sprite_dir = State.Dir.RIGHT
 	mute = false
 	time_between_attacks = rng.randf_range(2,4)
-	melee_damage = rng.randi_range(2,7)
+	melee_damage = 1 # rng.randi_range(2,7)
 	ranged_damage = 0
-	health = 10
-	MAX_HEALTH = 10
+	health = 100
+	MAX_HEALTH = 100
 	
 func get_corpse(): 
 	return FarmerCorpse
