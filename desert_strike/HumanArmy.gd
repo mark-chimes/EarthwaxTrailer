@@ -13,7 +13,7 @@ var dead_farmers = 0
 var dead_archers = 0
 
 var num_farmers_to_spawn = 8
-var num_archers_to_spawn = 0
+var num_archers_to_spawn = 16
 
 func _ready(): 
 	pass

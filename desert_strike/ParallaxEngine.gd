@@ -20,7 +20,7 @@ var parallax_objects = []
 var projectiles = []
 
 # Player control
-const SPEED_MOD = 20
+const SPEED_MOD = 10
 var player_real_pos_x = 0
 var player_real_pos_z = 3
 

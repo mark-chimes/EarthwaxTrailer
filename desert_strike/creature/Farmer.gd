@@ -5,7 +5,7 @@ func _ready():
 	sprite_dir = State.Dir.RIGHT
 	mute = false
 	time_between_attacks = rng.randf_range(2,3)
-	melee_damage = rng.randi_range(5,9)
+	melee_damage = rng.randi_range(1,2)
 	ranged_damage = 0
 	health = rng.randi_range(14,20)
 	MAX_HEALTH = 10

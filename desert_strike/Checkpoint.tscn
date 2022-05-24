@@ -12,7 +12,6 @@ texture = ExtResource( 1 )
 offset = Vector2( 0, -18 )
 
 [node name="LevelLabel" type="Label" parent="."]
-visible = false
 margin_left = -22.0
 margin_top = -38.0
 margin_right = 18.0
