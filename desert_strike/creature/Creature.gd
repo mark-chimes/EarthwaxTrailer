@@ -54,7 +54,7 @@ var walk_target_z
 var is_waiting_for_anim = false # waiting for attack animation to finish before moving
 
 var show_health = false
-var is_debug_state = true
+var is_debug_state = false
 var is_debug_anim = false
 var is_debug_band_lane = false
 var is_debug_target_x = false

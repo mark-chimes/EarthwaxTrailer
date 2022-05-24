@@ -15,7 +15,7 @@ var FarmerAtHut = preload("res://desert_strike/building/FarmerAtHut.tscn")
 var ArcherAtHut = preload("res://desert_strike/building/ArcherAtHut.tscn") 
 var Checkpoint = preload("res://desert_strike/Checkpoint.tscn")
 
-var checkpoint = null # TOOD allow for multiple checkpoints
+var checkpoints = [] # TOOD allow for multiple checkpoints
 
 onready var parallax_engine = get_parent().get_node("ParallaxEngine")
 
@@ -29,8 +29,6 @@ var money_ui = null
 # TODO This isn't the right way to do this - should use signals and a parent object
 var income = 0 
 var money = 0
-
-const CHECKPOINT_POS = 40
 
 func _ready():
 	$ArmyHuman.connect("defeat", self, "_human_defeat")
@@ -112,28 +110,64 @@ func check_checkpoints(delta):
 	if $ArmyHuman.get_state() == State.Army.BATTLE or $ArmyGlut.get_state() == State.Army.BATTLE:
 		return
 	
-	# TODO use the direction and check this differently.
+	# TODO this is a really hacky way to check checkpoints and set their states
+	# We need to: 
+	# - Use a direction
+	# - Have a specific state for capturing a checkpoint
+	# - Have a nice way to know what's the next checkpoint they should target 
+	# 		(rather than checking through the whole array)
+	# - Keep track of what checkpoint the army is busy trying to capture
+	# - Be able to go back to a checkpoint we've passed
+	
 	if $ArmyGlut.get_state() != State.Army.DIE:
-		if $ArmyGlut.get_pos() < CHECKPOINT_POS - 4:
-			if checkpoint.check_ownership() > -1:
-				$ArmyGlut.idle()
-				checkpoint.modify_ownership(-5 * delta)
-				# TODO move this out? 
+		var closest_checkpoint = null
+		var closest_dist = -1000000000
+		for checkpoint in checkpoints: 
+			if checkpoint.real_pos.x > closest_dist:
+				if checkpoint.check_ownership() > -1:
+					closest_checkpoint = checkpoint
+					closest_dist = checkpoint.real_pos.x
+		if closest_checkpoint == null: 
+			$ArmyGlut.idle()
+		else:
+			if $ArmyGlut.get_pos() < closest_checkpoint.real_pos.x - 4:
+				if closest_checkpoint.check_ownership() > -1:
+					$ArmyGlut.idle()
+					closest_checkpoint.modify_ownership(-5 * delta)
+					# TODO move this out? 
+				else: 
+					if $ArmyGlut.get_state() != State.Army.MARCH: # TODO use "capture" state
+						$ArmyGlut.march() # TODO this should only happen once
 			else: 
 				if $ArmyGlut.get_state() != State.Army.MARCH: # TODO use "capture" state
-					$ArmyGlut.march() # TODO this should only happen once
-		else: 
-			if $ArmyGlut.get_state() != State.Army.MARCH: # TODO use "capture" state
-				$ArmyGlut.march() # TODO this should only happen once	
-			
-	if $ArmyHuman.get_state() != State.Army.DIE and $ArmyHuman.get_pos() > CHECKPOINT_POS + 4:
-		if checkpoint.check_ownership() < 1:
+					$ArmyGlut.march() # TODO this should only happen once	
+		
+	if $ArmyHuman.get_state() != State.Army.DIE:
+		var closest_checkpoint = null
+		var closest_dist = 1000000000
+		for checkpoint in checkpoints: 
+			if checkpoint.real_pos.x < closest_dist:
+				if checkpoint.check_ownership() < 1:
+					closest_checkpoint = checkpoint
+					closest_dist = checkpoint.real_pos.x
+					print("New closest human checkpoint: " + str(closest_dist))
+		if closest_checkpoint == null: 
 			$ArmyHuman.idle()
-			checkpoint.modify_ownership(5 * delta)
 		else: 
-			if $ArmyHuman.get_state() != State.Army.MARCH: # TODO use "capture" state
-				$ArmyHuman.march() # TODO this should only happen once
-
+			print("Juman checkpoint non-null: " + str(closest_dist))	
+			print("ArmyHuman.get_pos(): " + str($ArmyHuman.get_pos()))	
+			if $ArmyHuman.get_pos() > closest_checkpoint.real_pos.x + 4:
+				if closest_checkpoint.check_ownership() < 1:
+					$ArmyHuman.idle()
+					closest_checkpoint.modify_ownership(5 * delta)
+				else: 
+					if $ArmyHuman.get_state() != State.Army.MARCH: # TODO use "capture" state
+						$ArmyHuman.march() # TODO this should only happen once
+			else: 
+				if $ArmyHuman.get_state() != State.Army.MARCH: # TODO use "capture" state
+					$ArmyHuman.march() # TODO this should only happen once
+				
+				
 func create_building_places(): 
 	# TODO Should this function be happening in the entity controller?
 	create_building_places_at(range(0, -121, -12))
@@ -153,9 +187,15 @@ func create_building_place_at(x_pos):
 	building_place.set_parallax_engine(parallax_engine) # TODO this is hacky and wrong
 
 func create_checkpoints(): 
-	checkpoint = Checkpoint.instance()
+	create_checkpoint(40, -1)
+	create_checkpoint(80, -1)
+
+func create_checkpoint(checkpoint_pos, ownership): 
+	var checkpoint = Checkpoint.instance()
 	checkpoint.real_pos.z = 40
-	checkpoint.real_pos.x = CHECKPOINT_POS
+	checkpoint.real_pos.x = checkpoint_pos
+	checkpoint.set_ownership(ownership)
+	checkpoints.append(checkpoint)
 	add_child(checkpoint)
 	parallax_engine.add_object_to_parallax_world(checkpoint)
 	
