@@ -9,12 +9,12 @@ func _ready():
 	sprite_dir = State.Dir.RIGHT
 	time_between_attacks = 3 # TODO should be different for melee and range
 	ranged_damage = 10 # rng.randi_range(6,10)
-	melee_damage = rng.randi_range(1,2)
+	melee_damage = rng.randi_range(2,4)
 	is_ranged = true
 	min_attack_range = 0
 	attack_range = 10
 	mute = true
-	health = 10
+	health = rng.randi_range(8,12)
 	MAX_HEALTH = 10
 
 func fire_ranged_projectile(): 

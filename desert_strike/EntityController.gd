@@ -35,7 +35,7 @@ func _ready():
 	$ArmyGlut.connect("defeat", self, "_glut_defeat")
 	
 	$ArmyHuman.set_army_start_offset(20)
-	$ArmyGlut.set_army_start_offset(140)
+	$ArmyGlut.set_army_start_offset(60)
 	$ArmyHuman.start_army()
 	$ArmyGlut.start_army()
 	
@@ -45,7 +45,7 @@ func _ready():
 	
 	get_parent().get_node("Clock").seconds_between_waves = TIME_BETWEEN_WAVES
 	adjust_income(1)
-	adjust_money(2)
+	adjust_money(20)
 
 	
 func _process(delta):
@@ -56,6 +56,34 @@ func _process(delta):
 func wave_spawn(delta): 
 	# TODO Waves for already-defeated armies.
 	if wave_timer >= TIME_BETWEEN_WAVES: 
+		
+		# Find last owned checkpoint
+		var furthest_checkpoint = null
+		var furthest_dist = 1000000000
+		for checkpoint in checkpoints: 
+			if checkpoint.real_pos.x < furthest_dist:
+				if checkpoint.check_ownership() == -1:
+					furthest_checkpoint = checkpoint
+					furthest_dist = checkpoint.real_pos.x
+		if furthest_checkpoint == null: 
+			$ArmyGlut.set_army_start_offset(140)
+		else: 
+			$ArmyGlut.set_army_start_offset(furthest_dist)
+		
+		furthest_checkpoint = null
+		furthest_dist = -1000000000
+		for checkpoint in checkpoints: 
+			if checkpoint.real_pos.x > furthest_dist:
+				if checkpoint.check_ownership() == 1:
+					furthest_checkpoint = checkpoint
+					furthest_dist = checkpoint.real_pos.x
+		if furthest_checkpoint == null: 
+			$ArmyHuman.set_army_start_offset(0)
+		else: 
+			$ArmyHuman.set_army_start_offset(furthest_dist)
+		
+		
+		
 		# new wave
 		$ArmyHuman.spawn_new_wave(wave_num)
 		$ArmyGlut.spawn_new_wave(wave_num)
@@ -150,12 +178,9 @@ func check_checkpoints(delta):
 				if checkpoint.check_ownership() < 1:
 					closest_checkpoint = checkpoint
 					closest_dist = checkpoint.real_pos.x
-					print("New closest human checkpoint: " + str(closest_dist))
 		if closest_checkpoint == null: 
 			$ArmyHuman.idle()
 		else: 
-			print("Juman checkpoint non-null: " + str(closest_dist))	
-			print("ArmyHuman.get_pos(): " + str($ArmyHuman.get_pos()))	
 			if $ArmyHuman.get_pos() > closest_checkpoint.real_pos.x + 4:
 				if closest_checkpoint.check_ownership() < 1:
 					$ArmyHuman.idle()
