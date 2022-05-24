@@ -19,7 +19,7 @@ var checkpoints = [] # TOOD allow for multiple checkpoints
 
 onready var parallax_engine = get_parent().get_node("ParallaxEngine")
 
-const TIME_BETWEEN_WAVES = 20
+const TIME_BETWEEN_WAVES = 60
 
 var wave_timer = 0 
 var wave_num = 1
@@ -35,7 +35,7 @@ func _ready():
 	$ArmyGlut.connect("defeat", self, "_glut_defeat")
 	
 	$ArmyHuman.set_army_start_offset(20)
-	$ArmyGlut.set_army_start_offset(100)
+	$ArmyGlut.set_army_start_offset(140)
 	$ArmyHuman.start_army()
 	$ArmyGlut.start_army()
 	
@@ -44,8 +44,8 @@ func _ready():
 	create_checkpoints()
 	
 	get_parent().get_node("Clock").seconds_between_waves = TIME_BETWEEN_WAVES
-	adjust_income(4)
-	adjust_money(10)
+	adjust_income(1)
+	adjust_money(2)
 
 	
 func _process(delta):
@@ -187,9 +187,12 @@ func create_building_place_at(x_pos):
 	building_place.set_parallax_engine(parallax_engine) # TODO this is hacky and wrong
 
 func create_checkpoints(): 
-	create_checkpoint(40, -1)
-	create_checkpoint(80, -1)
-
+	create_checkpoint(10, 1)
+	create_checkpoint(40, 0)
+	create_checkpoint(70, -1)
+	create_checkpoint(100, -1)
+	create_checkpoint(130, -1)
+	
 func create_checkpoint(checkpoint_pos, ownership): 
 	var checkpoint = Checkpoint.instance()
 	checkpoint.real_pos.z = 40
