@@ -13,6 +13,9 @@ var Farm = preload("res://desert_strike/building/Farm.tscn")
 var ArcheryTargets = preload("res://desert_strike/building/ArcheryTargets.tscn") 
 var FarmerAtHut = preload("res://desert_strike/building/FarmerAtHut.tscn") 
 var ArcherAtHut = preload("res://desert_strike/building/ArcherAtHut.tscn") 
+var Checkpoint = preload("res://desert_strike/Checkpoint.tscn")
+
+var checkpoint = null # TOOD allow for multiple checkpoints
 
 onready var parallax_engine = get_parent().get_node("ParallaxEngine")
 
@@ -27,19 +30,30 @@ var money_ui = null
 var income = 0 
 var money = 0
 
+const CHECKPOINT_POS = 40
+
 func _ready():
 	$ArmyHuman.connect("defeat", self, "_human_defeat")
 	$ArmyGlut.connect("defeat", self, "_glut_defeat")
+	
+	$ArmyHuman.set_army_start_offset(20)
+	$ArmyGlut.set_army_start_offset(100)
+	$ArmyHuman.start_army()
+	$ArmyGlut.start_army()
+	
 	rng.randomize()
 	create_building_places()
+	create_checkpoints()
 	
 	get_parent().get_node("Clock").seconds_between_waves = TIME_BETWEEN_WAVES
 	adjust_income(4)
 	adjust_money(10)
+
 	
 func _process(delta):
 	wave_spawn(delta)
 	battle_start()
+	check_checkpoints(delta)
 
 func wave_spawn(delta): 
 	# TODO Waves for already-defeated armies.
@@ -47,12 +61,16 @@ func wave_spawn(delta):
 		# new wave
 		$ArmyHuman.spawn_new_wave(wave_num)
 		$ArmyGlut.spawn_new_wave(wave_num)
+		if $ArmyHuman.get_state() == State.Army.DIE: 
+			$ArmyHuman.march()
+		if $ArmyGlut.get_state() == State.Army.DIE: 
+			$ArmyGlut.march()
 		wave_num += 1
 		wave_timer = 0
 		adjust_money(income)
 	else: 
 		wave_timer += delta
-		
+
 func battle_start():
 	# TODO Do we want a separate entity and battle controller? 
 	if $ArmyHuman.get_state() == State.Army.BATTLE or $ArmyHuman.get_state() == State.Army.DIE\
@@ -90,9 +108,36 @@ func battle_start():
 		# $ArmyGlut.set_speech_system(speech_system)
 		# display_test_text()	
 
+func check_checkpoints(delta): 
+	if $ArmyHuman.get_state() == State.Army.BATTLE or $ArmyGlut.get_state() == State.Army.BATTLE:
+		return
+	
+	# TODO use the direction and check this differently.
+	if $ArmyGlut.get_state() != State.Army.DIE:
+		if $ArmyGlut.get_pos() < CHECKPOINT_POS - 4:
+			if checkpoint.check_ownership() > -1:
+				$ArmyGlut.idle()
+				checkpoint.modify_ownership(-5 * delta)
+				# TODO move this out? 
+			else: 
+				if $ArmyGlut.get_state() != State.Army.MARCH: # TODO use "capture" state
+					$ArmyGlut.march() # TODO this should only happen once
+		else: 
+			if $ArmyGlut.get_state() != State.Army.MARCH: # TODO use "capture" state
+				$ArmyGlut.march() # TODO this should only happen once	
+			
+	if $ArmyHuman.get_state() != State.Army.DIE and $ArmyHuman.get_pos() > CHECKPOINT_POS + 4:
+		if checkpoint.check_ownership() < 1:
+			$ArmyHuman.idle()
+			checkpoint.modify_ownership(5 * delta)
+		else: 
+			if $ArmyHuman.get_state() != State.Army.MARCH: # TODO use "capture" state
+				$ArmyHuman.march() # TODO this should only happen once
+
 func create_building_places(): 
 	# TODO Should this function be happening in the entity controller?
 	create_building_places_at(range(0, -121, -12))
+
 
 func create_building_places_at(x_poses):
 	for x_pos in x_poses: 
@@ -107,6 +152,13 @@ func create_building_place_at(x_pos):
 	parallax_engine.add_object_to_parallax_world(building_place)
 	building_place.set_parallax_engine(parallax_engine) # TODO this is hacky and wrong
 
+func create_checkpoints(): 
+	checkpoint = Checkpoint.instance()
+	checkpoint.real_pos.z = 40
+	checkpoint.real_pos.x = CHECKPOINT_POS
+	add_child(checkpoint)
+	parallax_engine.add_object_to_parallax_world(checkpoint)
+	
 func _on_building_place_structure(building_place): 
 
 	var new_building
@@ -160,15 +212,17 @@ func _on_person_at_hut_destroy_structure(person_at_hut):
 	
 func _human_defeat():
 	$ArmyGlut.say("jajajajaja")
-	start_marching()
+	$ArmyGlut.march()
+	$ArmyHuman.die()
+	disconnect_signals()
 	
 func _glut_defeat():
 	$ArmyHuman.say("They are dead! We've won!")
-	start_marching()
-
-func start_marching(): 
 	$ArmyHuman.march()
-	$ArmyGlut.march()
+	$ArmyGlut.die()
+	disconnect_signals()
+
+func disconnect_signals(): 
 	$ArmyHuman.disconnect("front_line_ready", $ArmyGlut, "_on_front_line_ready")
 	$ArmyGlut.disconnect("front_line_ready", $ArmyHuman, "_on_front_line_ready")
 	$ArmyHuman.disconnect("creature_death", $ArmyGlut, "_on_enemy_creature_death")

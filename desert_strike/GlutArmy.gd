@@ -3,12 +3,15 @@ extends "res://desert_strike/Army.gd"
 var Grubling = load("res://desert_strike/creature/Grubling.tscn")
 
 func _ready(): 
+	pass
+
+func start_army(): 
 	army_dir = State.Dir.LEFT
 	initialize_army()
 	spawn_first_wave_no_gaps()
 
 func spawn_first_wave_no_gaps(): 
-	add_new_creatures(Grubling, 32)
+	add_new_creatures(Grubling, 4)
 
 func spawn_first_wave_with_gaps(): 
 	create_and_add_creature_to_lane_DEBUG(Grubling, 0)

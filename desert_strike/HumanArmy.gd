@@ -12,13 +12,16 @@ const FARMER_DEATH_TRIGGER_NUM = 4
 var dead_farmers = 0
 var dead_archers = 0
 
-var num_farmers_to_spawn = 4
+var num_farmers_to_spawn = 12
 var num_archers_to_spawn = 4
 
 func _ready(): 
+	pass
+
+func start_army(): 
 	army_dir = State.Dir.RIGHT
 	initialize_army()
-	spawn_first_wave()
+	spawn_first_wave()	
 
 func spawn_first_wave(): 
 	add_new_creatures(Farmer, num_farmers_to_spawn)
