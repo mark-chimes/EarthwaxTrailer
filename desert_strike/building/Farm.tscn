@@ -43,8 +43,15 @@ frames = SubResource( 5 )
 offset = Vector2( 0, -12 )
 
 [node name="Sprite2" type="Sprite" parent="."]
-scale = Vector2( 2, 2 )
+position = Vector2( 4, 0 )
 texture = ExtResource( 2 )
-offset = Vector2( 0, -12 )
+offset = Vector2( -32, -12 )
+region_enabled = true
+region_rect = Rect2( 32, 0, 64, 32 )
+
+[node name="Sprite3" type="Sprite" parent="."]
+position = Vector2( -3, 0 )
+texture = ExtResource( 2 )
+offset = Vector2( 32, -12 )
 region_enabled = true
 region_rect = Rect2( 32, 0, 64, 32 )

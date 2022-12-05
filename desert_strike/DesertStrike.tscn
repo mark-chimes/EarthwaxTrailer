@@ -109,6 +109,7 @@ valign = 1
 script = ExtResource( 7 )
 
 [node name="ArmyHuman" type="Node2D" parent="EntityController"]
+position = Vector2( -1, 0 )
 script = ExtResource( 5 )
 
 [node name="ArmyGlut" type="Node2D" parent="EntityController"]

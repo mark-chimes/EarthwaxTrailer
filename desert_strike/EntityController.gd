@@ -11,6 +11,7 @@ var SpeechSystem = preload("res://desert_strike/SpeechSystem.gd")
 var BuildingPlace = preload("res://desert_strike/building/BuildingPlace.tscn") 
 var Farm = preload("res://desert_strike/building/Farm.tscn") 
 var ArcheryTargets = preload("res://desert_strike/building/ArcheryTargets.tscn") 
+var ArcheryTarget = preload("res://desert_strike/building/ArcheryTarget.tscn") 
 var FarmerAtHut = preload("res://desert_strike/building/FarmerAtHut.tscn") 
 var ArcherAtHut = preload("res://desert_strike/building/ArcherAtHut.tscn") 
 var Checkpoint = preload("res://desert_strike/Checkpoint.tscn")
@@ -235,7 +236,13 @@ func _on_building_place_structure(building_place):
 		if money < 2: 
 			return
 		adjust_money(-2)
-		new_building = Farm.instance()
+		
+		for i in range(0,3):
+			new_building = Farm.instance()
+			new_building.real_pos.z = 48 + i*8
+			new_building.real_pos.x = building_place.real_pos.x
+			add_child(new_building)
+			parallax_engine.add_object_to_parallax_world(new_building)
 		new_person = FarmerAtHut.instance()
 		$ArmyHuman.add_farmers_to_spawn(2)
 		adjust_income(1)
@@ -243,13 +250,20 @@ func _on_building_place_structure(building_place):
 		if money < 2: 
 			return
 		adjust_money(-2)
-		new_building = ArcheryTargets.instance()
 		new_person = ArcherAtHut.instance()
 		$ArmyHuman.add_archers_to_spawn(2)
-	new_building.real_pos.z = 48
-	new_building.real_pos.x = building_place.real_pos.x
-	add_child(new_building)
-	parallax_engine.add_object_to_parallax_world(new_building)
+
+		new_building = ArcheryTargets.instance()
+		new_building.real_pos.z = 48
+		new_building.real_pos.x = building_place.real_pos.x
+		add_child(new_building)
+		parallax_engine.add_object_to_parallax_world(new_building)
+		
+		new_building = ArcheryTarget.instance()
+		new_building.real_pos.z = 64
+		new_building.real_pos.x = building_place.real_pos.x
+		add_child(new_building)
+		parallax_engine.add_object_to_parallax_world(new_building)
 
 	new_person.connect("destroy_structure", self, "_on_person_at_hut_destroy_structure")
 	new_person.set_connected_structure(new_building)
