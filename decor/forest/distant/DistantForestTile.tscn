@@ -1,13 +1,14 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://decor/forest/distant/DistantForestTile.gd" type="Script" id=1]
-[ext_resource path="res://decor/forest/distant/distant_forest_tile_2.png" type="Texture" id=2]
+[ext_resource path="res://decor/forest/distant/distant_forest_tile_downscaled.png" type="Texture" id=2]
 
 [node name="DistantForestTile" type="Node2D"]
 z_index = 1000
 script = ExtResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
-scale = Vector2( 2, 2 )
+position = Vector2( 0, 48 )
+scale = Vector2( 6, 6 )
 texture = ExtResource( 2 )
 offset = Vector2( 0, -16 )

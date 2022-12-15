@@ -158,14 +158,14 @@ animations = [ {
 "name": "walk",
 "speed": 8.0
 }, {
-"frames": [ ExtResource( 6 ) ],
-"loop": true,
-"name": "hurt",
-"speed": 5.0
-}, {
 "frames": [ SubResource( 32 ) ],
 "loop": true,
 "name": "attack_hold",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 6 ) ],
+"loop": true,
+"name": "hurt",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 26 ), SubResource( 27 ), SubResource( 28 ) ],
@@ -183,7 +183,7 @@ animations = [ {
 script = ExtResource( 1 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-scale = Vector2( 2, 2 )
+scale = Vector2( 6, 6 )
 frames = SubResource( 25 )
 animation = "walk"
 frame = 4

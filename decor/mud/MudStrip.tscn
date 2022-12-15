@@ -7,7 +7,7 @@
 script = ExtResource( 2 )
 
 [node name="strip1" type="Sprite" parent="."]
-scale = Vector2( 2, 2 )
+scale = Vector2( 6, 6 )
 texture = ExtResource( 1 )
 offset = Vector2( 0, -26 )
 

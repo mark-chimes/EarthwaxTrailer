@@ -189,6 +189,11 @@ animations = [ {
 "name": "attack_hold",
 "speed": 5.0
 }, {
+"frames": [ ExtResource( 1 ) ],
+"loop": true,
+"name": "hurt",
+"speed": 5.0
+}, {
 "frames": [ SubResource( 92 ), SubResource( 93 ), SubResource( 94 ), SubResource( 95 ), SubResource( 96 ), SubResource( 97 ) ],
 "loop": true,
 "name": "attack_strike",
@@ -198,21 +203,16 @@ animations = [ {
 "loop": true,
 "name": "attack_prep",
 "speed": 5.0
-}, {
-"frames": [ ExtResource( 1 ) ],
-"loop": true,
-"name": "hurt",
-"speed": 5.0
 } ]
 
 [node name="Farmer" type="Node2D"]
 script = ExtResource( 5 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-scale = Vector2( 2, 2 )
+scale = Vector2( 6, 6 )
 frames = SubResource( 51 )
 animation = "walk"
-frame = 3
+frame = 2
 playing = true
 offset = Vector2( 0, -12 )
 

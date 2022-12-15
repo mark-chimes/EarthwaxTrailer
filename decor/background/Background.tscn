@@ -1,20 +1,23 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://decor/grass/plain-green2.png" type="Texture" id=1]
 [ext_resource path="res://decor/background/water/blue-strip.png" type="Texture" id=2]
 [ext_resource path="res://decor/background/mountain/mountain.png" type="Texture" id=3]
+[ext_resource path="res://decor/background/mountain/mountain_rescaled.png" type="Texture" id=4]
 
 [node name="Background" type="Node2D"]
 
 [node name="Mountain" type="Sprite" parent="."]
-position = Vector2( 960, 260 )
-scale = Vector2( 2, 2 )
+visible = false
+position = Vector2( 767.899, -100.947 )
+scale = Vector2( 6, 6 )
 z_index = -2000
 texture = ExtResource( 3 )
 
 [node name="Mountain2" type="Sprite" parent="."]
-position = Vector2( 960, 632 )
-scale = Vector2( 2, -2 )
+visible = false
+position = Vector2( 775.003, 911.178 )
+scale = Vector2( 4, -4 )
 z_index = -2000
 texture = ExtResource( 3 )
 
@@ -40,3 +43,15 @@ position = Vector2( 960, 882.08 )
 scale = Vector2( 4, 15.63 )
 z_index = -100
 texture = ExtResource( 2 )
+
+[node name="MountainDownscaled" type="Sprite" parent="."]
+position = Vector2( 716.863, 40.1206 )
+scale = Vector2( 6, 6 )
+z_index = -2000
+texture = ExtResource( 4 )
+
+[node name="MountainDownscaledReflect" type="Sprite" parent="."]
+position = Vector2( 704.166, 834.863 )
+scale = Vector2( 6, -6 )
+z_index = -2000
+texture = ExtResource( 4 )

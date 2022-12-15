@@ -36,10 +36,10 @@ const BANDS_SPAWNED = 1
 const NUM_LANES = 4
 const DISTANCE_BETWEEN_LANES = 4
 const ARMY_HALF_SEP = 10
-const BAND_SEP = 3
+const BAND_SEP = 6
 const STARTING_BAND_SEP = 8
 
-const FIGHT_SEP = 1
+const FIGHT_SEP = 2
 const END_POS_DELTA = 0.1
 
 var army_start_offset = -40
@@ -199,7 +199,7 @@ func _on_creature_fire_projectile(creature, projectile):
 	var target_band = projectile.ranged_target_band
 	var target_lane = projectile.ranged_target_lane
 	
-	var lane_offset = FIGHT_SEP + target_lane*1.0/10
+	var lane_offset = FIGHT_SEP + target_lane*1.0/5
 	var end_x
 	var target_creature = null
 		
@@ -453,7 +453,7 @@ func has_creatures():
 	return army_grid.has_creatures()
 
 func get_target_x_from_band_lane(band, lane):
-	var lane_offset = FIGHT_SEP + lane*1.0/10
+	var lane_offset = FIGHT_SEP + lane*1.0/2
 	if state == State.Army.BATTLE:
 		return battlefronts[lane] - (army_dir * (lane_offset + band * BAND_SEP))
 	else: 

@@ -1,15 +1,15 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://decor/stone/Boulder_transparent.png" type="Texture" id=1]
+[ext_resource path="res://decor/stone/Boulder_downscale.png" type="Texture" id=1]
 [ext_resource path="res://desert_strike/Checkpoint.gd" type="Script" id=2]
 
 [node name="Checkpoint" type="Node2D"]
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
-scale = Vector2( 2, 2 )
+scale = Vector2( 6, 6 )
 texture = ExtResource( 1 )
-offset = Vector2( 0, -18 )
+offset = Vector2( 0, -9 )
 
 [node name="LevelLabel" type="Label" parent="."]
 margin_left = -22.0

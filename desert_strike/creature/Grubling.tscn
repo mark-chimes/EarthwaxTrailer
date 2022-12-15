@@ -1,9 +1,10 @@
-[gd_scene load_steps=46 format=2]
+[gd_scene load_steps=48 format=2]
 
 [ext_resource path="res://entity/creature/glut/grub/grub_dissolve.png" type="Texture" id=1]
 [ext_resource path="res://entity/creature/glut/grub/grub_small_attack_small_bright.png" type="Texture" id=2]
 [ext_resource path="res://entity/creature/glut/grub/grub_small_walk_small.png" type="Texture" id=3]
 [ext_resource path="res://desert_strike/creature/Grubling.gd" type="Script" id=4]
+[ext_resource path="res://entity/creature/glut/grub/grub_small_attack_small_bright_sheet.png" type="Texture" id=5]
 
 [sub_resource type="AtlasTexture" id=44]
 atlas = ExtResource( 2 )
@@ -133,29 +134,33 @@ region = Rect2( 32, 0, 32, 16 )
 atlas = ExtResource( 1 )
 region = Rect2( 96, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=47]
-atlas = ExtResource( 2 )
+[sub_resource type="AtlasTexture" id=63]
+atlas = ExtResource( 5 )
+region = Rect2( 32, 0, 32, 16 )
+
+[sub_resource type="AtlasTexture" id=64]
+atlas = ExtResource( 5 )
 region = Rect2( 64, 0, 32, 16 )
 
-[sub_resource type="AtlasTexture" id=48]
-atlas = ExtResource( 2 )
+[sub_resource type="AtlasTexture" id=65]
+atlas = ExtResource( 5 )
 region = Rect2( 96, 0, 32, 16 )
 
-[sub_resource type="AtlasTexture" id=49]
-atlas = ExtResource( 2 )
-region = Rect2( 128, 0, 32, 16 )
+[sub_resource type="AtlasTexture" id=66]
+atlas = ExtResource( 5 )
+region = Rect2( 0, 16, 32, 16 )
 
-[sub_resource type="AtlasTexture" id=50]
-atlas = ExtResource( 2 )
-region = Rect2( 160, 0, 32, 16 )
+[sub_resource type="AtlasTexture" id=67]
+atlas = ExtResource( 5 )
+region = Rect2( 32, 16, 32, 16 )
 
-[sub_resource type="AtlasTexture" id=51]
-atlas = ExtResource( 2 )
-region = Rect2( 192, 0, 32, 16 )
+[sub_resource type="AtlasTexture" id=68]
+atlas = ExtResource( 5 )
+region = Rect2( 64, 16, 32, 16 )
 
-[sub_resource type="AtlasTexture" id=52]
-atlas = ExtResource( 2 )
-region = Rect2( 224, 0, 32, 16 )
+[sub_resource type="AtlasTexture" id=69]
+atlas = ExtResource( 5 )
+region = Rect2( 96, 16, 32, 16 )
 
 [sub_resource type="AtlasTexture" id=53]
 atlas = ExtResource( 2 )
@@ -197,7 +202,7 @@ animations = [ {
 "name": "hurt",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 47 ), SubResource( 48 ), SubResource( 49 ), SubResource( 50 ), SubResource( 51 ), SubResource( 52 ) ],
+"frames": [ SubResource( 63 ), SubResource( 64 ), SubResource( 65 ), SubResource( 66 ), SubResource( 67 ), SubResource( 68 ), SubResource( 69 ) ],
 "loop": true,
 "name": "attack_strike",
 "speed": 5.0
@@ -212,9 +217,9 @@ animations = [ {
 script = ExtResource( 4 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-scale = Vector2( 2, 2 )
+scale = Vector2( 6, 6 )
 frames = SubResource( 29 )
-animation = "attack"
-frame = 5
+animation = "attack_strike"
+frame = 3
 playing = true
-offset = Vector2( 0, -5 )
+offset = Vector2( -5, -5 )

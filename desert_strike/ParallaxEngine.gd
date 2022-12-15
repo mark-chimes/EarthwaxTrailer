@@ -1,14 +1,14 @@
 extends Node
 
-const HORIZON_ACTUAL = 420 # Where the sky meets land
-const HORIZON = HORIZON_ACTUAL - 50 # Where the infinity point is
-const SCREEN_MAX_X = 1920
-const SCREEN_MAX_Y = 1080
+const HORIZON_ACTUAL = 300 # Where the sky meets land
+const HORIZON = HORIZON_ACTUAL - 100 # Where the infinity point is
+const SCREEN_MAX_X = 1400
+const SCREEN_MAX_Y = 900
 const SCREEN_MID_X = SCREEN_MAX_X / 2
-const Z_ORIGIN_Y_OFFSET = SCREEN_MAX_Y - 458 # Where the first layer starts
+const Z_ORIGIN_Y_OFFSET = SCREEN_MAX_Y - 300 # Where the first layer starts
 const HORIZON_HEIGHT = Z_ORIGIN_Y_OFFSET - HORIZON
-const X_UNIT =  32.0 # Width in  pixels at z0 to separate
-const Z_UNIT = 0.05 # Separation degree for z
+const X_UNIT =  64.0 # Width in  pixels at z0 to separate
+const Z_UNIT = 0.1 # Separation degree for z
 
 var ParallaxObjectGenerator = preload("res://parallax/util/ParallaxObjectGenerator.gd")
 var object_generator = ParallaxObjectGenerator.new()
@@ -67,7 +67,7 @@ func position_stuff_on_screen(delta):
 		parallax_obj.position.x = z_and_x_to_x_converter(player_real_pos_x, 
 				parallax_obj.real_pos.z, parallax_obj.real_pos.x)
 		parallax_obj.position.y = y_and_z_to_y_converter(parallax_obj.real_pos.y, parallax_obj.real_pos.z)
-
+		
 	for parallax_obj in projectiles:
 		parallax_obj.visible = true
 		parallax_obj.position.x = z_and_x_to_x_converter(player_real_pos_x, 
