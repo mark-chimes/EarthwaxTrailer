@@ -44,8 +44,8 @@ func generate_lawn():
 	var plants_x_off = -plants_x_width / 2
 	var plants_z_off = 3
 	var plants_z_length = 32
-	var plants_x_sep = 6
-	var plants_z_sep = 2
+	var plants_x_sep = 12
+	var plants_z_sep = 4
 	create_plants(plants_x_off, plants_z_off, 
 			plants_x_width, plants_z_length, plants_x_sep, plants_z_sep)
 
