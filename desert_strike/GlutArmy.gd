@@ -1,6 +1,7 @@
 extends "res://desert_strike/Army.gd"
 
 var Grubling = load("res://desert_strike/creature/Grubling.tscn")
+var Bony = load("res://desert_strike/creature/Bony.tscn")
 
 func _ready(): 
 	pass
@@ -11,7 +12,8 @@ func start_army():
 	spawn_first_wave_no_gaps()
 
 func spawn_first_wave_no_gaps(): 
-	add_new_creatures(Grubling, 128)
+	add_new_creatures(Bony, 4)
+	add_new_creatures(Grubling, 12)
 
 func spawn_first_wave_with_gaps(): 
 	create_and_add_creature_to_lane_DEBUG(Grubling, 0)
