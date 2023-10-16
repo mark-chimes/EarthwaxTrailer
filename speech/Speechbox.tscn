@@ -24,6 +24,3 @@ text = "Hello this is a lot of text in order to test the autowrap function of th
 align = 1
 valign = 2
 autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
