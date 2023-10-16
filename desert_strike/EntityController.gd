@@ -11,35 +11,93 @@ var SpeechSystem = preload("res://desert_strike/SpeechSystem.gd")
 var BuildingPlace = preload("res://desert_strike/building/BuildingPlace.tscn") 
 var Farm = preload("res://desert_strike/building/Farm.tscn") 
 var ArcheryTargets = preload("res://desert_strike/building/ArcheryTargets.tscn") 
+var ArcheryTarget = preload("res://desert_strike/building/ArcheryTarget.tscn") 
 var FarmerAtHut = preload("res://desert_strike/building/FarmerAtHut.tscn") 
 var ArcherAtHut = preload("res://desert_strike/building/ArcherAtHut.tscn") 
+var Checkpoint = preload("res://desert_strike/Checkpoint.tscn")
+
+var checkpoints = [] # TOOD allow for multiple checkpoints
 
 onready var parallax_engine = get_parent().get_node("ParallaxEngine")
 
-const TIME_BETWEEN_WAVES = 200000
+const TIME_BETWEEN_WAVES = 60
 
 var wave_timer = 0 
+var wave_num = 1
+
+var income_ui = null 
+var money_ui = null 
+# TODO This isn't the right way to do this - should use signals and a parent object
+var income = 0 
+var money = 0
 
 func _ready():
 	$ArmyHuman.connect("defeat", self, "_human_defeat")
 	$ArmyGlut.connect("defeat", self, "_glut_defeat")
+	
+	$ArmyHuman.set_army_start_offset(20)
+	$ArmyGlut.set_army_start_offset(60)
+	$ArmyHuman.start_army()
+	$ArmyGlut.start_army()
+	
 	rng.randomize()
 	create_building_places()
+	create_checkpoints()
+	
+	get_parent().get_node("Camera2D/Clock").seconds_between_waves = TIME_BETWEEN_WAVES
+	adjust_income(1)
+	adjust_money(20)
 
+	
 func _process(delta):
 	wave_spawn(delta)
 	battle_start()
+	check_checkpoints(delta)
 
 func wave_spawn(delta): 
 	# TODO Waves for already-defeated armies.
 	if wave_timer >= TIME_BETWEEN_WAVES: 
+		
+		# Find last owned checkpoint
+		var furthest_checkpoint = null
+		var furthest_dist = 1000000000
+		for checkpoint in checkpoints: 
+			if checkpoint.real_pos.x < furthest_dist:
+				if checkpoint.check_ownership() == -1:
+					furthest_checkpoint = checkpoint
+					furthest_dist = checkpoint.real_pos.x
+		if furthest_checkpoint == null: 
+			$ArmyGlut.set_army_start_offset(140)
+		else: 
+			$ArmyGlut.set_army_start_offset(furthest_dist)
+		
+		furthest_checkpoint = null
+		furthest_dist = -1000000000
+		for checkpoint in checkpoints: 
+			if checkpoint.real_pos.x > furthest_dist:
+				if checkpoint.check_ownership() == 1:
+					furthest_checkpoint = checkpoint
+					furthest_dist = checkpoint.real_pos.x
+		if furthest_checkpoint == null: 
+			$ArmyHuman.set_army_start_offset(0)
+		else: 
+			$ArmyHuman.set_army_start_offset(furthest_dist)
+		
+		
+		
 		# new wave
-		$ArmyHuman.spawn_new_wave()
-		$ArmyGlut.spawn_new_wave()
+		$ArmyHuman.spawn_new_wave(wave_num)
+		$ArmyGlut.spawn_new_wave(wave_num)
+		if $ArmyHuman.get_state() == State.Army.DIE: 
+			$ArmyHuman.march()
+		if $ArmyGlut.get_state() == State.Army.DIE: 
+			$ArmyGlut.march()
+		wave_num += 1
 		wave_timer = 0
+		adjust_money(income)
 	else: 
 		wave_timer += delta
-		
+
 func battle_start():
 	# TODO Do we want a separate entity and battle controller? 
 	if $ArmyHuman.get_state() == State.Army.BATTLE or $ArmyHuman.get_state() == State.Army.DIE\
@@ -62,6 +120,8 @@ func battle_start():
 		$ArmyGlut.connect("creature_death", $ArmyHuman, "_on_enemy_creature_death")
 		$ArmyHuman.connect("attack", $ArmyGlut, "_on_get_attacked")
 		$ArmyGlut.connect("attack", $ArmyHuman, "_on_get_attacked")
+		$ArmyHuman.connect("projectile_attack", $ArmyGlut, "_on_enemy_projectile_attack")
+		$ArmyGlut.connect("projectile_attack", $ArmyHuman, "_on_enemy_projectile_attack")
 		
 		# SPEECH
 		var human_speech_system = SpeechSystem.new()
@@ -70,14 +130,75 @@ func battle_start():
 		$ArmyGlut.set_speech_system(glut_speech_system)
 		$ArmyHuman.connect("many_deaths", self, "_on_many_human_deaths")
 		$ArmyGlut.connect("many_deaths", self, "_on_many_glut_deaths")
-		$ArmyHuman.say("Prepare for battle!")
+		$ArmyHuman.say("Prepare for Trouble!")
+		$ArmyHuman.say("And make it double!")
 		$ArmyGlut.say("GRRR")
 		# $ArmyGlut.set_speech_system(speech_system)
 		# display_test_text()	
 
+func check_checkpoints(delta): 
+	if $ArmyHuman.get_state() == State.Army.BATTLE or $ArmyGlut.get_state() == State.Army.BATTLE:
+		return
+	
+	# TODO this is a really hacky way to check checkpoints and set their states
+	# We need to: 
+	# - Use a direction
+	# - Have a specific state for capturing a checkpoint
+	# - Have a nice way to know what's the next checkpoint they should target 
+	# 		(rather than checking through the whole array)
+	# - Keep track of what checkpoint the army is busy trying to capture
+	# - Be able to go back to a checkpoint we've passed
+	
+	if $ArmyGlut.get_state() != State.Army.DIE:
+		var closest_checkpoint = null
+		var closest_dist = -1000000000
+		for checkpoint in checkpoints: 
+			if checkpoint.real_pos.x > closest_dist:
+				if checkpoint.check_ownership() > -1:
+					closest_checkpoint = checkpoint
+					closest_dist = checkpoint.real_pos.x
+		if closest_checkpoint == null: 
+			$ArmyGlut.idle()
+		else:
+			if $ArmyGlut.get_pos() < closest_checkpoint.real_pos.x - 4:
+				if closest_checkpoint.check_ownership() > -1:
+					$ArmyGlut.idle()
+					closest_checkpoint.modify_ownership(-5 * delta)
+					# TODO move this out? 
+				else: 
+					if $ArmyGlut.get_state() != State.Army.MARCH: # TODO use "capture" state
+						$ArmyGlut.march() # TODO this should only happen once
+			else: 
+				if $ArmyGlut.get_state() != State.Army.MARCH: # TODO use "capture" state
+					$ArmyGlut.march() # TODO this should only happen once	
+		
+	if $ArmyHuman.get_state() != State.Army.DIE:
+		var closest_checkpoint = null
+		var closest_dist = 1000000000
+		for checkpoint in checkpoints: 
+			if checkpoint.real_pos.x < closest_dist:
+				if checkpoint.check_ownership() < 1:
+					closest_checkpoint = checkpoint
+					closest_dist = checkpoint.real_pos.x
+		if closest_checkpoint == null: 
+			$ArmyHuman.idle()
+		else: 
+			if $ArmyHuman.get_pos() > closest_checkpoint.real_pos.x + 4:
+				if closest_checkpoint.check_ownership() < 1:
+					$ArmyHuman.idle()
+					closest_checkpoint.modify_ownership(5 * delta)
+				else: 
+					if $ArmyHuman.get_state() != State.Army.MARCH: # TODO use "capture" state
+						$ArmyHuman.march() # TODO this should only happen once
+			else: 
+				if $ArmyHuman.get_state() != State.Army.MARCH: # TODO use "capture" state
+					$ArmyHuman.march() # TODO this should only happen once
+				
+				
 func create_building_places(): 
 	# TODO Should this function be happening in the entity controller?
-	create_building_places_at(range(0, -121, -25))
+	create_building_places_at(range(0, -121, -12))
+
 
 func create_building_places_at(x_poses):
 	for x_pos in x_poses: 
@@ -92,21 +213,58 @@ func create_building_place_at(x_pos):
 	parallax_engine.add_object_to_parallax_world(building_place)
 	building_place.set_parallax_engine(parallax_engine) # TODO this is hacky and wrong
 
+func create_checkpoints(): 
+	create_checkpoint(10, 1)
+	create_checkpoint(40, 0)
+	create_checkpoint(70, -1)
+	create_checkpoint(100, -1)
+	create_checkpoint(130, -1)
+	
+func create_checkpoint(checkpoint_pos, ownership): 
+	var checkpoint = Checkpoint.instance()
+	checkpoint.real_pos.z = 40
+	checkpoint.real_pos.x = checkpoint_pos
+	checkpoint.set_ownership(ownership)
+	checkpoints.append(checkpoint)
+	add_child(checkpoint)
+	parallax_engine.add_object_to_parallax_world(checkpoint)
+	
 func _on_building_place_structure(building_place): 
+
 	var new_building
 	var new_person
 	if building_place.building_state == "farm": 
-		new_building = Farm.instance()
+		if money < 2: 
+			return
+		adjust_money(-2)
+		
+		for i in range(0,3):
+			new_building = Farm.instance()
+			new_building.real_pos.z = 48 + i*8
+			new_building.real_pos.x = building_place.real_pos.x
+			add_child(new_building)
+			parallax_engine.add_object_to_parallax_world(new_building)
 		new_person = FarmerAtHut.instance()
-		$ArmyHuman.add_farmers_to_spawn(1)
+		$ArmyHuman.add_farmers_to_spawn(2)
+		adjust_income(1)
 	else: 
-		new_building = ArcheryTargets.instance()
+		if money < 2: 
+			return
+		adjust_money(-2)
 		new_person = ArcherAtHut.instance()
-		$ArmyHuman.add_archers_to_spawn(1)
-	new_building.real_pos.z = 48
-	new_building.real_pos.x = building_place.real_pos.x
-	add_child(new_building)
-	parallax_engine.add_object_to_parallax_world(new_building)
+		$ArmyHuman.add_archers_to_spawn(2)
+
+		new_building = ArcheryTargets.instance()
+		new_building.real_pos.z = 48
+		new_building.real_pos.x = building_place.real_pos.x
+		add_child(new_building)
+		parallax_engine.add_object_to_parallax_world(new_building)
+		
+		new_building = ArcheryTarget.instance()
+		new_building.real_pos.z = 64
+		new_building.real_pos.x = building_place.real_pos.x
+		add_child(new_building)
+		parallax_engine.add_object_to_parallax_world(new_building)
 
 	new_person.connect("destroy_structure", self, "_on_person_at_hut_destroy_structure")
 	new_person.set_connected_structure(new_building)
@@ -118,6 +276,18 @@ func _on_building_place_structure(building_place):
 	
 	parallax_engine.remove_object(building_place)
 
+func adjust_income(increase): 
+	income += increase
+	if income_ui == null: 
+		income_ui = get_parent().get_node("Camera2D/Income")
+	income_ui.set_income(income)
+
+func adjust_money(increase): 
+	money += increase
+	if money_ui == null: 
+		money_ui = get_parent().get_node("Camera2D/Money")
+	money_ui.set_income(money)
+
 func _on_person_at_hut_destroy_structure(person_at_hut): 
 	create_building_place_at(person_at_hut.real_pos.x)
 	parallax_engine.remove_object(person_at_hut.connected_structure)
@@ -125,21 +295,25 @@ func _on_person_at_hut_destroy_structure(person_at_hut):
 	
 func _human_defeat():
 	$ArmyGlut.say("jajajajaja")
-	start_marching()
+	$ArmyGlut.march()
+	$ArmyHuman.die()
+	disconnect_signals()
 	
 func _glut_defeat():
 	$ArmyHuman.say("They are dead! We've won!")
-	start_marching()
-
-func start_marching(): 
 	$ArmyHuman.march()
-	$ArmyGlut.march()
+	$ArmyGlut.die()
+	disconnect_signals()
+
+func disconnect_signals(): 
 	$ArmyHuman.disconnect("front_line_ready", $ArmyGlut, "_on_front_line_ready")
 	$ArmyGlut.disconnect("front_line_ready", $ArmyHuman, "_on_front_line_ready")
 	$ArmyHuman.disconnect("creature_death", $ArmyGlut, "_on_enemy_creature_death")
 	$ArmyGlut.disconnect("creature_death", $ArmyHuman, "_on_enemy_creature_death")
 	$ArmyHuman.disconnect("attack", $ArmyGlut, "_on_get_attacked")
 	$ArmyGlut.disconnect("attack", $ArmyHuman, "_on_get_attacked")
+	$ArmyHuman.disconnect("projectile_attack", $ArmyGlut, "_on_enemy_projectile_attack")
+	$ArmyGlut.disconnect("projectile_attack", $ArmyHuman, "_on_enemy_projectile_attack")
 	$ArmyHuman.disconnect("many_deaths", self, "_on_many_human_deaths")
 	$ArmyGlut.disconnect("many_deaths", self, "_on_many_glut_deaths")
 	

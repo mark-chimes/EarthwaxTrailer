@@ -44,8 +44,8 @@ func generate_lawn():
 	var plants_x_off = -plants_x_width / 2
 	var plants_z_off = 3
 	var plants_z_length = 32
-	var plants_x_sep = 6
-	var plants_z_sep = 2
+	var plants_x_sep = 12
+	var plants_z_sep = 4
 	create_plants(plants_x_off, plants_z_off, 
 			plants_x_width, plants_z_length, plants_x_sep, plants_z_sep)
 
@@ -77,20 +77,20 @@ func add_random_plant_to_lawn_at(x, z):
 	elif plant.real_pos.z > 15 and plant.real_pos.z <= 20:
 		var is_close = rng.randi_range(0,4)
 		if is_close == 0:
-			plant.get_node("AnimatedSprite").visible = true
-			plant.get_node("AnimatedSprite2").visible = false
-			plant.get_node("AnimatedSprite").animation = "unfiltered"
-			plant.get_node("AnimatedSprite").frame = plant.plant_num
-			plant.get_node("AnimatedSprite").get_node("AnimatedSprite").frame = plant.plant_num
+			plant.get_node("AnimatedSprite2").visible = true
+			# plant.get_node("AnimatedSprite2").visible = false
+			plant.get_node("AnimatedSprite2").animation = "unfiltered"
+			plant.get_node("AnimatedSprite2").frame = plant.plant_num
+			plant.get_node("AnimatedSprite2").get_node("AnimatedSprite3").frame = plant.plant_num
 		else: 
 			plant.get_node("AnimatedSprite2").visible = true
-			plant.get_node("AnimatedSprite").visible = false
+			#plant.get_node("AnimatedSprite").visible = false
 			plant.get_node("AnimatedSprite2").animation = "unfiltered"
 			plant.get_node("AnimatedSprite2").frame = plant.plant_num	
 	else: 
-		plant.get_node("AnimatedSprite").visible = true
-		plant.get_node("AnimatedSprite2").visible = false
-		plant.get_node("AnimatedSprite").animation = "unfiltered"
-		plant.get_node("AnimatedSprite").frame = plant.plant_num
-		plant.get_node("AnimatedSprite").get_node("AnimatedSprite").frame = plant.plant_num
+		plant.get_node("AnimatedSprite2").visible = true
+		#plant.get_node("AnimatedSprite2").visible = false
+		plant.get_node("AnimatedSprite2").animation = "unfiltered"
+		plant.get_node("AnimatedSprite2").frame = plant.plant_num
+		plant.get_node("AnimatedSprite2").get_node("AnimatedSprite3").frame = plant.plant_num
 	parallax_engine.add_object_to_parallax_world(plant)

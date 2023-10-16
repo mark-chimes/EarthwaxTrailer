@@ -52,6 +52,7 @@ animations = [ {
 script = ExtResource( 21 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+visible = false
 scale = Vector2( 2, 2 )
 frames = SubResource( 1 )
 animation = "filtered"
@@ -68,5 +69,12 @@ offset = Vector2( 0, -8 )
 [node name="AnimatedSprite2" type="AnimatedSprite" parent="."]
 scale = Vector2( 2, 2 )
 frames = SubResource( 2 )
-animation = "filtered"
+animation = "unfiltered"
 offset = Vector2( 0, -4 )
+
+[node name="AnimatedSprite3" type="AnimatedSprite" parent="AnimatedSprite2"]
+z_index = -1200
+frames = SubResource( 2 )
+animation = "unfiltered"
+offset = Vector2( 0, 4 )
+flip_v = true

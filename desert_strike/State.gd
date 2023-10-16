@@ -19,6 +19,7 @@ enum Creature {
 enum Army {
 	MARCH,
 	BATTLE,
+	CAPTURE,
 	IDLE,
 	DIE,
 }

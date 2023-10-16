@@ -13,12 +13,10 @@ font_data = ExtResource( 4 )
 script = ExtResource( 2 )
 
 [node name="BrownHelm" type="Sprite" parent="."]
-scale = Vector2( 2, 2 )
 texture = ExtResource( 1 )
 offset = Vector2( 0, -30 )
 
 [node name="GreenHelm" type="Sprite" parent="."]
-scale = Vector2( 2, 2 )
 texture = ExtResource( 3 )
 offset = Vector2( 0, -30 )
 

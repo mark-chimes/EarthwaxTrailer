@@ -26,7 +26,7 @@ func say_with_creature(text, creature_filter):
 # Private func
 func display_text_on_creature_satisfying(text, filter):
 	if not army_grid.has_creatures():
-		printerr("Trying to get an empty army to say something")
+		printerr("Trying to get an empty army to say " + text)
 		return
 		
 	var all_creatures = army_grid.get_creatures_satisfying_all([

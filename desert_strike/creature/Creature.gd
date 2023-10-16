@@ -2,9 +2,11 @@ extends "res://parallax/util/ParallaxObject.gd"
 signal attack(this)
 signal death(this)
 signal creature_positioned(this)
+signal get_ranged_target(this)
 signal done_speaking(this)
 signal disappear(this)
 signal ready_to_swap(this)
+signal swap_with_booking(this, booking_creature)
 
 var State = preload("res://desert_strike/State.gd")
 
@@ -12,14 +14,18 @@ var HealthBar = preload("res://desert_strike/HealthBar.tscn")
 var DebugLabel = preload("res://desert_strike/DebugLabel.tscn")
 var SpeechBox = preload("res://speech/SpeechBox.tscn")
 
+var parallax_engine
+
 onready var rng = RandomNumberGenerator.new()
 var melee_damage
 var ranged_damage
 
 var is_ranged = false # TODO 
+var min_attack_range = 0
 var attack_range = 0
 var ranged_target_band
 var ranged_target_lane
+var attached_projectile = null
 
 var band
 var lane
@@ -29,7 +35,7 @@ var state = State.Creature.IDLE
 var sprite_dir = State.Dir.RIGHT
 var dir = State.Dir.RIGHT
 var is_in_combat = false
-var is_ready_to_swap = false
+
 var mute = false
 
 var health = 10
@@ -38,25 +44,44 @@ var MAX_HEALTH = 10
 
 const WALK_SPEED = 5
 const END_POS_DELTA = 0.1
+const WALK_TO_OFFSET_MAX = 3
 
 var attack_prep_timer = 0
 var time_between_attacks = 3
 var time_for_corpse_fade = 3
 var walk_target_x
+var walk_target_z
+var is_waiting_for_anim = false # waiting for attack animation to finish before moving
 
 var show_health = false
 var is_debug_state = false
+var is_debug_anim = false
 var is_debug_band_lane = false
 var is_debug_target_x = false
-var is_speech_possible = true
+var is_debug_static_position = true
 onready var debug_label = DebugLabel.instance()
 onready var speech_box = SpeechBox.instance()
 
+var is_ready_to_swap = false
+var is_booked = false
+var is_booking = false
+var booking_creature = null
+
+var booking_creature_debug_name = "no_name"
+var booking_creature_debug_band = -1
+var booking_creature_debug_lane = -1
+
+const SWAP_WAIT_TIME = 1
+var swap_countdown = 0
+
+var debug_name = "no_name_set"
+
 func _ready(): 
 	rng.randomize()
+	debug_name = gen_unique_string(rng.randi_range(4,12))
 	priority = rng.randi_range(0,255)
-	var color = Color8(priority, 255 - priority, 0, 255)
-	$AnimatedSprite.modulate = color
+	# var color = Color8(255 - priority, priority, 0, 255)
+	# $AnimatedSprite.modulate = color
 	init_health_bar()
 	add_child(debug_label)
 	add_child(speech_box)
@@ -66,7 +91,18 @@ func _ready():
 	update_debug_with_target_x()
 	update_debug_label_with_state()
 	update_debug_with_band_lane()
+	update_debug_label_with_anim()
 	$AnimatedSprite.connect("animation_finished", self, "_on_animation_finished")
+
+var ascii_letters_and_digits = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+func gen_unique_string(length: int) -> String:
+	var result = ""
+	for i in range(length):
+		result += ascii_letters_and_digits[rng.randi_range(0, ascii_letters_and_digits.length()-1)]
+	return result
+
+func debug_string(): 
+	return debug_name + "(" + str(band) + ", " + str(lane) + ")"
 
 func set_band_lane(new_band, new_lane): 
 	band = new_band
@@ -97,15 +133,29 @@ func _process(delta):
 		State.Creature.MARCH:
 			real_pos.x += delta * WALK_SPEED * dir
 		State.Creature.WALK:
+			if is_instance_valid(attached_projectile):
+				update_projectile_pos(delta)
 			if is_positioned():
 				emit_signal("creature_positioned", self)
-				wait_for_swap()
-				return
-			real_pos.x += delta * WALK_SPEED * dir
+			elif is_positioned_z():
+				real_pos.x += delta * WALK_SPEED * dir
+			elif is_positioned_x():
+				if walk_target_z < real_pos.z:
+					real_pos.z -= delta * WALK_SPEED * 1.5
+				else:
+					real_pos.z += delta * WALK_SPEED * 1.5
+				parallax_engine.update_z_index(self)
+			else:
+				real_pos.x += delta * WALK_SPEED * dir * 0.6
+				if walk_target_z < real_pos.z:
+					real_pos.z -= delta * WALK_SPEED
+				else:
+					real_pos.z += delta * WALK_SPEED
+				parallax_engine.update_z_index(self)
 		State.Creature.AWAIT_FIGHT: 
 			pass
 		State.Creature.IDLE:
-			pass
+			wait_for_swap(delta)
 		State.Creature.FIGHT:
 			attack_prep_timer -= delta
 			if attack_prep_timer <= 0: 
@@ -114,15 +164,117 @@ func _process(delta):
 		State.Creature.DIE:
 			pass
 
-func wait_for_swap():
-	yield(get_tree().create_timer(3), "timeout")
-	if not state == State.Creature.IDLE:
+func update_projectile_pos(delta): 
+	if is_positioned():
 		return
-	emit_signal("ready_to_swap", self)
+	elif is_positioned_z():
+		attached_projectile.real_pos.x += delta * WALK_SPEED * dir
+	elif is_positioned_x():
+		if walk_target_z < real_pos.z:
+			attached_projectile.real_pos.z -= delta * WALK_SPEED * 1.5
+		else:
+			attached_projectile.real_pos.z += delta * WALK_SPEED * 1.5
+			parallax_engine.update_z_index(attached_projectile)
+	else:
+		attached_projectile.real_pos.x += delta * dir * WALK_SPEED * 0.6
+		if walk_target_z < real_pos.z:
+			attached_projectile.real_pos.z -= delta * WALK_SPEED
+		else:
+			attached_projectile.real_pos.z += delta * WALK_SPEED
+		parallax_engine.update_z_index(attached_projectile)	
+
+func wait_for_swap(delta):
+	# TODO this yield is a bit of a hacky way to do it
+	if swap_countdown > 0:
+		swap_countdown -= delta
+		return
+	swap_countdown = SWAP_WAIT_TIME + rng.randf_range(-1, 1)
+		
+#	if not state == State.Creature.IDLE:
+#		return
+		
+	if is_booked: 
+		if booking_creature == null: 
+			printerr(debug_name + "trying to swap but booking creature is null")
+		if (!booking_creature.get_ref()):
+			printerr(debug_name + "trying to swap but booking creature weakref is gone!")
+			# TODO RETURN?
+		emit_signal("swap_with_booking", self, booking_creature.get_ref())
+		
+		# TODO need to make sure this doesn't crash anything
+		if booking_creature != null: 
+			if booking_creature.get_ref() != null:
+				booking_creature.get_ref().booking_creature = null  # TODO correct? 
+		else: 
+			printerr("Trying to nullify already null booking creature")
+		is_booked = false
+		is_booking = false
+			
+		booking_creature = null # TODO correct? 
+		return 
+		
 	is_ready_to_swap = true
-	wait_for_swap()
+	if state == State.Creature.DIE: 
+		printerr("I'm dead but trying to swap!")
+	emit_signal("ready_to_swap", self)
+
+func book_swap(other_creature): 
+	if other_creature.is_booked or other_creature.is_booking: 
+		return
+	is_ready_to_swap = false
+	is_booking = true
+	booking_creature = weakref(other_creature) # TODO is this right?!
+	other_creature.get_booked_by(self)
+	
+func break_bookings(): 
+	is_ready_to_swap = false
+	is_booked = false
+	is_booking = false
+	# TODO should this be weakref? 
+	if booking_creature == null:
+		return
+	
+	if (!booking_creature.get_ref()):
+		printerr(debug_name + ": Booking creature weakref is gone: " + booking_creature_debug_name) 
+		printerr(debug_name + "(" + str(band) + ", " + str(lane) + ")") 
+		printerr(booking_creature_debug_name + "(" + str(booking_creature_debug_band) + ", " + str(booking_creature_debug_lane) + ")") 
+		booking_creature = null
+		return
+
+	var temp_creature = booking_creature.get_ref()
+	booking_creature = null
+	# print("...with other creature " + str(booking_creature.get_ref()))
+	# print("...with name \"" + booking_creature.get_ref().debug_name + "\"" )
+	temp_creature.break_bookings()
+
+func debug_break_bookings_string(): 
+	# print("Dead creature " + debug_string() + " breaking bookings")
+	if (booking_creature != null):
+		if ! booking_creature.get_ref():
+			printerr("Dead creature trying to break booking with dereferenced creature")
+			return
+		var debug_creature = booking_creature.get_ref()
+		if debug_creature == null: 
+			printerr("Trying to break booking with null creature")
+			return
+		# print("Dead creature " +  debug_string() + " breaking booking with: " + debug_creature.debug_string())
+
+func get_booked_by(new_booking_creature): 
+	# print(debug_string() + " booked by " + new_booking_creature.debug_string())
+	booking_creature = weakref(new_booking_creature)
+	booking_creature_debug_name = new_booking_creature.debug_name # TODO Debug
+	booking_creature_debug_band = new_booking_creature.band # TODO Debug
+	booking_creature_debug_lane = new_booking_creature.lane # TODO Debug
+	is_booked = true
 
 func is_positioned(): 
+	return is_positioned_z() and is_positioned_x()
+
+func is_positioned_z():
+	#todo, return 1, 0 or -1
+	return abs(walk_target_z - real_pos.z ) < END_POS_DELTA
+
+func is_positioned_x():
 	return abs(walk_target_x - real_pos.x ) < END_POS_DELTA
 	
 func hide_debug(): 
@@ -145,6 +297,11 @@ func update_debug_with_target_x():
 	var decimaled_float = stepify(walk_target_x, 0.01)	
 	set_debug_label(str(decimaled_float))
 
+func update_debug_label_with_anim(): 
+	if not is_debug_anim:
+		return
+	set_debug_label($AnimatedSprite.get_animation())
+	
 func update_debug_label_with_state(): 
 	if not is_debug_state: 
 		return 
@@ -165,23 +322,29 @@ func update_debug_label_with_state():
 			label_text = "" # Don't show labels for the dead
 	set_debug_label(label_text)
 
-func  set_archery_target_band_lane(band_index, lane_index): 
+func set_archery_target_band_lane(band_index, lane_index): 
 	ranged_target_band = band_index
 	ranged_target_lane = lane_index
 	
 func set_state(new_state, new_dir):
-	if state == State.Creature.FIGHT and new_state != State.Creature.FIGHT: 
+	update_debug_with_target_x()
+	dir = new_dir
+	$AnimatedSprite.flip_h = (dir != sprite_dir)
+	
+	if state == new_state:
+		return
+		
+	if new_state == State.Creature.FIGHT: 
 		reset_attack_prep_timer()
 	
 	# This part should be removed when dead creatures no longer get
 	# state information from the army
-	if state == State.Creature.DIE and (new_state in [State.Creature.WALK, State.Creature.AWAIT_FIGHT, State.Creature.FIGHT, State.Creature.IDLE]):
+	if state == State.Creature.DIE:
 		return
+		
 	state = new_state
-	
 	update_debug_label_with_state()
-	update_debug_with_target_x()
-	dir = new_dir
+	
 	match state:
 		State.Creature.MARCH:
 			$AnimatedSprite.play("walk")
@@ -192,30 +355,29 @@ func set_state(new_state, new_dir):
 		State.Creature.FIGHT:
 			prep_attack()
 		State.Creature.IDLE:
+			swap_countdown = SWAP_WAIT_TIME + rng.randf_range(-1, 1)
 			$AnimatedSprite.play("idle")
 		State.Creature.DIE:
+			# TODO death shouldn't really be setting a state at all.
+			# Should just be a separate function entirely.
 			hide_debug()
 			hide_health()
 			$AnimatedSprite.play("die")
-			$AnimatedSprite.flip_h = (dir != sprite_dir)
+			# $AnimatedSprite.flip_h = (dir != sprite_dir)
 			emit_signal("death", self)
 			play_sound_death()
-			yield($AnimatedSprite, "animation_finished")
-			$AnimatedSprite.frame = $AnimatedSprite.frames.get_frame_count("die")
-			$AnimatedSprite.playing = false
-			yield(get_tree().create_timer(time_for_corpse_fade), "timeout")
+			debug_break_bookings_string()
+			break_bookings()
 			emit_signal("disappear", self)
-			
-	$AnimatedSprite.flip_h = (dir != sprite_dir)
+	update_debug_label_with_anim()
 
 func take_damage(the_damage): 
 	hurt_anim()
 	health -= the_damage
-#	temporarily removing death to test jostling
-#	if health <= 0: 
-#		health = 0
-#		if state != State.DIE:
-#			set_state(State.DIE, dir)
+	if health <= 0: 
+		health = 0
+		if state != State.Creature.DIE:
+			set_state(State.Creature.DIE, dir)
 	update_health_bar(health)
 
 func _on_animation_finished():
@@ -232,29 +394,30 @@ func _on_animation_finished():
 			attack_prep_anim_finish()
 		"attack_prep":
 			attack_prep_anim_finish()
-
+	update_debug_label_with_anim()
+	
 func prep_attack(): 
 	if is_ranged and band != 0: 
 		$AnimatedSprite.play("ranged_attack_prep")
 	else:
 		$AnimatedSprite.play("attack_prep")
-	reset_attack_prep_timer()	
 
 func reset_attack_prep_timer(): 
 	attack_prep_timer = time_between_attacks
 
 func do_attack_strike():
-	if state == State.Creature.FIGHT: 
-		emit_signal("attack", self)
-	if state != State.Creature.FIGHT: # has to be checked again after attack signal
-		return
 	if is_ranged and band != 0: 
+		emit_signal("get_ranged_target", self)
 		$AnimatedSprite.play("ranged_attack_strike")
 		fire_ranged_projectile()
 	else:
 		$AnimatedSprite.play("attack_strike")
 	play_sound_attack()
-
+	update_debug_label_with_anim()
+	if state == State.Creature.FIGHT: 
+		emit_signal("attack", self)
+	update_debug_label_with_anim()
+	
 func fire_ranged_projectile():
 	# Overload this
 	pass
@@ -266,10 +429,16 @@ func hurt_anim():
 func attack_strike_anim_finish(): 
 	if state != State.Creature.FIGHT: 
 		return
+	if is_waiting_for_anim: 
+		is_waiting_for_anim = false
+		walk_to_walk_target_ignoring_anim()
+		return
+			
 	if is_ranged and band != 0: 
 		$AnimatedSprite.play("ranged_attack_prep")
 	else:
 		$AnimatedSprite.play("attack_prep")
+	
 
 func attack_prep_anim_finish(): 
 	if state != State.Creature.FIGHT: 
@@ -301,12 +470,32 @@ func play_sound_attack():
 	var sounds = $SoundAttack.get_children()
 	sounds[rng.randi() % sounds.size()].play()
 
-func walk_to(new_walk_target_x):
-	#TODO check we arent in position already
+func walk_to(new_walk_target_x, new_walk_target_z):
+	if is_debug_static_position:
+		walk_target_z = new_walk_target_z
+		walk_target_x = new_walk_target_x
+	else:
+		walk_target_z = new_walk_target_z + rng.randf_range(-WALK_TO_OFFSET_MAX, WALK_TO_OFFSET_MAX)
+		walk_target_x = new_walk_target_x + rng.randf_range(-WALK_TO_OFFSET_MAX, WALK_TO_OFFSET_MAX)
+	
+	if state == State.Creature.FIGHT: 
+		var anim = $AnimatedSprite.get_animation()
+		if anim == "attack_strike" or anim == "ranged_attack_strike": 
+			is_waiting_for_anim = true
+			return
+			
+	walk_to_walk_target_ignoring_anim()
+
+func walk_to_walk_target_ignoring_anim():
+	# TODO happen for other states as well (e.g. fighting)
 	is_ready_to_swap = false
-	walk_target_x = new_walk_target_x
+	is_booked = false
+	is_booking = false
+	
+	#TODO check we arent in position already
+	update_debug_with_target_x()
 	var new_dir
-	if new_walk_target_x > real_pos.x:
+	if walk_target_x > real_pos.x:
 		new_dir = State.Dir.RIGHT
 	else:
 		new_dir = State.Dir.LEFT
@@ -323,3 +512,10 @@ func is_speaking():
 	
 func _on_speech_box_done_speaking(): 
 	emit_signal("done_speaking", self)
+
+func attach_projectile(projectile): 
+	if is_instance_valid(attached_projectile): 
+		projectile.disappear_immediately()
+	if abs(projectile.real_pos.x - real_pos.x) > 2:
+		projectile.real_pos.x = real_pos.x
+	attached_projectile = projectile

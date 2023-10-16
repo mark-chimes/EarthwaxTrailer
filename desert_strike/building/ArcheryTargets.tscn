@@ -7,18 +7,31 @@
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
+visible = false
 scale = Vector2( 2, 2 )
 texture = ExtResource( 1 )
 offset = Vector2( 0, -12 )
 
 [node name="Sprite2" type="Sprite" parent="."]
+visible = false
 position = Vector2( 55, 0 )
 scale = Vector2( 2, 2 )
 texture = ExtResource( 1 )
 offset = Vector2( 0, -12 )
 
 [node name="Sprite3" type="Sprite" parent="."]
+visible = false
 position = Vector2( -56, 0 )
 scale = Vector2( 2, 2 )
+texture = ExtResource( 1 )
+offset = Vector2( 0, -12 )
+
+[node name="Sprite4" type="Sprite" parent="."]
+position = Vector2( -16, -2 )
+texture = ExtResource( 1 )
+offset = Vector2( 0, -12 )
+
+[node name="Sprite5" type="Sprite" parent="."]
+position = Vector2( 19, -2 )
 texture = ExtResource( 1 )
 offset = Vector2( 0, -12 )

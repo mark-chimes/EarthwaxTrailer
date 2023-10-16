@@ -5,7 +5,7 @@ signal destroy_structure(this)
 onready var LabelForPerson = preload("res://desert_strike/building/LabelForPersonAtHut.tscn")
 var label
 var parallax_engine
-const SELECTION_WIDTH = 8
+const SELECTION_WIDTH = 4
 
 const FADE_SPEED = 2
 const MAX_SPEECH_TIME = 3
