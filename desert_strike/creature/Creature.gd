@@ -12,7 +12,7 @@ var State = preload("res://desert_strike/State.gd")
 
 var HealthBar = preload("res://desert_strike/HealthBar.tscn")
 var DebugLabel = preload("res://desert_strike/DebugLabel.tscn")
-var SpeechBox = preload("res://speech/SpeechBox.tscn")
+var SpeechBox = preload("res://speech/Speechbox.tscn")
 
 var parallax_engine
 
