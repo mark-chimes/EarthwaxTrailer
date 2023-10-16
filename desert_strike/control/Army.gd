@@ -7,7 +7,7 @@ signal front_line_ready(shared_lane)
 signal creature_death(band, lane)
 signal many_deaths
 
-var ArmyGrid = preload("res://desert_strike/ArmyGrid.gd")
+var ArmyGrid = preload("res://desert_strike/control/ArmyGrid.gd")
 var State = preload("res://desert_strike/State.gd")
 
 var num_deaths = 0
