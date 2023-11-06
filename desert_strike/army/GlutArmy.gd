@@ -1,4 +1,4 @@
-extends "res://desert_strike/control/Army.gd"
+extends "res://desert_strike/army/Army.gd"
 
 var Grubling = load("res://desert_strike/creature/Grubling.tscn")
 

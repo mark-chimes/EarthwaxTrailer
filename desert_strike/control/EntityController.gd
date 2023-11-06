@@ -32,13 +32,13 @@ var income = 0
 var money = 0
 
 func _ready():
-	$ArmyHuman.connect("defeat", self, "_human_defeat")
-	$ArmyGlut.connect("defeat", self, "_glut_defeat")
+	$HumanArmy.connect("defeat", self, "_human_defeat")
+	$GlutArmy.connect("defeat", self, "_glut_defeat")
 	
-	$ArmyHuman.set_army_start_offset(20)
-	$ArmyGlut.set_army_start_offset(60)
-	$ArmyHuman.start_army()
-	$ArmyGlut.start_army()
+	$HumanArmy.set_army_start_offset(20)
+	$GlutArmy.set_army_start_offset(60)
+	$HumanArmy.start_army()
+	$GlutArmy.start_army()
 	
 	rng.randomize()
 	create_building_places()
@@ -67,9 +67,9 @@ func wave_spawn(delta):
 					furthest_checkpoint = checkpoint
 					furthest_dist = checkpoint.real_pos.x
 		if furthest_checkpoint == null: 
-			$ArmyGlut.set_army_start_offset(140)
+			$GlutArmy.set_army_start_offset(140)
 		else: 
-			$ArmyGlut.set_army_start_offset(furthest_dist)
+			$GlutArmy.set_army_start_offset(furthest_dist)
 		
 		furthest_checkpoint = null
 		furthest_dist = -1000000000
@@ -79,19 +79,19 @@ func wave_spawn(delta):
 					furthest_checkpoint = checkpoint
 					furthest_dist = checkpoint.real_pos.x
 		if furthest_checkpoint == null: 
-			$ArmyHuman.set_army_start_offset(0)
+			$HumanArmy.set_army_start_offset(0)
 		else: 
-			$ArmyHuman.set_army_start_offset(furthest_dist)
+			$HumanArmy.set_army_start_offset(furthest_dist)
 		
 		
 		
 		# new wave
-		$ArmyHuman.spawn_new_wave(wave_num)
-		$ArmyGlut.spawn_new_wave(wave_num)
-		if $ArmyHuman.get_state() == State.Army.DIE: 
-			$ArmyHuman.march()
-		if $ArmyGlut.get_state() == State.Army.DIE: 
-			$ArmyGlut.march()
+		$HumanArmy.spawn_new_wave(wave_num)
+		$GlutArmy.spawn_new_wave(wave_num)
+		if $HumanArmy.get_state() == State.Army.DIE: 
+			$HumanArmy.march()
+		if $GlutArmy.get_state() == State.Army.DIE: 
+			$GlutArmy.march()
 		wave_num += 1
 		wave_timer = 0
 		adjust_money(income)
@@ -100,44 +100,44 @@ func wave_spawn(delta):
 
 func battle_start():
 	# TODO Do we want a separate entity and battle controller? 
-	if $ArmyHuman.get_state() == State.Army.BATTLE or $ArmyHuman.get_state() == State.Army.DIE\
-			or $ArmyGlut.get_state() == State.Army.BATTLE or $ArmyGlut.get_state() == State.Army.DIE:
+	if $HumanArmy.get_state() == State.Army.BATTLE or $HumanArmy.get_state() == State.Army.DIE\
+			or $GlutArmy.get_state() == State.Army.BATTLE or $GlutArmy.get_state() == State.Army.DIE:
 		return
 	
-	if abs($ArmyHuman.get_pos() - $ArmyGlut.get_pos()) < BATTLE_SEP:
-		var battlefront_base = ($ArmyHuman.get_pos() + $ArmyGlut.get_pos())/2
+	if abs($HumanArmy.get_pos() - $GlutArmy.get_pos()) < BATTLE_SEP:
+		var battlefront_base = ($HumanArmy.get_pos() + $GlutArmy.get_pos())/2
 		var battlefronts = []
 		# TODO RANDOM
 		for i in range(0,NUM_LANES): 
 			var offset = rng.randf_range(-0.2, 0.2)
 			battlefronts.append(battlefront_base + offset)
 		
-		$ArmyHuman.battle(battlefronts, $ArmyGlut.army_grid)
-		$ArmyGlut.battle(battlefronts, $ArmyHuman.army_grid)
-		$ArmyHuman.connect("front_line_ready", $ArmyGlut, "_on_front_line_ready")
-		$ArmyGlut.connect("front_line_ready", $ArmyHuman, "_on_front_line_ready")
-		$ArmyHuman.connect("creature_death", $ArmyGlut, "_on_enemy_creature_death")
-		$ArmyGlut.connect("creature_death", $ArmyHuman, "_on_enemy_creature_death")
-		$ArmyHuman.connect("attack", $ArmyGlut, "_on_get_attacked")
-		$ArmyGlut.connect("attack", $ArmyHuman, "_on_get_attacked")
-		$ArmyHuman.connect("projectile_attack", $ArmyGlut, "_on_enemy_projectile_attack")
-		$ArmyGlut.connect("projectile_attack", $ArmyHuman, "_on_enemy_projectile_attack")
+		$HumanArmy.battle(battlefronts, $GlutArmy.army_grid)
+		$GlutArmy.battle(battlefronts, $HumanArmy.army_grid)
+		$HumanArmy.connect("front_line_ready", $GlutArmy, "_on_front_line_ready")
+		$GlutArmy.connect("front_line_ready", $HumanArmy, "_on_front_line_ready")
+		$HumanArmy.connect("creature_death", $GlutArmy, "_on_enemy_creature_death")
+		$GlutArmy.connect("creature_death", $HumanArmy, "_on_enemy_creature_death")
+		$HumanArmy.connect("attack", $GlutArmy, "_on_get_attacked")
+		$GlutArmy.connect("attack", $HumanArmy, "_on_get_attacked")
+		$HumanArmy.connect("projectile_attack", $GlutArmy, "_on_enemy_projectile_attack")
+		$GlutArmy.connect("projectile_attack", $HumanArmy, "_on_enemy_projectile_attack")
 		
 		# SPEECH
 		var human_speech_system = SpeechSystem.new()
 		var glut_speech_system = SpeechSystem.new()
-		$ArmyHuman.set_speech_system(human_speech_system)
-		$ArmyGlut.set_speech_system(glut_speech_system)
-		$ArmyHuman.connect("many_deaths", self, "_on_many_human_deaths")
-		$ArmyGlut.connect("many_deaths", self, "_on_many_glut_deaths")
-		$ArmyHuman.say("Prepare for Trouble!")
-		$ArmyHuman.say("And make it double!")
-		$ArmyGlut.say("GRRR")
-		# $ArmyGlut.set_speech_system(speech_system)
+		$HumanArmy.set_speech_system(human_speech_system)
+		$GlutArmy.set_speech_system(glut_speech_system)
+		$HumanArmy.connect("many_deaths", self, "_on_many_human_deaths")
+		$GlutArmy.connect("many_deaths", self, "_on_many_glut_deaths")
+		$HumanArmy.say("Prepare for Trouble!")
+		$HumanArmy.say("And make it double!")
+		$GlutArmy.say("GRRR")
+		# $GlutArmy.set_speech_system(speech_system)
 		# display_test_text()	
 
 func check_checkpoints(delta): 
-	if $ArmyHuman.get_state() == State.Army.BATTLE or $ArmyGlut.get_state() == State.Army.BATTLE:
+	if $HumanArmy.get_state() == State.Army.BATTLE or $GlutArmy.get_state() == State.Army.BATTLE:
 		return
 	
 	# TODO this is a really hacky way to check checkpoints and set their states
@@ -149,7 +149,7 @@ func check_checkpoints(delta):
 	# - Keep track of what checkpoint the army is busy trying to capture
 	# - Be able to go back to a checkpoint we've passed
 	
-	if $ArmyGlut.get_state() != State.Army.DIE:
+	if $GlutArmy.get_state() != State.Army.DIE:
 		var closest_checkpoint = null
 		var closest_dist = -1000000000
 		for checkpoint in checkpoints: 
@@ -158,21 +158,21 @@ func check_checkpoints(delta):
 					closest_checkpoint = checkpoint
 					closest_dist = checkpoint.real_pos.x
 		if closest_checkpoint == null: 
-			$ArmyGlut.idle()
+			$GlutArmy.idle()
 		else:
-			if $ArmyGlut.get_pos() < closest_checkpoint.real_pos.x - 4:
+			if $GlutArmy.get_pos() < closest_checkpoint.real_pos.x - 4:
 				if closest_checkpoint.check_ownership() > -1:
-					$ArmyGlut.idle()
+					$GlutArmy.idle()
 					closest_checkpoint.modify_ownership(-5 * delta)
 					# TODO move this out? 
 				else: 
-					if $ArmyGlut.get_state() != State.Army.MARCH: # TODO use "capture" state
-						$ArmyGlut.march() # TODO this should only happen once
+					if $GlutArmy.get_state() != State.Army.MARCH: # TODO use "capture" state
+						$GlutArmy.march() # TODO this should only happen once
 			else: 
-				if $ArmyGlut.get_state() != State.Army.MARCH: # TODO use "capture" state
-					$ArmyGlut.march() # TODO this should only happen once	
+				if $GlutArmy.get_state() != State.Army.MARCH: # TODO use "capture" state
+					$GlutArmy.march() # TODO this should only happen once	
 		
-	if $ArmyHuman.get_state() != State.Army.DIE:
+	if $HumanArmy.get_state() != State.Army.DIE:
 		var closest_checkpoint = null
 		var closest_dist = 1000000000
 		for checkpoint in checkpoints: 
@@ -181,18 +181,18 @@ func check_checkpoints(delta):
 					closest_checkpoint = checkpoint
 					closest_dist = checkpoint.real_pos.x
 		if closest_checkpoint == null: 
-			$ArmyHuman.idle()
+			$HumanArmy.idle()
 		else: 
-			if $ArmyHuman.get_pos() > closest_checkpoint.real_pos.x + 4:
+			if $HumanArmy.get_pos() > closest_checkpoint.real_pos.x + 4:
 				if closest_checkpoint.check_ownership() < 1:
-					$ArmyHuman.idle()
+					$HumanArmy.idle()
 					closest_checkpoint.modify_ownership(5 * delta)
 				else: 
-					if $ArmyHuman.get_state() != State.Army.MARCH: # TODO use "capture" state
-						$ArmyHuman.march() # TODO this should only happen once
+					if $HumanArmy.get_state() != State.Army.MARCH: # TODO use "capture" state
+						$HumanArmy.march() # TODO this should only happen once
 			else: 
-				if $ArmyHuman.get_state() != State.Army.MARCH: # TODO use "capture" state
-					$ArmyHuman.march() # TODO this should only happen once
+				if $HumanArmy.get_state() != State.Army.MARCH: # TODO use "capture" state
+					$HumanArmy.march() # TODO this should only happen once
 				
 				
 func create_building_places(): 
@@ -245,14 +245,14 @@ func _on_building_place_structure(building_place):
 			add_child(new_building)
 			parallax_engine.add_object_to_parallax_world(new_building)
 		new_person = FarmerAtHut.instance()
-		$ArmyHuman.add_farmers_to_spawn(2)
+		$HumanArmy.add_farmers_to_spawn(2)
 		adjust_income(1)
 	else: 
 		if money < 2: 
 			return
 		adjust_money(-2)
 		new_person = ArcherAtHut.instance()
-		$ArmyHuman.add_archers_to_spawn(2)
+		$HumanArmy.add_archers_to_spawn(2)
 
 		new_building = ArcheryTargets.instance()
 		new_building.real_pos.z = 48
@@ -294,53 +294,53 @@ func _on_person_at_hut_destroy_structure(person_at_hut):
 	parallax_engine.remove_object(person_at_hut)
 	
 func _human_defeat():
-	$ArmyGlut.say("jajajajaja")
-	$ArmyGlut.march()
-	$ArmyHuman.die()
+	$GlutArmy.say("jajajajaja")
+	$GlutArmy.march()
+	$HumanArmy.die()
 	disconnect_signals()
 	
 func _glut_defeat():
-	$ArmyHuman.say("They are dead! We've won!")
-	$ArmyHuman.march()
-	$ArmyGlut.die()
+	$HumanArmy.say("They are dead! We've won!")
+	$HumanArmy.march()
+	$GlutArmy.die()
 	disconnect_signals()
 
 func disconnect_signals(): 
-	$ArmyHuman.disconnect("front_line_ready", $ArmyGlut, "_on_front_line_ready")
-	$ArmyGlut.disconnect("front_line_ready", $ArmyHuman, "_on_front_line_ready")
-	$ArmyHuman.disconnect("creature_death", $ArmyGlut, "_on_enemy_creature_death")
-	$ArmyGlut.disconnect("creature_death", $ArmyHuman, "_on_enemy_creature_death")
-	$ArmyHuman.disconnect("attack", $ArmyGlut, "_on_get_attacked")
-	$ArmyGlut.disconnect("attack", $ArmyHuman, "_on_get_attacked")
-	$ArmyHuman.disconnect("projectile_attack", $ArmyGlut, "_on_enemy_projectile_attack")
-	$ArmyGlut.disconnect("projectile_attack", $ArmyHuman, "_on_enemy_projectile_attack")
-	$ArmyHuman.disconnect("many_deaths", self, "_on_many_human_deaths")
-	$ArmyGlut.disconnect("many_deaths", self, "_on_many_glut_deaths")
+	$HumanArmy.disconnect("front_line_ready", $GlutArmy, "_on_front_line_ready")
+	$GlutArmy.disconnect("front_line_ready", $HumanArmy, "_on_front_line_ready")
+	$HumanArmy.disconnect("creature_death", $GlutArmy, "_on_enemy_creature_death")
+	$GlutArmy.disconnect("creature_death", $HumanArmy, "_on_enemy_creature_death")
+	$HumanArmy.disconnect("attack", $GlutArmy, "_on_get_attacked")
+	$GlutArmy.disconnect("attack", $HumanArmy, "_on_get_attacked")
+	$HumanArmy.disconnect("projectile_attack", $GlutArmy, "_on_enemy_projectile_attack")
+	$GlutArmy.disconnect("projectile_attack", $HumanArmy, "_on_enemy_projectile_attack")
+	$HumanArmy.disconnect("many_deaths", self, "_on_many_human_deaths")
+	$GlutArmy.disconnect("many_deaths", self, "_on_many_glut_deaths")
 	
 func _on_many_human_deaths(): 
-	$ArmyHuman.say("Many of us have died, but hold the line!")
+	$HumanArmy.say("Many of us have died, but hold the line!")
 	
 func _on_many_glut_deaths(): 
-	$ArmyHuman.say("They can be killed! Their numbers wane!")	
-	$ArmyGlut.say("Blegh")
+	$HumanArmy.say("They can be killed! Their numbers wane!")	
+	$GlutArmy.say("Blegh")
 
 func display_test_text(): 
-	$ArmyHuman.say("Hello there!")
+	$HumanArmy.say("Hello there!")
 	yield(get_tree().create_timer(2), "timeout")
-	$ArmyHuman.say("Let's wait awhile!")
+	$HumanArmy.say("Let's wait awhile!")
 	yield(get_tree().create_timer(5), "timeout")
-	$ArmyHuman.say("Now wait a little time")
+	$HumanArmy.say("Now wait a little time")
 	yield(get_tree().create_timer(1), "timeout")
-	$ArmyHuman.say("Wait not much")
+	$HumanArmy.say("Wait not much")
 	yield(get_tree().create_timer(0.5), "timeout")
-	$ArmyHuman.say("At all")
+	$HumanArmy.say("At all")
 	yield(get_tree().create_timer(0.5), "timeout")
-	$ArmyHuman.say("The first text...")
-	$ArmyHuman.say("...and the second text.")
+	$HumanArmy.say("The first text...")
+	$HumanArmy.say("...and the second text.")
 	yield(get_tree().create_timer(2), "timeout")
-	$ArmyHuman.say("A")
-	$ArmyHuman.say("Bunch")
-	$ArmyHuman.say("of")
-	$ArmyHuman.say("text")
-	$ArmyHuman.say("at")
-	$ArmyHuman.say("once.")	
+	$HumanArmy.say("A")
+	$HumanArmy.say("Bunch")
+	$HumanArmy.say("of")
+	$HumanArmy.say("text")
+	$HumanArmy.say("at")
+	$HumanArmy.say("once.")	

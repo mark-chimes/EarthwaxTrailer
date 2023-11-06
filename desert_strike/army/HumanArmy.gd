@@ -1,4 +1,4 @@
-extends "res://desert_strike/control/Army.gd"
+extends "res://desert_strike/army/Army.gd"
 
 onready var Archer = load("res://desert_strike/creature/Archer.tscn")
 onready var Farmer = load("res://desert_strike/creature/Farmer.tscn")
