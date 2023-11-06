@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://util/performance/FPSCounter.gd" type="Script" id=1]
-[ext_resource path="res://desert_strike/Camera2D.gd" type="Script" id=2]
+[ext_resource path="res://desert_strike/camera/MoveableCamera.gd" type="Script" id=2]
 
 [node name="Camera2D" type="Camera2D"]
 position = Vector2( 594, 203 )
