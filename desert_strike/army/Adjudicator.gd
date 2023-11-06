@@ -1,3 +1,3 @@
 extends Node
 
-# Oversees battles
+# Oversees battles - alternative name: Battlefield

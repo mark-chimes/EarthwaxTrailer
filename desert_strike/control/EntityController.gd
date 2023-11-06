@@ -44,7 +44,6 @@ func _ready():
 	create_building_places()
 	create_checkpoints()
 	
-	get_parent().get_node("Camera2D/Clock").seconds_between_waves = TIME_BETWEEN_WAVES
 	adjust_income(1)
 	adjust_money(20)
 
@@ -278,15 +277,9 @@ func _on_building_place_structure(building_place):
 
 func adjust_income(increase): 
 	income += increase
-	if income_ui == null: 
-		income_ui = get_parent().get_node("Camera2D/Income")
-	income_ui.set_income(income)
 
 func adjust_money(increase): 
 	money += increase
-	if money_ui == null: 
-		money_ui = get_parent().get_node("Camera2D/Money")
-	money_ui.set_income(money)
 
 func _on_person_at_hut_destroy_structure(person_at_hut): 
 	create_building_place_at(person_at_hut.real_pos.x)
