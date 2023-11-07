@@ -1,6 +1,7 @@
-extends Node2D
+extends Node
+class_name WarbandAttacking
 
-# TODO This is an army actively in battle
+# TODO This needs to be split into a formation and a deployment
 
 signal defeat
 signal attack(band, lane, damage)
@@ -27,7 +28,10 @@ onready var army_grid = ArmyGrid.new()
 var enemy_army_grid
 var use_slow_arrows_on_short_dist = true
 
+var speech_system = null
+
 # TODO Special parallax converter subobject for grid army positions to real positions. 
+
 
 var state = State.Army.IDLE
 
@@ -388,7 +392,7 @@ func idle():
 		return
 	if army_dir == State.Dir.RIGHT:
 		print("Idling humans")
-	else:a 
+	else:
 		print("Idling glut")	
 	idle_point = get_pos()
 	state = State.Army.IDLE

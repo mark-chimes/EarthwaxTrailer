@@ -18,10 +18,16 @@ _global_script_classes=[ {
 "class": "State",
 "language": "GDScript",
 "path": "res://desert_strike/State.gd"
+}, {
+"base": "Node",
+"class": "WarbandAttacking",
+"language": "GDScript",
+"path": "res://desert_strike/army/WarbandAttacking.gd"
 } ]
 _global_script_class_icons={
 "Faction": "",
-"State": ""
+"State": "",
+"WarbandAttacking": ""
 }
 
 [application]

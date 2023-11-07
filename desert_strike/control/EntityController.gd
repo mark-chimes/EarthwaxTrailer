@@ -1,7 +1,8 @@
 extends Node2D
 
 # TODO move functionality into other classes
-# When the armies encounter each other, they should be passed along to an adjudicator
+# When the armies encounter each other, spawn an adjudicator
+# pass the armies to the adjudicator 
 
 var State = preload("res://desert_strike/State.gd")
 

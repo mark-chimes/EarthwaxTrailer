@@ -4,7 +4,7 @@
 [ext_resource path="res://desert_strike/army/GlutArmy.tscn" type="PackedScene" id=2]
 [ext_resource path="res://desert_strike/control/EntityController.gd" type="Script" id=3]
 [ext_resource path="res://desert_strike/faction/GlutFaction.tscn" type="PackedScene" id=4]
-[ext_resource path="res://desert_strike/control/HumanFaction.tscn" type="PackedScene" id=5]
+[ext_resource path="res://desert_strike/faction/HumanFaction.tscn" type="PackedScene" id=5]
 
 [node name="EntityController" type="Node2D"]
 script = ExtResource( 3 )
