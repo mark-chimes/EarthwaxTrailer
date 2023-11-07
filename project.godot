@@ -33,7 +33,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Earthwax"
-run/main_scene="res://desert_strike/DesertStrike.tscn"
+run/main_scene="res://desert_strike/DesertStrikeBattleTest.tscn"
 boot_splash/image="res://entity/creature/glut/warrior/warrior_large_naked_fists.png"
 boot_splash/use_filter=false
 boot_splash/bg_color=Color( 0.12549, 0.145098, 0.192157, 1 )
