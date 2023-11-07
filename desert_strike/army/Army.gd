@@ -1,5 +1,7 @@
 extends Node2D
 
+# TODO This needs to be split into a formation and a deployment
+
 signal defeat
 signal attack(band, lane, damage)
 signal projectile_attack(projectile)
@@ -14,7 +16,7 @@ var num_deaths = 0
 const DEATH_TRIGGER_NUM = 8
 
 # var creature = preload("res://desert_strike/creature/creature.tscn")
-var Creature
+
 onready var parallax_engine = get_parent().get_parent().get_node("ParallaxEngine")
 onready var rng = RandomNumberGenerator.new()
 

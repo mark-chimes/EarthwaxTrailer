@@ -1,6 +1,8 @@
 extends Node2D
 
-# TODO this is more of a battle controller than an entity controller at this point
+# TODO move functionality into other classes
+# When the armies encounter each other, they should be passed along to an adjudicator
+
 var State = preload("res://desert_strike/State.gd")
 
 const BATTLE_SEP = 10
@@ -32,6 +34,9 @@ var income = 0
 var money = 0
 
 func _ready():
+	# TODO when armies encounter each other, they should be converted between army types
+	# I.e., Formation or Deployment
+	
 	$HumanArmy.connect("defeat", self, "_human_defeat")
 	$GlutArmy.connect("defeat", self, "_glut_defeat")
 	

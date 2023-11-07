@@ -9,12 +9,18 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node2D",
+"class": "Faction",
+"language": "GDScript",
+"path": "res://desert_strike/faction/Faction.gd"
+}, {
 "base": "Object",
 "class": "State",
 "language": "GDScript",
 "path": "res://desert_strike/State.gd"
 } ]
 _global_script_class_icons={
+"Faction": "",
 "State": ""
 }
 

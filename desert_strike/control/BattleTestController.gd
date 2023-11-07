@@ -309,31 +309,3 @@ func disconnect_signals():
 	$GlutArmy.disconnect("projectile_attack", $HumanArmy, "_on_enemy_projectile_attack")
 	$HumanArmy.disconnect("many_deaths", self, "_on_many_human_deaths")
 	$GlutArmy.disconnect("many_deaths", self, "_on_many_glut_deaths")
-	
-func _on_many_human_deaths(): 
-	$HumanArmy.say("Many of us have died, but hold the line!")
-	
-func _on_many_glut_deaths(): 
-	$HumanArmy.say("They can be killed! Their numbers wane!")	
-	$GlutArmy.say("Blegh")
-
-func display_test_text(): 
-	$HumanArmy.say("Hello there!")
-	yield(get_tree().create_timer(2), "timeout")
-	$HumanArmy.say("Let's wait awhile!")
-	yield(get_tree().create_timer(5), "timeout")
-	$HumanArmy.say("Now wait a little time")
-	yield(get_tree().create_timer(1), "timeout")
-	$HumanArmy.say("Wait not much")
-	yield(get_tree().create_timer(0.5), "timeout")
-	$HumanArmy.say("At all")
-	yield(get_tree().create_timer(0.5), "timeout")
-	$HumanArmy.say("The first text...")
-	$HumanArmy.say("...and the second text.")
-	yield(get_tree().create_timer(2), "timeout")
-	$HumanArmy.say("A")
-	$HumanArmy.say("Bunch")
-	$HumanArmy.say("of")
-	$HumanArmy.say("text")
-	$HumanArmy.say("at")
-	$HumanArmy.say("once.")	

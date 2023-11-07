@@ -1,1 +1,6 @@
-extends "res://desert_strike/faction/Faction.gd"
+extends Faction
+
+func _init(): 
+	warlord = $HumanWarlord
+	architect = $HumanArchitect
+	barracks = $HumanBarracks
