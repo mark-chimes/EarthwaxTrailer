@@ -1,5 +1,4 @@
 extends Object
-class_name ArmyGrid
 
 # Assume no gaps in a given lane
 var creature_lanes = []

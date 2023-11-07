@@ -5,54 +5,6 @@
 [ext_resource path="res://entity/creature/glut/grub/grub_small_walk_small.png" type="Texture" id=3]
 [ext_resource path="res://desert_strike/creature/Grubling.gd" type="Script" id=4]
 
-[sub_resource type="AtlasTexture" id=44]
-atlas = ExtResource( 2 )
-region = Rect2( 0, 0, 32, 16 )
-
-[sub_resource type="AtlasTexture" id=45]
-atlas = ExtResource( 2 )
-region = Rect2( 224, 0, 32, 16 )
-
-[sub_resource type="AtlasTexture" id=46]
-atlas = ExtResource( 2 )
-region = Rect2( 32, 0, 32, 16 )
-
-[sub_resource type="AtlasTexture" id=47]
-atlas = ExtResource( 2 )
-region = Rect2( 64, 0, 32, 16 )
-
-[sub_resource type="AtlasTexture" id=48]
-atlas = ExtResource( 2 )
-region = Rect2( 96, 0, 32, 16 )
-
-[sub_resource type="AtlasTexture" id=49]
-atlas = ExtResource( 2 )
-region = Rect2( 128, 0, 32, 16 )
-
-[sub_resource type="AtlasTexture" id=50]
-atlas = ExtResource( 2 )
-region = Rect2( 160, 0, 32, 16 )
-
-[sub_resource type="AtlasTexture" id=51]
-atlas = ExtResource( 2 )
-region = Rect2( 192, 0, 32, 16 )
-
-[sub_resource type="AtlasTexture" id=52]
-atlas = ExtResource( 2 )
-region = Rect2( 224, 0, 32, 16 )
-
-[sub_resource type="AtlasTexture" id=53]
-atlas = ExtResource( 2 )
-region = Rect2( 0, 0, 32, 16 )
-
-[sub_resource type="AtlasTexture" id=54]
-atlas = ExtResource( 2 )
-region = Rect2( 32, 0, 32, 16 )
-
-[sub_resource type="AtlasTexture" id=34]
-atlas = ExtResource( 1 )
-region = Rect2( 96, 0, 32, 32 )
-
 [sub_resource type="AtlasTexture" id=55]
 atlas = ExtResource( 2 )
 region = Rect2( 0, 0, 32, 16 )
@@ -82,6 +34,42 @@ atlas = ExtResource( 2 )
 region = Rect2( 192, 0, 32, 16 )
 
 [sub_resource type="AtlasTexture" id=62]
+atlas = ExtResource( 2 )
+region = Rect2( 224, 0, 32, 16 )
+
+[sub_resource type="AtlasTexture" id=46]
+atlas = ExtResource( 2 )
+region = Rect2( 32, 0, 32, 16 )
+
+[sub_resource type="AtlasTexture" id=53]
+atlas = ExtResource( 2 )
+region = Rect2( 0, 0, 32, 16 )
+
+[sub_resource type="AtlasTexture" id=54]
+atlas = ExtResource( 2 )
+region = Rect2( 32, 0, 32, 16 )
+
+[sub_resource type="AtlasTexture" id=47]
+atlas = ExtResource( 2 )
+region = Rect2( 64, 0, 32, 16 )
+
+[sub_resource type="AtlasTexture" id=48]
+atlas = ExtResource( 2 )
+region = Rect2( 96, 0, 32, 16 )
+
+[sub_resource type="AtlasTexture" id=49]
+atlas = ExtResource( 2 )
+region = Rect2( 128, 0, 32, 16 )
+
+[sub_resource type="AtlasTexture" id=50]
+atlas = ExtResource( 2 )
+region = Rect2( 160, 0, 32, 16 )
+
+[sub_resource type="AtlasTexture" id=51]
+atlas = ExtResource( 2 )
+region = Rect2( 192, 0, 32, 16 )
+
+[sub_resource type="AtlasTexture" id=52]
 atlas = ExtResource( 2 )
 region = Rect2( 224, 0, 32, 16 )
 
@@ -153,6 +141,18 @@ region = Rect2( 96, 96, 32, 32 )
 atlas = ExtResource( 1 )
 region = Rect2( 0, 128, 32, 32 )
 
+[sub_resource type="AtlasTexture" id=34]
+atlas = ExtResource( 1 )
+region = Rect2( 96, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=44]
+atlas = ExtResource( 2 )
+region = Rect2( 0, 0, 32, 16 )
+
+[sub_resource type="AtlasTexture" id=45]
+atlas = ExtResource( 2 )
+region = Rect2( 224, 0, 32, 16 )
+
 [sub_resource type="AtlasTexture" id=41]
 atlas = ExtResource( 3 )
 region = Rect2( 0, 0, 16, 16 )
@@ -167,9 +167,9 @@ region = Rect2( 32, 0, 16, 16 )
 
 [sub_resource type="SpriteFrames" id=29]
 animations = [ {
-"frames": [ SubResource( 44 ), SubResource( 45 ) ],
+"frames": [ SubResource( 55 ), SubResource( 56 ), SubResource( 57 ), SubResource( 58 ), SubResource( 59 ), SubResource( 60 ), SubResource( 61 ), SubResource( 62 ) ],
 "loop": true,
-"name": "idle",
+"name": "attack",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 46 ) ],
@@ -177,14 +177,19 @@ animations = [ {
 "name": "attack_hold",
 "speed": 5.0
 }, {
+"frames": [ SubResource( 53 ), SubResource( 54 ) ],
+"loop": true,
+"name": "attack_prep",
+"speed": 5.0
+}, {
 "frames": [ SubResource( 47 ), SubResource( 48 ), SubResource( 49 ), SubResource( 50 ), SubResource( 51 ), SubResource( 52 ) ],
 "loop": true,
 "name": "attack_strike",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 53 ), SubResource( 54 ) ],
+"frames": [ SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ), SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), SubResource( 10 ), SubResource( 11 ), SubResource( 12 ), SubResource( 13 ), SubResource( 14 ), SubResource( 15 ), SubResource( 16 ), SubResource( 17 ), SubResource( 18 ), SubResource( 19 ) ],
 "loop": true,
-"name": "attack_prep",
+"name": "die",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 34 ) ],
@@ -192,14 +197,9 @@ animations = [ {
 "name": "hurt",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 55 ), SubResource( 56 ), SubResource( 57 ), SubResource( 58 ), SubResource( 59 ), SubResource( 60 ), SubResource( 61 ), SubResource( 62 ) ],
+"frames": [ SubResource( 44 ), SubResource( 45 ) ],
 "loop": true,
-"name": "attack",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ), SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), SubResource( 10 ), SubResource( 11 ), SubResource( 12 ), SubResource( 13 ), SubResource( 14 ), SubResource( 15 ), SubResource( 16 ), SubResource( 17 ), SubResource( 18 ), SubResource( 19 ) ],
-"loop": true,
-"name": "die",
+"name": "idle",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 41 ), SubResource( 42 ), SubResource( 43 ) ],
@@ -215,6 +215,5 @@ script = ExtResource( 4 )
 scale = Vector2( 2, 2 )
 frames = SubResource( 29 )
 animation = "idle"
-frame = 1
 playing = true
 offset = Vector2( 0, -5 )

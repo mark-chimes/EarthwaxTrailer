@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Object",
+"class": "ArmyGrid",
+"language": "GDScript",
+"path": "res://desert_strike/army/ArmyGrid.gd"
+}, {
 "base": "Node2D",
 "class": "Faction",
 "language": "GDScript",
@@ -19,21 +24,22 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://desert_strike/State.gd"
 }, {
-"base": "Node",
-"class": "WarbandAttacking",
+"base": "Node2D",
+"class": "WarbandSpawner",
 "language": "GDScript",
-"path": "res://desert_strike/army/WarbandAttacking.gd"
+"path": "res://desert_strike/experiment_battle/WarbandSpawner.gd"
 } ]
 _global_script_class_icons={
+"ArmyGrid": "",
 "Faction": "",
 "State": "",
-"WarbandAttacking": ""
+"WarbandSpawner": ""
 }
 
 [application]
 
 config/name="Earthwax"
-run/main_scene="res://desert_strike/DesertStrikeBattleTest.tscn"
+run/main_scene="res://desert_strike/experiment_battle/DesertStrikeBattleTest.tscn"
 boot_splash/image="res://entity/creature/glut/warrior/warrior_large_naked_fists.png"
 boot_splash/use_filter=false
 boot_splash/bg_color=Color( 0.12549, 0.145098, 0.192157, 1 )

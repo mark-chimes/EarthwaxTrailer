@@ -17,17 +17,20 @@ const DEATH_TRIGGER_NUM = 8
 
 # var creature = preload("res://desert_strike/creature/creature.tscn")
 
-var is_initialized = false
-
-var parallax_engine = null
-var rng = null
+onready var parallax_engine = get_parent().get_parent().get_node("ParallaxEngine")
+onready var rng = RandomNumberGenerator.new()
 
 var battlefronts = []
 var idle_point = 0
 
-var army_grid = null
+onready var army_grid = ArmyGrid.new()
 var enemy_army_grid
 var use_slow_arrows_on_short_dist = true
+
+var speech_system = null
+
+# TODO Special parallax converter subobject for grid army positions to real positions. 
+
 
 var state = State.Army.IDLE
 
@@ -51,31 +54,16 @@ func set_army_start_offset(new_army_start_offset):
 	army_start_offset = new_army_start_offset
 	idle_point = army_start_offset
 
-func initialize_army(starting_parallax_engine, first_army_start_offset, starting_army_grid, starting_army_dir):
-	parallax_engine = starting_parallax_engine
-	army_grid = starting_army_grid
-	army_dir = starting_army_dir
-	set_army_start_offset(first_army_start_offset)
-	rng = RandomNumberGenerator.new()
+func start_army():
+	# Overload this
+	pass
+
+# TODO internal? 
+func initialize_army(): 
 	rng.set_seed(hash("42069"))
+	army_grid.initialize(NUM_LANES)
 	state = State.Army.MARCH
-	initialize_all_creatures()
-	is_initialized = true
-
-func initialize_all_creatures(): 
-	for creature in army_grid.get_all_creatures():
-		creature.connect("creature_positioned", self, "_on_creature_positioned")
-		creature.connect("attack", self, "_on_creature_attack")
-		creature.connect("get_ranged_target", self, "_on_creature_get_ranged_target")
-		creature.connect("death", self, "_on_creature_death")
-		creature.connect("disappear", parallax_engine, "_on_object_disappear")
-		creature.connect("ready_to_swap", self, "_on_creature_ready_to_swap")
-		creature.connect("swap_with_booking", self, "_on_creature_swap_with_booking")
-		if creature.is_ranged: 
-			creature.connect("fire_projectile", self, "_on_creature_fire_projectile")
-		creature.set_state(State.Creature.MARCH, army_dir)
 	
-
 func _on_creature_attack(attacker): 
 	if attacker.is_ranged and attacker.band != 0:
 		return
@@ -513,3 +501,18 @@ func should_creature_1_be_further_back(creature1, creature2):
 		return true
 		
 	return creature1.priority < creature2.priority
+
+func set_speech_system(new_speech_system): 
+	speech_system = new_speech_system
+	speech_system.set_army_grid(army_grid)
+	speech_system.set_rng(rng)
+
+func say(text): 
+	if speech_system == null: 
+		return
+	speech_system.say(text)
+
+func say_with_creature(text, filter): 
+	if speech_system == null: 
+		return
+	speech_system.say_with_creature(text, filter)

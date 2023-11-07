@@ -22,6 +22,25 @@ func start_battle_between_armies(attacking_warband, defending_warband):
 	defender = defending_warband
 	attacker.connect("defeat", self, "_attacker_defeat")
 	defender.connect("defeat", self, "_defender_defeat")
+	
+	var battlefront_base = (attacker.get_pos() + defender.get_pos())/2
+	var battlefronts = []
+	# TODO RANDOM
+	for i in range(0,NUM_LANES): 
+		var offset = rng.randf_range(-0.2, 0.2)
+		battlefronts.append(battlefront_base + offset)
+	
+	attacker.battle(battlefronts, defender.army_grid)
+	defender.battle(battlefronts, attacker.army_grid)
+	attacker.connect("front_line_ready", defender, "_on_front_line_ready")
+	defender.connect("front_line_ready", attacker, "_on_front_line_ready")
+	attacker.connect("creature_death", defender, "_on_enemy_creature_death")
+	defender.connect("creature_death", attacker, "_on_enemy_creature_death")
+	attacker.connect("attack", defender, "_on_get_attacked")
+	defender.connect("attack", attacker, "_on_get_attacked")
+	attacker.connect("projectile_attack", defender, "_on_enemy_projectile_attack")
+	defender.connect("projectile_attack", attacker, "_on_enemy_projectile_attack")
+	
 	is_initialized = true
 
 func _process(delta):
