@@ -68,7 +68,7 @@ func create_and_add_creature(creatures_arr, CreatureType):
 	var z_pos = (creature.lane * DISTANCE_BETWEEN_LANES) + 3 
 	creature.parallax_engine = parallax_engine
 	creature.real_pos.z = z_pos
-	add_child(creature)
+	add_child(creature) # TODO These creatures should not be children of the spawner
 	creature.dir = army_dir
 	creature.real_pos.x = (-army_dir * ARMY_HALF_SEP) \
 			+ (-army_dir * creature.band * STARTING_BAND_SEP) + rng.randf_range(-2, 2)\

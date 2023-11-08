@@ -1,6 +1,5 @@
 extends Node2D
-
-# TODO This needs to be split into a formation and a deployment
+class_name SquadAttacking
 
 signal defeat
 signal attack(band, lane, damage)
@@ -51,7 +50,19 @@ func set_army_start_offset(new_army_start_offset):
 	army_start_offset = new_army_start_offset
 	idle_point = army_start_offset
 
-func initialize_army(starting_parallax_engine, first_army_start_offset, starting_army_grid, starting_army_dir):
+func initialize_squad_from_list(starting_parallax_engine, first_squad_start_offset, creatures_in_squad, starting_squad_dir, num_lanes):
+	parallax_engine = starting_parallax_engine
+	army_grid = ArmyGrid.new()
+	army_grid.initialize(num_lanes)
+	army_dir = starting_squad_dir
+	add_new_creatures_from_list(creatures_in_squad)
+	set_army_start_offset(first_squad_start_offset)
+	rng = RandomNumberGenerator.new()
+	rng.set_seed(hash("42069"))
+	state = State.Army.MARCH
+	is_initialized = true
+
+func initialize_army_from_grid(starting_parallax_engine, first_army_start_offset, starting_army_grid, starting_army_dir):
 	parallax_engine = starting_parallax_engine
 	army_grid = starting_army_grid
 	army_dir = starting_army_dir
@@ -74,7 +85,21 @@ func initialize_all_creatures():
 		if creature.is_ranged: 
 			creature.connect("fire_projectile", self, "_on_creature_fire_projectile")
 		creature.set_state(State.Creature.MARCH, army_dir)
-	
+
+func add_new_creatures_from_list(new_creatures): 
+	for creature in new_creatures: 
+		army_grid.add_creature_to_smallest_lane(creature)
+		creature.dir = army_dir
+		creature.connect("creature_positioned", self, "_on_creature_positioned")
+		creature.connect("attack", self, "_on_creature_attack")
+		creature.connect("get_ranged_target", self, "_on_creature_get_ranged_target")
+		creature.connect("death", self, "_on_creature_death")
+		creature.connect("disappear", parallax_engine, "_on_object_disappear")
+		creature.connect("ready_to_swap", self, "_on_creature_ready_to_swap")
+		creature.connect("swap_with_booking", self, "_on_creature_swap_with_booking")
+		if creature.is_ranged: 
+			creature.connect("fire_projectile", self, "_on_creature_fire_projectile")
+		creature.set_state(State.Creature.MARCH, army_dir)
 
 func _on_creature_attack(attacker): 
 	if attacker.is_ranged and attacker.band != 0:

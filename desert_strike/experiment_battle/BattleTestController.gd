@@ -9,17 +9,19 @@ func _ready():
 	$BattleBoss.connect("attacker_defeat", self, "_human_defeat")
 	$BattleBoss.connect("defender_defeat", self, "_glut_defeat")
 	
-	var human_squad_grid = $HumanSquadSpawner.start_army(parallax_engine)
-	var glut_squad_grid = $GlutSquadSpawner.start_army(parallax_engine)
+	var human_squad = $HumanSquadSpawner.start_army(parallax_engine)
+	var glut_squad = $GlutSquadSpawner.start_army(parallax_engine)
 	
 	var human_army = SquadAttacking.new()
 	add_child(human_army)
-	human_army.initialize_army(parallax_engine, -4, human_squad_grid, State.Dir.RIGHT)
+	human_army.initialize_squad_from_list(parallax_engine, -4, human_squad, State.Dir.RIGHT, 4)
+	$HumanSquadSpawner.queue_free()
 	
 	var glut_army = SquadAttacking.new()
 	add_child(glut_army)
-	glut_army.initialize_army(parallax_engine, 4, glut_squad_grid, State.Dir.LEFT)
-
+	glut_army.initialize_squad_from_list(parallax_engine, 4, glut_squad, State.Dir.LEFT, 4)
+	# $GlutSquadSpawner.queue_free()
+	
 	$BattleBoss.start_battle_between_armies(human_army, glut_army)
 
 func human_army_from(army_grid): 

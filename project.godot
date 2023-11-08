@@ -20,6 +20,11 @@ _global_script_classes=[ {
 "path": "res://desert_strike/faction/Faction.gd"
 }, {
 "base": "Node2D",
+"class": "SquadAttacking",
+"language": "GDScript",
+"path": "res://desert_strike/army/SquadAttacking.gd"
+}, {
+"base": "Node2D",
 "class": "SquadSpawner",
 "language": "GDScript",
 "path": "res://desert_strike/experiment_battle/SquadSpawner.gd"
@@ -32,6 +37,7 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "ArmyGrid": "",
 "Faction": "",
+"SquadAttacking": "",
 "SquadSpawner": "",
 "State": ""
 }

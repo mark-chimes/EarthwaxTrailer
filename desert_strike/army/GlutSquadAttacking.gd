@@ -1,4 +1,4 @@
-extends WarbandAttacking
+extends SquadAttacking
 
 var Grubling = load("res://desert_strike/creature/Grubling.tscn")
 

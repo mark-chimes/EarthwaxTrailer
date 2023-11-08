@@ -11,7 +11,7 @@ func start_army(parallax_engine):
 	set_army_start_offset(-4)
 	initialize_army(parallax_engine)
 	spawn_first_wave_no_gaps()
-	return army_grid
+	return army_grid.get_all_creatures()
 
 func spawn_first_wave_no_gaps(): 
 	add_new_creatures(Farmer, num_farmers_to_spawn)
