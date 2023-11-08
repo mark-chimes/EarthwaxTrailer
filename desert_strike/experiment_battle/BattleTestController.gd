@@ -18,20 +18,37 @@ func _ready():
 	
 	var human_army = SquadAttacking.new()
 	add_child(human_army)
-	human_army.initialize_squad_from_list(parallax_engine, -2, human_squad, State.Dir.RIGHT, 4)
+	human_army.initialize_squad_from_list(-2, human_squad, State.Dir.RIGHT, 4)
 	$HumanSquadSpawner.queue_free()
 	
 	var glut_army = SquadAttacking.new()
 	add_child(glut_army)
-	glut_army.initialize_squad_from_list(parallax_engine, 2, glut_squad, State.Dir.LEFT, 4)
+	glut_army.initialize_squad_from_list(2, glut_squad, State.Dir.LEFT, 4)
 	$GlutSquadSpawner.queue_free()
-		
+	
+	human_army.connect("create_projectile", self, "add_projectile_to_world")
+	human_army.connect("create_corpse", self, "add_corpse_to_world")
+	glut_army.connect("create_projectile", self, "add_projectile_to_world")
+	glut_army.connect("create_corpse", self, "add_corpse_to_world")
+	
 	$BattleBoss.start_battle_between_armies(human_army, glut_army)
 
+func add_projectile_to_world(projectile): 
+	# projectile.parallax_engine = parallax_engine
+	add_child(projectile)
+	parallax_engine.add_object_to_parallax_world(projectile)
+	projectile.connect("disappear", parallax_engine, "_on_projectile_disappear")
+		
 func add_creature_to_world(creature): 
 	creature.parallax_engine = parallax_engine
 	add_child(creature)
 	parallax_engine.add_object_to_parallax_world(creature)
+	creature.connect("disappear", parallax_engine, "_on_object_disappear")
+
+func add_corpse_to_world(corpse): 
+	add_child(corpse)
+	parallax_engine.add_object_to_parallax_world(corpse)
+	corpse.connect("disappear", parallax_engine, "_on_object_disappear")
 
 func human_army_from(army_grid): 
 	pass

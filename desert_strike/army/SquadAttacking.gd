@@ -8,6 +8,9 @@ signal front_line_ready(shared_lane)
 signal creature_death(band, lane)
 signal many_deaths
 
+signal create_projectile(projectile)
+signal create_corpse(corpse)
+
 var ArmyGrid = preload("res://desert_strike/army/ArmyGrid.gd")
 var State = preload("res://desert_strike/State.gd")
 
@@ -18,7 +21,7 @@ const DEATH_TRIGGER_NUM = 8
 
 var is_initialized = false
 
-var parallax_engine = null
+# var parallax_engine = null
 var rng = null
 
 var battlefronts = []
@@ -50,8 +53,8 @@ func set_army_start_offset(new_army_start_offset):
 	army_start_offset = new_army_start_offset
 	idle_point = army_start_offset
 
-func initialize_squad_from_list(starting_parallax_engine, first_squad_start_offset, creatures_in_squad, starting_squad_dir, num_lanes):
-	parallax_engine = starting_parallax_engine
+func initialize_squad_from_list(first_squad_start_offset, creatures_in_squad, starting_squad_dir, num_lanes):
+	# parallax_engine = starting_parallax_engine
 	army_grid = ArmyGrid.new()
 	army_grid.initialize(num_lanes)
 	army_dir = starting_squad_dir
@@ -62,8 +65,8 @@ func initialize_squad_from_list(starting_parallax_engine, first_squad_start_offs
 	state = State.Army.MARCH
 	is_initialized = true
 
-func initialize_army_from_grid(starting_parallax_engine, first_army_start_offset, starting_army_grid, starting_army_dir):
-	parallax_engine = starting_parallax_engine
+func initialize_army_from_grid(first_army_start_offset, starting_army_grid, starting_army_dir):
+	# parallax_engine = starting_parallax_engine
 	army_grid = starting_army_grid
 	army_dir = starting_army_dir
 	set_army_start_offset(first_army_start_offset)
@@ -79,7 +82,7 @@ func initialize_all_creatures():
 		creature.connect("attack", self, "_on_creature_attack")
 		creature.connect("get_ranged_target", self, "_on_creature_get_ranged_target")
 		creature.connect("death", self, "_on_creature_death")
-		creature.connect("disappear", parallax_engine, "_on_object_disappear")
+		# creature.connect("disappear", parallax_engine, "_on_object_disappear")
 		creature.connect("ready_to_swap", self, "_on_creature_ready_to_swap")
 		creature.connect("swap_with_booking", self, "_on_creature_swap_with_booking")
 		if creature.is_ranged: 
@@ -94,7 +97,7 @@ func add_new_creatures_from_list(new_creatures):
 		creature.connect("attack", self, "_on_creature_attack")
 		creature.connect("get_ranged_target", self, "_on_creature_get_ranged_target")
 		creature.connect("death", self, "_on_creature_death")
-		creature.connect("disappear", parallax_engine, "_on_object_disappear")
+		# creature.connect("disappear", parallax_engine, "_on_object_disappear")
 		creature.connect("ready_to_swap", self, "_on_creature_ready_to_swap")
 		creature.connect("swap_with_booking", self, "_on_creature_swap_with_booking")
 		if creature.is_ranged: 
@@ -165,64 +168,6 @@ func get_pos_deprecated():
 				front_pos = creature.real_pos.x
 	return front_pos
 
-func add_new_creatures(CreatureType, num_creatures): 
-	var new_creatures = [] 
-	for i in range(0, num_creatures):
-		create_and_add_creature(new_creatures, CreatureType)
-	if state == State.Army.BATTLE:
-		for creature in new_creatures:
-			position_creature(creature)
-	else:
-		for creature in new_creatures:
-			creature.set_state(State.Creature.MARCH, army_dir)
-	return new_creatures
-
-func create_and_add_creature_to_lane_DEBUG(CreatureType, lane_index): 
-	var creature = CreatureType.instance()
-	army_grid.add_creature_to_lane(creature, lane_index)
-	var z_pos = (creature.lane * DISTANCE_BETWEEN_LANES) + 3 
-	creature.parallax_engine = parallax_engine
-	creature.real_pos.z = z_pos
-	add_child(creature)
-	creature.dir = army_dir
-	creature.real_pos.x = (-army_dir * ARMY_HALF_SEP) \
-			+ (-army_dir * creature.band * STARTING_BAND_SEP) + rng.randf_range(-2, 2)\
-			+ army_start_offset
-	parallax_engine.add_object_to_parallax_world(creature)	
-	creature.connect("creature_positioned", self, "_on_creature_positioned")
-	creature.connect("attack", self, "_on_creature_attack")
-	creature.connect("get_ranged_target", self, "_on_creature_get_ranged_target")
-	creature.connect("death", self, "_on_creature_death")
-	creature.connect("disappear", parallax_engine, "_on_object_disappear")
-	creature.connect("ready_to_swap", self, "_on_creature_ready_to_swap")
-	creature.connect("swap_with_booking", self, "_on_creature_swap_with_booking")
-	if creature.is_ranged: 
-		creature.connect("fire_projectile", self, "_on_creature_fire_projectile")
-	creature.set_state(State.Creature.MARCH, army_dir)
-
-func create_and_add_creature(creatures_arr, CreatureType): 
-	var creature = CreatureType.instance()
-	army_grid.add_creature_to_smallest_lane(creature)
-	var z_pos = (creature.lane * DISTANCE_BETWEEN_LANES) + 3 
-	creature.parallax_engine = parallax_engine
-	creature.real_pos.z = z_pos
-	add_child(creature)
-	creature.dir = army_dir
-	creature.real_pos.x = (-army_dir * ARMY_HALF_SEP) \
-			+ (-army_dir * creature.band * STARTING_BAND_SEP) + rng.randf_range(-2, 2)\
-			+ army_start_offset
-	parallax_engine.add_object_to_parallax_world(creature)	
-	creatures_arr.append(creature)
-	creature.connect("creature_positioned", self, "_on_creature_positioned")
-	creature.connect("attack", self, "_on_creature_attack")
-	creature.connect("get_ranged_target", self, "_on_creature_get_ranged_target")
-	creature.connect("death", self, "_on_creature_death")
-	creature.connect("disappear", parallax_engine, "_on_object_disappear")
-	creature.connect("ready_to_swap", self, "_on_creature_ready_to_swap")
-	creature.connect("swap_with_booking", self, "_on_creature_swap_with_booking")
-	if creature.is_ranged: 
-		creature.connect("fire_projectile", self, "_on_creature_fire_projectile")
-
 func _on_creature_get_ranged_target(creature): 
 	var enemy_creature = enemy_army_grid.get_archery_target(creature.lane, creature.min_attack_range, creature.attack_range)
 	if enemy_creature == null:
@@ -267,13 +212,9 @@ func _on_creature_fire_projectile(creature, projectile):
 	projectile.vertical_acc = -2*projectile.vertical_speed / (travel_time)
 	projectile.rot_dist = total_dist / (frames + 1)
 	projectile.is_flying = true
-	
-	add_child(projectile)
-	parallax_engine.add_object_to_parallax_world(projectile)
+	emit_signal("create_projectile", projectile)
 	projectile.connect("attack", self, "_on_projectile_attack")
-	projectile.connect("disappear", parallax_engine, "_on_projectile_disappear")
 
-	
 func _on_projectile_attack(projectile): 
 	emit_signal("projectile_attack", projectile)
 
@@ -385,9 +326,7 @@ func create_and_add_corpse(CorpseType, corpse_x, corpse_z):
 	var corpse = CorpseType.instance()
 	corpse.real_pos.x = corpse_x
 	corpse.real_pos.z = corpse_z
-	add_child(corpse)
-	parallax_engine.add_object_to_parallax_world(corpse)
-	corpse.connect("disappear", parallax_engine, "_on_object_disappear")
+	emit_signal("create_corpse", corpse)
 	
 func move_creature_into_empty_slot(band, lane): 
 	# print("Army grid moving creature into empty slot at (" + str(band) + ", " + str(lane) + ")")
