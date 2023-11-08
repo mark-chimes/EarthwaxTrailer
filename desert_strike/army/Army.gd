@@ -17,7 +17,7 @@ const DEATH_TRIGGER_NUM = 8
 
 # var creature = preload("res://desert_strike/creature/creature.tscn")
 
-onready var parallax_engine = get_parent().get_parent().get_node("ParallaxEngine")
+onready var parallax_engine = null#get_parent().get_parent().get_node("ParallaxEngine")
 onready var rng = RandomNumberGenerator.new()
 
 var battlefronts = []

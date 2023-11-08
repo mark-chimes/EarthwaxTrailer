@@ -40,14 +40,6 @@ func start_battle_between_armies(attacking_squad, defending_squad, battle_pos):
 	attacker.connect("projectile_attack", defender, "_on_enemy_projectile_attack")
 	defender.connect("projectile_attack", attacker, "_on_enemy_projectile_attack")
 
-# TODO Not sure this functionality below should be in the BattleBoss
-
-func reinforce_attacker(new_creatures):
-	attacker.reinforce_squad(new_creatures)
-
-func reinforce_defender(new_creatures):
-	defender.reinforce_squad(new_creatures)
-
 func _attacker_defeat():
 	# TODO Defeat actions
 	disconnect_signals()

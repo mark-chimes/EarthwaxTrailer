@@ -35,10 +35,13 @@ func _ready():
 	# SPAWNS LOTS OF EXTRA UNITS
 	for x in range(10): 
 		yield(get_tree().create_timer(1.0), "timeout")
+
 		human_squad = $HumanSquadSpawner.generate_extra_squad()
 		glut_squad = $GlutSquadSpawner.generate_extra_squad()
-		$BattleBoss.reinforce_attacker(human_squad)
-		$BattleBoss.reinforce_defender(glut_squad)
+		
+		# TODO I am unsure of where the reinforcement code should happen
+		attacker.reinforce_squad(human_squad)
+		defender.reinforce_squad(glut_squad)
 
 func add_projectile_to_world(projectile): 
 	# projectile.parallax_engine = parallax_engine
