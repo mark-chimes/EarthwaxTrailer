@@ -6,13 +6,23 @@ var SquadAttacking = preload("res://desert_strike/army/SquadAttacking.gd")
 onready var parallax_engine = get_parent().get_node("ParallaxEngine")
 
 func _ready():
-	$BattleBoss.connect("attacker_defeat", self, "_human_defeat")
-	$BattleBoss.connect("defender_defeat", self, "_glut_defeat")
-	
 	# TODO this doesn't seem right
 	$HumanSquadSpawner.connect("add_creature_to_world", self, "add_creature_to_world")
 	$GlutSquadSpawner.connect("add_creature_to_world", self, "add_creature_to_world")
+	attack_test()
+
+func march_test(): 
+	var human_squad_march = $HumanSquadSpawner.generate_starting_squad_grid_for_marching()
+	var glut_squad_march = $GlutSquadSpawner.generate_starting_squad_grid_for_marching()
+
+	var human_march = SquadMarching.new()
+	human_march.initialize_army_from_grid(human_squad_march, State.Dir.RIGHT)
+	var glut_march = SquadMarching.new()
+	glut_march.initialize_army_from_grid(glut_squad_march, State.Dir.LEFT)
 	
+	# BATTLE MECHANICS BELOW. MARCHING MECHANICS ABOVE
+	
+func attack_test():
 	var human_squad = $HumanSquadSpawner.generate_starting_squad()
 	var glut_squad = $GlutSquadSpawner.generate_starting_squad()
 	
@@ -31,6 +41,8 @@ func _ready():
 	defender.connect("create_projectile", self, "add_projectile_to_world")
 	defender.connect("create_corpse", self, "add_corpse_to_world")
 	$BattleBoss.start_battle_between_armies(attacker, defender, battlefront_pos)
+	$BattleBoss.connect("attacker_defeat", self, "_human_defeat")
+	$BattleBoss.connect("defender_defeat", self, "_glut_defeat")
 	
 	# SPAWNS LOTS OF EXTRA UNITS
 	for x in range(10): 

@@ -42,6 +42,9 @@ var health = 10
 onready var health_bar = HealthBar.instance()
 var MAX_HEALTH = 10
 
+var is_moving_fast = false # TODO Hacky, to move when marching
+const FAST_MOVE_MULT = 4
+
 const WALK_SPEED = 5
 const END_POS_DELTA = 0.1
 const WALK_TO_OFFSET_MAX = 3
