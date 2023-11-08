@@ -3,8 +3,8 @@ extends WarbandSpawner
 onready var Archer = load("res://desert_strike/creature/Archer.tscn")
 onready var Farmer = load("res://desert_strike/creature/Farmer.tscn")
 
-var num_farmers_to_spawn = 8
-var num_archers_to_spawn = 16
+var num_farmers_to_spawn = 2
+var num_archers_to_spawn = 4
 
 func start_army(parallax_engine):
 	army_dir = State.Dir.RIGHT

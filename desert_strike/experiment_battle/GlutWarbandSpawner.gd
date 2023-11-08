@@ -1,5 +1,4 @@
 extends WarbandSpawner
-onready var Archer = load("res://desert_strike/creature/Archer.tscn")
 
 var Grubling = load("res://desert_strike/creature/Grubling.tscn")
 
@@ -11,7 +10,7 @@ func start_army(parallax_engine):
 	return army_grid
 
 func spawn_first_wave_no_gaps(): 
-	add_new_creatures(Grubling, 128)
+	add_new_creatures(Grubling, 8)
 
 func spawn_first_wave_with_gaps(): 
 	create_and_add_creature_to_lane_DEBUG(Grubling, 0)
