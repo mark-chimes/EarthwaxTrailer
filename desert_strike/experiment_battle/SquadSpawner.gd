@@ -1,5 +1,5 @@
 extends Node2D
-class_name WarbandSpawner
+class_name SquadSpawner
 
 signal front_line_ready(shared_lane)
 

@@ -1,4 +1,4 @@
-extends WarbandSpawner
+extends SquadSpawner
 
 onready var Archer = load("res://desert_strike/creature/Archer.tscn")
 onready var Farmer = load("res://desert_strike/creature/Farmer.tscn")

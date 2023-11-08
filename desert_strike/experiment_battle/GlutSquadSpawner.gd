@@ -1,4 +1,4 @@
-extends WarbandSpawner
+extends SquadSpawner
 
 var Grubling = load("res://desert_strike/creature/Grubling.tscn")
 

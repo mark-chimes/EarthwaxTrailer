@@ -19,21 +19,21 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://desert_strike/faction/Faction.gd"
 }, {
+"base": "Node2D",
+"class": "SquadSpawner",
+"language": "GDScript",
+"path": "res://desert_strike/experiment_battle/SquadSpawner.gd"
+}, {
 "base": "Object",
 "class": "State",
 "language": "GDScript",
 "path": "res://desert_strike/State.gd"
-}, {
-"base": "Node2D",
-"class": "WarbandSpawner",
-"language": "GDScript",
-"path": "res://desert_strike/experiment_battle/SquadSpawner.gd"
 } ]
 _global_script_class_icons={
 "ArmyGrid": "",
 "Faction": "",
-"State": "",
-"WarbandSpawner": ""
+"SquadSpawner": "",
+"State": ""
 }
 
 [application]
