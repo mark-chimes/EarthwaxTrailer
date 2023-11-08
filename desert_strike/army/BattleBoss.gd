@@ -16,14 +16,14 @@ var defender = null
 
 onready var is_initialized = false
 
-func start_battle_between_armies(attacking_warband, defending_warband): 
+func start_battle_between_armies(attacking_warband, defending_warband, battle_pos): 
 	rng.randomize()
 	attacker = attacking_warband
 	defender = defending_warband
 	attacker.connect("defeat", self, "_attacker_defeat")
 	defender.connect("defeat", self, "_defender_defeat")
 	
-	var battlefront_base = (attacker.get_pos() + defender.get_pos())/2
+	var battlefront_base = battle_pos # (attacker.get_pos() + defender.get_pos())/2
 	var battlefronts = []
 	# TODO RANDOM
 	for i in range(0,NUM_LANES): 
@@ -46,31 +46,6 @@ func start_battle_between_armies(attacking_warband, defending_warband):
 func _process(delta):
 	if not is_initialized: 
 		return
-	continue_battle()
-
-func continue_battle():
-	if attacker.get_state() == State.Army.BATTLE or attacker.get_state() == State.Army.DIE\
-			or defender.get_state() == State.Army.BATTLE or defender.get_state() == State.Army.DIE:
-		return
-	
-	if abs(attacker.get_pos() - defender.get_pos()) < BATTLE_SEP:
-		var battlefront_base = (attacker.get_pos() + defender.get_pos())/2
-		var battlefronts = []
-		# TODO RANDOM
-		for i in range(0,NUM_LANES): 
-			var offset = rng.randf_range(-0.2, 0.2)
-			battlefronts.append(battlefront_base + offset)
-		
-		attacker.battle(battlefronts, defender.army_grid)
-		defender.battle(battlefronts, attacker.army_grid)
-		attacker.connect("front_line_ready", defender, "_on_front_line_ready")
-		defender.connect("front_line_ready", attacker, "_on_front_line_ready")
-		attacker.connect("creature_death", defender, "_on_enemy_creature_death")
-		defender.connect("creature_death", attacker, "_on_enemy_creature_death")
-		attacker.connect("attack", defender, "_on_get_attacked")
-		defender.connect("attack", attacker, "_on_get_attacked")
-		attacker.connect("projectile_attack", defender, "_on_enemy_projectile_attack")
-
 	
 func _attacker_defeat():
 	# TODO Defeat actions

@@ -13,25 +13,34 @@ func _ready():
 	$HumanSquadSpawner.connect("add_creature_to_world", self, "add_creature_to_world")
 	$GlutSquadSpawner.connect("add_creature_to_world", self, "add_creature_to_world")
 	
-	var human_squad = $HumanSquadSpawner.start_army()
-	var glut_squad = $GlutSquadSpawner.start_army()
+	var human_squad = $HumanSquadSpawner.generate_starting_squad()
+	var glut_squad = $GlutSquadSpawner.generate_starting_squad()
 	
 	var human_army = SquadAttacking.new()
 	add_child(human_army)
 	human_army.initialize_squad_from_list(-2, human_squad, State.Dir.RIGHT, 4)
-	$HumanSquadSpawner.queue_free()
-	
+
 	var glut_army = SquadAttacking.new()
 	add_child(glut_army)
 	glut_army.initialize_squad_from_list(2, glut_squad, State.Dir.LEFT, 4)
-	$GlutSquadSpawner.queue_free()
+
+	var battlefront_pos = 0 # THIS WILL BE CALCULATED FROM MARCHING ARMIES
 	
 	human_army.connect("create_projectile", self, "add_projectile_to_world")
 	human_army.connect("create_corpse", self, "add_corpse_to_world")
 	glut_army.connect("create_projectile", self, "add_projectile_to_world")
 	glut_army.connect("create_corpse", self, "add_corpse_to_world")
 	
-	$BattleBoss.start_battle_between_armies(human_army, glut_army)
+	$BattleBoss.start_battle_between_armies(human_army, glut_army, battlefront_pos)
+	
+	# SPAWNS LOTS OF EXTRA UNITS
+	for x in range(10): 
+		yield(get_tree().create_timer(1.0), "timeout")
+		human_squad = $HumanSquadSpawner.generate_extra_squad()
+		glut_squad = $GlutSquadSpawner.generate_extra_squad()
+		human_army.add_new_creatures_from_list_and_position_them(human_squad)
+		glut_army.add_new_creatures_from_list_and_position_them(glut_squad)
+
 
 func add_projectile_to_world(projectile): 
 	# projectile.parallax_engine = parallax_engine
@@ -52,9 +61,7 @@ func add_corpse_to_world(corpse):
 
 func human_army_from(army_grid): 
 	pass
-	#var human_army = HumanArmy.instance()
 	
-
 func _human_defeat(): 
 	pass
 	
