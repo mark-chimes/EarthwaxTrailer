@@ -11,7 +11,7 @@ func _ready():
 	ranged_damage = 10 # rng.randi_range(6,10)
 	melee_damage = rng.randi_range(1,2)
 	is_ranged = true
-	min_attack_range = 4
+	min_attack_range = 0
 	attack_range = 10
 	mute = true
 	health = rng.randi_range(8,12)

@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://desert_strike/experiment_battle/BattleTestController.gd" type="Script" id=1]
-[ext_resource path="res://desert_strike/experiment_battle/HumanWarbandSpawner.tscn" type="PackedScene" id=2]
-[ext_resource path="res://desert_strike/experiment_battle/GlutWarbandSpawner.tscn" type="PackedScene" id=3]
+[ext_resource path="res://desert_strike/experiment_battle/HumanSquadSpawner.tscn" type="PackedScene" id=2]
+[ext_resource path="res://desert_strike/experiment_battle/GlutSquadSpawner.tscn" type="PackedScene" id=3]
 [ext_resource path="res://desert_strike/army/BattleBoss.tscn" type="PackedScene" id=4]
 
 [node name="BattleTestController" type="Node2D"]

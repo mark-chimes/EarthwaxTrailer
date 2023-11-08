@@ -27,7 +27,7 @@ _global_script_classes=[ {
 "base": "Node2D",
 "class": "WarbandSpawner",
 "language": "GDScript",
-"path": "res://desert_strike/experiment_battle/WarbandSpawner.gd"
+"path": "res://desert_strike/experiment_battle/SquadSpawner.gd"
 } ]
 _global_script_class_icons={
 "ArmyGrid": "",
