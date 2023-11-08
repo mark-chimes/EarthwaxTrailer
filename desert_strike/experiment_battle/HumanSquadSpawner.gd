@@ -16,7 +16,7 @@ func generate_starting_squad():
 
 func generate_starting_squad_grid_for_marching():
 	army_dir = State.Dir.RIGHT
-	set_army_start_offset(-20)
+	set_army_start_offset(-10)
 	initialize_army()
 	add_new_creatures(Farmer, num_farmers_to_spawn)
 	add_new_creatures(Archer,num_archers_to_spawn)

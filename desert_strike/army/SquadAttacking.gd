@@ -73,7 +73,7 @@ func initialize_army_from_grid(first_army_start_offset, starting_army_grid, star
 	rng = RandomNumberGenerator.new()
 	rng.set_seed(hash("42069"))
 	# state = State.Army.MARCH
-	initialize_all_creatures()
+	# initialize_all_creatures()
 	is_initialized = true
 
 func initialize_all_creatures(): 
@@ -87,7 +87,7 @@ func initialize_all_creatures():
 		creature.connect("swap_with_booking", self, "_on_creature_swap_with_booking")
 		if creature.is_ranged: 
 			creature.connect("fire_projectile", self, "_on_creature_fire_projectile")
-		creature.set_state(State.Creature.MARCH, army_dir)
+		creature.set_state(State.Creature.IDLE, army_dir)
 
 # This is for external use, adding creatures when the battle has started
 func reinforce_squad(new_creatures): 
