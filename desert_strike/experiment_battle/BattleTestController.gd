@@ -18,14 +18,14 @@ func _ready():
 	
 	var human_army = SquadAttacking.new()
 	add_child(human_army)
-	human_army.initialize_squad_from_list(parallax_engine, -4, human_squad, State.Dir.RIGHT, 4)
+	human_army.initialize_squad_from_list(parallax_engine, -2, human_squad, State.Dir.RIGHT, 4)
 	$HumanSquadSpawner.queue_free()
 	
 	var glut_army = SquadAttacking.new()
 	add_child(glut_army)
-	glut_army.initialize_squad_from_list(parallax_engine, 4, glut_squad, State.Dir.LEFT, 4)
-	# $GlutSquadSpawner.queue_free()
-	
+	glut_army.initialize_squad_from_list(parallax_engine, 2, glut_squad, State.Dir.LEFT, 4)
+	$GlutSquadSpawner.queue_free()
+		
 	$BattleBoss.start_battle_between_armies(human_army, glut_army)
 
 func add_creature_to_world(creature): 
