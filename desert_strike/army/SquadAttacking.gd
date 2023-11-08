@@ -90,14 +90,12 @@ func initialize_all_creatures():
 		creature.set_state(State.Creature.MARCH, army_dir)
 
 # This is for external use, adding creatures when the battle has started
-# TODO: Rename function
-func add_new_creatures_from_list_and_position_them(new_creatures): 
+func reinforce_squad(new_creatures): 
 	_add_new_creatures_from_list(new_creatures)
 	for creature in new_creatures:
 		position_creature(creature)
 
 # This is for internal use, adding the creatures and intializing their signals
-# TODO: Rename function
 func _add_new_creatures_from_list(new_creatures): 
 	for creature in new_creatures: 
 		army_grid.add_creature_to_smallest_lane(creature)
@@ -293,7 +291,7 @@ func _on_creature_death(dead_creature):
 		print("NO CREATURES!")
 		emit_signal("defeat")
 
-	# TODO hacky
+	# TODO hacky - if we can remove this, this object can become an object not a node
 	yield(get_tree().create_timer(3), "timeout")
 	move_creature_into_empty_slot(band_index, lane_index)
 	

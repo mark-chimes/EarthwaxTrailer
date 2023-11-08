@@ -14,12 +14,11 @@ onready var rng = RandomNumberGenerator.new()
 var attacker = null
 var defender = null
 
-onready var is_initialized = false
-
-func start_battle_between_armies(attacking_warband, defending_warband, battle_pos): 
+func start_battle_between_armies(attacking_squad, defending_squad, battle_pos):
+	attacker = attacking_squad
+	defender = defending_squad
+	
 	rng.randomize()
-	attacker = attacking_warband
-	defender = defending_warband
 	attacker.connect("defeat", self, "_attacker_defeat")
 	defender.connect("defeat", self, "_defender_defeat")
 	
@@ -40,13 +39,15 @@ func start_battle_between_armies(attacking_warband, defending_warband, battle_po
 	defender.connect("attack", attacker, "_on_get_attacked")
 	attacker.connect("projectile_attack", defender, "_on_enemy_projectile_attack")
 	defender.connect("projectile_attack", attacker, "_on_enemy_projectile_attack")
-	
-	is_initialized = true
 
-func _process(delta):
-	if not is_initialized: 
-		return
-	
+# TODO Not sure this functionality below should be in the BattleBoss
+
+func reinforce_attacker(new_creatures):
+	attacker.reinforce_squad(new_creatures)
+
+func reinforce_defender(new_creatures):
+	defender.reinforce_squad(new_creatures)
+
 func _attacker_defeat():
 	# TODO Defeat actions
 	disconnect_signals()

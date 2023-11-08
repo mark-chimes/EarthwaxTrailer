@@ -11,7 +11,7 @@ func generate_starting_squad():
 
 func generate_extra_squad(): 
 	army_dir = State.Dir.LEFT
-	set_army_start_offset(2)
+	set_army_start_offset(-8)
 	initialize_army()
 	add_new_creatures(Grubling, 8)
 	return army_grid.get_all_creatures()
