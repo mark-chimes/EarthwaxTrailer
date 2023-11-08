@@ -9,8 +9,12 @@ func _ready():
 	$BattleBoss.connect("attacker_defeat", self, "_human_defeat")
 	$BattleBoss.connect("defender_defeat", self, "_glut_defeat")
 	
-	var human_squad = $HumanSquadSpawner.start_army(parallax_engine)
-	var glut_squad = $GlutSquadSpawner.start_army(parallax_engine)
+	# TODO this doesn't seem right
+	$HumanSquadSpawner.connect("add_creature_to_world", self, "add_creature_to_world")
+	$GlutSquadSpawner.connect("add_creature_to_world", self, "add_creature_to_world")
+	
+	var human_squad = $HumanSquadSpawner.start_army()
+	var glut_squad = $GlutSquadSpawner.start_army()
 	
 	var human_army = SquadAttacking.new()
 	add_child(human_army)
@@ -23,6 +27,11 @@ func _ready():
 	# $GlutSquadSpawner.queue_free()
 	
 	$BattleBoss.start_battle_between_armies(human_army, glut_army)
+
+func add_creature_to_world(creature): 
+	creature.parallax_engine = parallax_engine
+	add_child(creature)
+	parallax_engine.add_object_to_parallax_world(creature)
 
 func human_army_from(army_grid): 
 	pass

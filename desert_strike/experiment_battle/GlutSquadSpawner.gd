@@ -2,10 +2,10 @@ extends SquadSpawner
 
 var Grubling = load("res://desert_strike/creature/Grubling.tscn")
 
-func start_army(parallax_engine):
+func start_army():
 	army_dir = State.Dir.LEFT
 	set_army_start_offset(4)
-	initialize_army(parallax_engine)
+	initialize_army()
 	spawn_first_wave_no_gaps()
 	return army_grid.get_all_creatures()
 

@@ -2,13 +2,14 @@ extends Node2D
 class_name SquadSpawner
 
 signal front_line_ready(shared_lane)
+signal add_creature_to_world(creature)
 
 var ArmyGrid = preload("res://desert_strike/army/ArmyGrid.gd")
 var State = preload("res://desert_strike/State.gd")
 
 # var creature = preload("res://desert_strike/creature/creature.tscn")
 
-var parallax_engine = null
+# var parallax_engine = null
 var rng = null
 
 var battlefronts = []
@@ -33,8 +34,8 @@ func set_army_start_offset(new_army_start_offset):
 	army_start_offset = new_army_start_offset
 	idle_point = army_start_offset
 
-func initialize_army(the_parallax_engine): 
-	parallax_engine = the_parallax_engine
+func initialize_army(): 
+	# parallax_engine = the_parallax_engine
 	rng = RandomNumberGenerator.new()
 	rng.set_seed(hash("42069"))
 	army_grid = ArmyGrid.new()
@@ -52,29 +53,31 @@ func create_and_add_creature_to_lane_DEBUG(CreatureType, lane_index):
 	var creature = CreatureType.instance()
 	army_grid.add_creature_to_lane(creature, lane_index)
 	var z_pos = (creature.lane * DISTANCE_BETWEEN_LANES) + 3 
-	creature.parallax_engine = parallax_engine
+	# creature.parallax_engine = parallax_engine
 	creature.real_pos.z = z_pos
-	add_child(creature)
+	# add_child(creature)
 	creature.dir = army_dir
 	creature.real_pos.x = (-army_dir * ARMY_HALF_SEP) \
 			+ (-army_dir * creature.band * STARTING_BAND_SEP) + rng.randf_range(-2, 2)\
 			+ army_start_offset
-	parallax_engine.add_object_to_parallax_world(creature)	
+	# parallax_engine.add_object_to_parallax_world(creature)	
 	creature.set_state(State.Creature.IDLE, army_dir)
+	emit_signal("add_creature_to_world", creature)
 
 func create_and_add_creature(creatures_arr, CreatureType): 
 	var creature = CreatureType.instance()
 	army_grid.add_creature_to_smallest_lane(creature)
 	var z_pos = (creature.lane * DISTANCE_BETWEEN_LANES) + 3 
-	creature.parallax_engine = parallax_engine
+	# creature.parallax_engine = parallax_engine
 	creature.real_pos.z = z_pos
-	add_child(creature) # TODO These creatures should not be children of the spawner
+	# add_child(creature) # TODO These creatures should not be children of the spawner
 	creature.dir = army_dir
 	creature.real_pos.x = (-army_dir * ARMY_HALF_SEP) \
 			+ (-army_dir * creature.band * STARTING_BAND_SEP) + rng.randf_range(-2, 2)\
 			+ army_start_offset
-	parallax_engine.add_object_to_parallax_world(creature)	
+	# #parallax_engine.add_object_to_parallax_world(creature)	
 	creatures_arr.append(creature)
+	emit_signal("add_creature_to_world", creature)
 	
 func idle():
 	for creature in army_grid.get_all_creatures():
