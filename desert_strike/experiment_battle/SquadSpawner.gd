@@ -2,7 +2,6 @@ extends Node2D
 class_name SquadSpawner
 
 signal front_line_ready(shared_lane)
-signal add_creature_to_world(creature)
 
 var ArmyGrid = preload("res://desert_strike/army/ArmyGrid.gd")
 var State = preload("res://desert_strike/State.gd")
@@ -10,7 +9,6 @@ var State = preload("res://desert_strike/State.gd")
 var rng = null
 
 var battlefronts = []
-var idle_point = 0
 
 var army_grid = null
 
@@ -24,12 +22,21 @@ const STARTING_BAND_SEP = 8
 const FIGHT_SEP = 1
 const END_POS_DELTA = 0.1
 
-var army_start_offset = -40
-var army_dir = State.Dir.RIGHT
+export var army_start_offset = -40
+export(State.Dir) var army_dir = State.Dir.RIGHT
+export(PackedScene) var creature_type_one = null
+export(PackedScene) var creature_type_two = null
+export var num_creatures_to_spawn = 4 
+
+func generate_squad():
+	initialize_army()
+	add_new_creatures(creature_type_one, num_creatures_to_spawn)
+	if creature_type_two != null: 
+		add_new_creatures(creature_type_two, num_creatures_to_spawn)
+	return army_grid
 
 func set_army_start_offset(new_army_start_offset):
 	army_start_offset = new_army_start_offset
-	idle_point = army_start_offset
 
 func initialize_army(): 
 	# parallax_engine = the_parallax_engine
@@ -56,4 +63,3 @@ func _create_and_add_creature(creatures_arr, CreatureType):
 			+ (-army_dir * creature.band * STARTING_BAND_SEP) + rng.randf_range(-2, 2)\
 			+ army_start_offset
 	creatures_arr.append(creature)
-	emit_signal("add_creature_to_world", creature)

@@ -280,8 +280,9 @@ func is_positioned_z():
 func is_positioned_x():
 	return abs(walk_target_x - real_pos.x ) < END_POS_DELTA
 	
-func hide_debug(): 
-	debug_label.visible = false
+func hide_debug():
+	if debug_label != null: 
+		debug_label.visible = false
 
 func set_debug_label(label_text): 
 	if debug_label != null:
