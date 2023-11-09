@@ -7,6 +7,7 @@ onready var parallax_engine = get_parent().get_node("ParallaxEngine")
 enum TestType {
 	MARCH,
 	ATTACK,
+	MARCH_AND_DEFEND
 }
 
 export(TestType) var test_type = TestType.MARCH
@@ -17,9 +18,11 @@ func _ready():
 		march_test()
 	elif test_type == TestType.ATTACK:
 		attack_test()
+	elif test_type == TestType.MARCH_AND_DEFEND:
+		march_and_defend_test()
 
 var human_march
-var glut_march
+var glut_march_or_defense
 
 func march_test(): 
 	var human_squad_march = $HumanMarchSquadSpawner.generate_squad()
@@ -31,17 +34,32 @@ func march_test():
 		
 	human_march = SquadMarching.new()
 	human_march.initialize_army_from_grid(human_squad_march, State.Dir.RIGHT)
-	glut_march = SquadMarching.new()
-	glut_march.initialize_army_from_grid(glut_squad_march, State.Dir.LEFT)
+	glut_march_or_defense = SquadMarching.new()
+	glut_march_or_defense.initialize_army_from_grid(glut_squad_march, State.Dir.LEFT)
+
+func march_and_defend_test(): 
+	var human_squad_march = $HumanMarchSquadSpawner.generate_squad()
+	var glut_squad_defend = $GlutDefendSquadSpawner.generate_squad()
+	for creature in human_squad_march.get_all_creatures(): 
+		add_creature_to_world(creature)
+	for creature in glut_squad_defend.get_all_creatures(): 
+		add_creature_to_world(creature)
+		
+	human_march = SquadMarching.new()
+	human_march.initialize_army_from_grid(human_squad_march, State.Dir.RIGHT)
+	glut_march_or_defense = SquadDefending.new()
+	glut_march_or_defense.initialize_army_from_grid(glut_squad_defend, State.Dir.LEFT)
 
 const BATTLE_SEP = 10
 const NUM_LANES = 4
 var battlefront_base = -100
 var has_started_attacking = false # TODO do this better
 func _process(delta): 
-	if test_type == TestType.MARCH and not has_started_attacking: 
+	if (test_type == TestType.MARCH or 
+			test_type == TestType.MARCH_AND_DEFEND
+			and not has_started_attacking): 
 		var human_front = human_march.get_front_of_squad()
-		var glut_front = glut_march.get_front_of_squad()
+		var glut_front = glut_march_or_defense.get_front_of_squad()
 		if abs(human_front - glut_front) < BATTLE_SEP:
 			battlefront_base = (human_front + glut_front)/2
 			attack_after_march()
@@ -51,7 +69,7 @@ func attack_after_march():
 	# TODO This should be neatly packaged
 	var human_squad = human_march.army_grid.get_all_creatures()
 	# human_march.queue_free()
-	var glut_squad = glut_march.army_grid.get_all_creatures()
+	var glut_squad = glut_march_or_defense.army_grid.get_all_creatures()
 	# glut_march.queue_free()
 	
 	var attacker = SquadAttacking.new()
@@ -71,8 +89,7 @@ func attack_after_march():
 	$BattleBoss.start_battle_between_armies(attacker, defender, battlefront_pos)
 	$BattleBoss.connect("attacker_defeat", self, "_human_defeat")
 	$BattleBoss.connect("defender_defeat", self, "_glut_defeat")
-
-
+	
 func attack_test():
 	var human_squad = $HumanBattleSquadSpawner.generate_squad().get_all_creatures()
 	var glut_squad = $GlutBattleSquadSpawner.generate_squad().get_all_creatures()

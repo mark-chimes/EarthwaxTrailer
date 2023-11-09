@@ -25,11 +25,16 @@ _global_script_classes=[ {
 "path": "res://desert_strike/army/SquadAttacking.gd"
 }, {
 "base": "Object",
+"class": "SquadDefending",
+"language": "GDScript",
+"path": "res://desert_strike/army/SquadDefending.gd"
+}, {
+"base": "Object",
 "class": "SquadMarching",
 "language": "GDScript",
 "path": "res://desert_strike/army/SquadMarching.gd"
 }, {
-"base": "Node2D",
+"base": "Node",
 "class": "SquadSpawner",
 "language": "GDScript",
 "path": "res://desert_strike/experiment_battle/SquadSpawner.gd"
@@ -43,6 +48,7 @@ _global_script_class_icons={
 "ArmyGrid": "",
 "Faction": "",
 "SquadAttacking": "",
+"SquadDefending": "",
 "SquadMarching": "",
 "SquadSpawner": "",
 "State": ""

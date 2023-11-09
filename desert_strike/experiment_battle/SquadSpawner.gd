@@ -1,4 +1,4 @@
-extends Node2D
+extends Node
 class_name SquadSpawner
 
 signal front_line_ready(shared_lane)
