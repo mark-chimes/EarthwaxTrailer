@@ -7,15 +7,11 @@ export(State.Dir) var faction_dir = State.Dir.RIGHT
 
 onready var architect = $Architect
 onready var barracks = $Barracks
-onready var initializer = $Initializer 
 onready var warlord = $Warlord
 
 func _ready():
 	barracks.faction_dir = faction_dir
 	warlord.faction_dir = faction_dir
-
-func spawn_initial_units(): 
-	initializer.spawn_initial_units()
 
 # TODO THIS IS JUST TEMPORARY
 func add_units_to_spawn(unit_type, num_units): 

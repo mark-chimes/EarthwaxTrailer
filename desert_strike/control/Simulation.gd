@@ -20,7 +20,7 @@ var Checkpoint = preload("res://desert_strike/Checkpoint.tscn")
 
 var checkpoints = [] # TOOD allow for multiple checkpoints
 
-onready var parallax_engine = get_parent().get_node("ParallaxEngine")
+onready var parallax_engine = get_parent().get_node("Renderables/ParallaxEngine")
 
 const TIME_BETWEEN_WAVES = 60
 
@@ -118,6 +118,7 @@ func _on_building_place_structure(building_place):
 	new_person.real_pos.z = building_place.real_pos.z
 	new_person.real_pos.x = building_place.real_pos.x
 	new_person.set_parallax_engine(parallax_engine)
+	# TODO everything with objects and children should go via "Renderables"
 	parallax_engine.add_object_to_parallax_world(new_person)
 	add_child(new_person)
 	

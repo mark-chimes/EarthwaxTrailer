@@ -4,7 +4,7 @@
 [ext_resource path="res://desert_strike/camera/MovableCamera.tscn" type="PackedScene" id=2]
 [ext_resource path="res://desert_strike/Lawn.tscn" type="PackedScene" id=3]
 [ext_resource path="res://desert_strike/ParallaxEngine.tscn" type="PackedScene" id=4]
-[ext_resource path="res://desert_strike/control/EntityController.tscn" type="PackedScene" id=5]
+[ext_resource path="res://desert_strike/control/Simulation.tscn" type="PackedScene" id=5]
 [ext_resource path="res://entity/creature/experiment/rib-cage.png" type="Texture" id=16]
 [ext_resource path="res://entity/creature/experiment/bony.png" type="Texture" id=17]
 [ext_resource path="res://entity/creature/experiment/rib-cage2.png" type="Texture" id=18]
@@ -37,40 +37,42 @@ animations = [ {
 
 [node name="DesertStrike" type="Node2D"]
 
-[node name="EntityController" parent="." instance=ExtResource( 5 )]
+[node name="Simulation" parent="." instance=ExtResource( 5 )]
 
-[node name="ParallaxEngine" parent="." instance=ExtResource( 4 )]
+[node name="Renderables" type="Node2D" parent="."]
 
-[node name="Background" parent="." instance=ExtResource( 1 )]
+[node name="ParallaxEngine" parent="Renderables" instance=ExtResource( 4 )]
 
-[node name="Lawn" parent="." instance=ExtResource( 3 )]
+[node name="Background" parent="Renderables" instance=ExtResource( 1 )]
 
-[node name="MoveableCamera" parent="." instance=ExtResource( 2 )]
+[node name="Lawn" parent="Renderables" instance=ExtResource( 3 )]
 
-[node name="Experimental" type="Node2D" parent="."]
+[node name="MoveableCamera" parent="Renderables" instance=ExtResource( 2 )]
+
+[node name="Experimental" type="Node2D" parent="Renderables"]
 visible = false
 
-[node name="Rib-cage" type="Sprite" parent="Experimental"]
+[node name="Rib-cage" type="Sprite" parent="Renderables/Experimental"]
 position = Vector2( 1003, 495 )
 scale = Vector2( 2, 2 )
 texture = ExtResource( 16 )
 
-[node name="Bony" type="Sprite" parent="Experimental"]
+[node name="Bony" type="Sprite" parent="Renderables/Experimental"]
 position = Vector2( 1000, 549 )
 scale = Vector2( 2, 2 )
 texture = ExtResource( 17 )
 
-[node name="ChickenIdle" type="Sprite" parent="Experimental"]
+[node name="ChickenIdle" type="Sprite" parent="Renderables/Experimental"]
 position = Vector2( 954, 556 )
 scale = Vector2( 2, 2 )
 texture = ExtResource( 19 )
 
-[node name="Rib-cage2" type="Sprite" parent="Experimental"]
+[node name="Rib-cage2" type="Sprite" parent="Renderables/Experimental"]
 position = Vector2( 1066, 538 )
 scale = Vector2( 2, 2 )
 texture = ExtResource( 18 )
 
-[node name="Rat" type="AnimatedSprite" parent="Experimental"]
+[node name="Rat" type="AnimatedSprite" parent="Renderables/Experimental"]
 position = Vector2( 952, 530 )
 scale = Vector2( 2, 2 )
 frames = SubResource( 6 )
