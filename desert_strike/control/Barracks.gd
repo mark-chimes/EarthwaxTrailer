@@ -5,7 +5,7 @@ var State = preload("res://desert_strike/State.gd")
 
 # TODO this should work on logic based on buildings and research
 export var spawn_time = 1 # time between spawns
-export var time_since_spawn = 0 # time since last spawn
+var time_since_spawn = 0 # time since last spawn
 export var creature_name = "null"
 var faction_dir = State.Dir.RIGHT
 export(PackedScene) var creature_type = null

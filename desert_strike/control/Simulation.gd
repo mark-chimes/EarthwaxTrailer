@@ -1,4 +1,5 @@
 extends Node2D
+signal creatures_added_to_world(creatures)
 
 # TODO move functionality into other classes
 # When the armies encounter each other, spawn an adjudicator
@@ -131,11 +132,4 @@ func _on_person_at_hut_destroy_structure(person_at_hut):
 
 func _on_Faction_add_creatures_to_world(creatures):
 	# creatures is a grid, but we need a list to iterate
-	for creature in creatures.get_all_creatures():
-		add_creature_to_world(creature)
-
-func add_creature_to_world(creature): 
-	creature.parallax_engine = parallax_engine
-	add_child(creature)
-	parallax_engine.add_object_to_parallax_world(creature)
-	creature.connect("disappear", parallax_engine, "_on_object_disappear")
+	emit_signal("creatures_added_to_world", creatures.get_all_creatures())

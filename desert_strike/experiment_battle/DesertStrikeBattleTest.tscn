@@ -8,14 +8,14 @@
 [ext_resource path="res://desert_strike/army/Army.gd" type="Script" id=11]
 [ext_resource path="res://desert_strike/Lawn.tscn" type="PackedScene" id=12]
 
-[sub_resource type="DynamicFont" id=7]
+[sub_resource type="DynamicFont" id=1]
 size = 32
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 1 )
 
-[sub_resource type="Theme" id=8]
-default_font = SubResource( 7 )
+[sub_resource type="Theme" id=2]
+default_font = SubResource( 1 )
 
 [node name="DesertStrikeBattleTest" type="Node2D"]
 
@@ -36,6 +36,6 @@ margin_left = 506.0
 margin_top = 3.0
 margin_right = 696.0
 margin_bottom = 48.0
-theme = SubResource( 8 )
+theme = SubResource( 2 )
 custom_colors/font_color = Color( 1, 0, 0, 1 )
 text = "BATTLE TEST"
