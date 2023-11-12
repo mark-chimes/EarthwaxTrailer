@@ -1,4 +1,5 @@
 extends Object
+class_name ArmyGrid
 
 # Assume no gaps in a given lane
 var creature_lanes = []
@@ -197,7 +198,6 @@ func remove_creature(band, lane):
 	creature_lanes[lane][band] = EMPTY_SLOT
 	# TODO If the slot can be filled sideways, then remove this 
 	remove_empty_slot_if_at_back(band, lane)
-
 	
 # assumes the band and lane index holds an empty slot
 func remove_empty_slot_if_at_back(band_index, lane_index): 

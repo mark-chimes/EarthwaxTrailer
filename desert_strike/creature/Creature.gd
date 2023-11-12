@@ -12,7 +12,7 @@ var State = preload("res://desert_strike/State.gd")
 
 var HealthBar = preload("res://desert_strike/HealthBar.tscn")
 var DebugLabel = preload("res://desert_strike/DebugLabel.tscn")
-var SpeechBox = preload("res://speech/SpeechBox.tscn")
+var SpeechBox = preload("res://speech/Speechbox.tscn")
 
 var parallax_engine
 
@@ -41,6 +41,9 @@ var mute = false
 var health = 10
 onready var health_bar = HealthBar.instance()
 var MAX_HEALTH = 10
+
+var is_moving_fast = false # TODO Hacky, to move when marching
+const FAST_MOVE_MULT = 4
 
 const WALK_SPEED = 5
 const END_POS_DELTA = 0.1
@@ -277,8 +280,9 @@ func is_positioned_z():
 func is_positioned_x():
 	return abs(walk_target_x - real_pos.x ) < END_POS_DELTA
 	
-func hide_debug(): 
-	debug_label.visible = false
+func hide_debug():
+	if debug_label != null: 
+		debug_label.visible = false
 
 func set_debug_label(label_text): 
 	if debug_label != null:

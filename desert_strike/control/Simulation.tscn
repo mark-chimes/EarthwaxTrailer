@@ -1,0 +1,59 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://desert_strike/control/Barracks.gd" type="Script" id=1]
+[ext_resource path="res://desert_strike/control/Simulation.gd" type="Script" id=2]
+[ext_resource path="res://desert_strike/control/Faction.gd" type="Script" id=3]
+[ext_resource path="res://desert_strike/creature/Archer.tscn" type="PackedScene" id=4]
+[ext_resource path="res://desert_strike/control/Warlord.gd" type="Script" id=5]
+[ext_resource path="res://desert_strike/control/SquadSpawner.tscn" type="PackedScene" id=7]
+[ext_resource path="res://desert_strike/creature/Grubling.tscn" type="PackedScene" id=8]
+
+[node name="Simulation" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="HumanFaction" type="Node" parent="."]
+script = ExtResource( 3 )
+
+[node name="Architect" type="Node" parent="HumanFaction"]
+
+[node name="Barracks" type="Node" parent="HumanFaction"]
+script = ExtResource( 1 )
+spawn_time = 10
+creature_name = "archer"
+creature_type = ExtResource( 4 )
+
+[node name="SquadSpawner" parent="HumanFaction/Barracks" instance=ExtResource( 7 )]
+army_start_offset = -4
+
+[node name="Warlord" type="Node" parent="HumanFaction"]
+script = ExtResource( 5 )
+
+[node name="FactionController" type="Node" parent="HumanFaction"]
+
+[node name="GlutFaction" type="Node" parent="."]
+script = ExtResource( 3 )
+faction_dir = -1
+
+[node name="Architect" type="Node" parent="GlutFaction"]
+
+[node name="Barracks" type="Node" parent="GlutFaction"]
+script = ExtResource( 1 )
+creature_name = "grub"
+creature_type = ExtResource( 8 )
+
+[node name="SquadSpawner" parent="GlutFaction/Barracks" instance=ExtResource( 7 )]
+army_start_offset = 4
+
+[node name="Warlord" type="Node" parent="GlutFaction"]
+script = ExtResource( 5 )
+
+[node name="FactionController" type="Node" parent="GlutFaction"]
+
+[node name="EntityManager" type="Node" parent="."]
+
+[node name="Initializer" type="Node" parent="."]
+
+[connection signal="add_creatures_to_world" from="HumanFaction" to="." method="_on_Faction_add_creatures_to_world"]
+[connection signal="creatures_ready" from="HumanFaction/Barracks" to="HumanFaction" method="_on_Barracks_creatures_ready"]
+[connection signal="add_creatures_to_world" from="GlutFaction" to="." method="_on_Faction_add_creatures_to_world"]
+[connection signal="creatures_ready" from="GlutFaction/Barracks" to="GlutFaction" method="_on_Barracks_creatures_ready"]

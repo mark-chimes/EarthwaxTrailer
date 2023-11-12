@@ -1,0 +1,41 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://text/font/OpenSans-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://desert_strike/camera/MovableCamera.tscn" type="PackedScene" id=6]
+[ext_resource path="res://desert_strike/ParallaxEngine.tscn" type="PackedScene" id=7]
+[ext_resource path="res://decor/background/Background.tscn" type="PackedScene" id=8]
+[ext_resource path="res://desert_strike/experiment_battle/BattleTestController.tscn" type="PackedScene" id=9]
+[ext_resource path="res://desert_strike/army/Army.gd" type="Script" id=11]
+[ext_resource path="res://desert_strike/Lawn.tscn" type="PackedScene" id=12]
+
+[sub_resource type="DynamicFont" id=1]
+size = 32
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 1 )
+
+[sub_resource type="Theme" id=2]
+default_font = SubResource( 1 )
+
+[node name="DesertStrikeBattleTest" type="Node2D"]
+
+[node name="BattleTestController" parent="." instance=ExtResource( 9 )]
+
+[node name="ParallaxEngine" parent="." instance=ExtResource( 7 )]
+
+[node name="Background" parent="." instance=ExtResource( 8 )]
+script = ExtResource( 11 )
+
+[node name="Lawn" parent="." instance=ExtResource( 12 )]
+
+[node name="MoveableCamera" parent="." instance=ExtResource( 6 )]
+
+[node name="Label" type="Label" parent="MoveableCamera"]
+modulate = Color( 1, 1, 1, 0.839216 )
+margin_left = 506.0
+margin_top = 3.0
+margin_right = 696.0
+margin_bottom = 48.0
+theme = SubResource( 2 )
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+text = "BATTLE TEST"

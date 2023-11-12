@@ -10,6 +10,26 @@
 [ext_resource path="res://entity/creature/human/archer/archer_killed_small.png" type="Texture" id=8]
 [ext_resource path="res://entity/creature/human/archer/archer_attack_melee_smallt.png" type="Texture" id=9]
 
+[sub_resource type="AtlasTexture" id=32]
+atlas = ExtResource( 9 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=31]
+atlas = ExtResource( 9 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=26]
+atlas = ExtResource( 9 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=27]
+atlas = ExtResource( 9 )
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=28]
+atlas = ExtResource( 9 )
+region = Rect2( 0, 32, 32, 32 )
+
 [sub_resource type="AtlasTexture" id=54]
 atlas = ExtResource( 5 )
 region = Rect2( 32, 0, 32, 32 )
@@ -106,28 +126,33 @@ region = Rect2( 192, 0, 32, 32 )
 atlas = ExtResource( 3 )
 region = Rect2( 224, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=32]
-atlas = ExtResource( 9 )
-region = Rect2( 0, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=26]
-atlas = ExtResource( 9 )
-region = Rect2( 0, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=27]
-atlas = ExtResource( 9 )
-region = Rect2( 32, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=28]
-atlas = ExtResource( 9 )
-region = Rect2( 0, 32, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=31]
-atlas = ExtResource( 9 )
-region = Rect2( 0, 0, 32, 32 )
-
 [sub_resource type="SpriteFrames" id=25]
 animations = [ {
+"frames": [ SubResource( 32 ) ],
+"loop": true,
+"name": "attack_hold",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 31 ) ],
+"loop": true,
+"name": "attack_prep",
+"speed": 1.0
+}, {
+"frames": [ SubResource( 26 ), SubResource( 27 ), SubResource( 28 ) ],
+"loop": true,
+"name": "attack_strike",
+"speed": 4.0
+}, {
+"frames": [ ExtResource( 8 ), ExtResource( 4 ) ],
+"loop": true,
+"name": "die",
+"speed": 2.0
+}, {
+"frames": [ ExtResource( 6 ) ],
+"loop": true,
+"name": "hurt",
+"speed": 5.0
+}, {
 "frames": [ ExtResource( 2 ) ],
 "loop": true,
 "name": "idle",
@@ -148,35 +173,10 @@ animations = [ {
 "name": "ranged_attack_strike",
 "speed": 10.0
 }, {
-"frames": [ ExtResource( 8 ), ExtResource( 4 ) ],
-"loop": true,
-"name": "die",
-"speed": 2.0
-}, {
 "frames": [ SubResource( 70 ), SubResource( 71 ), SubResource( 72 ), SubResource( 73 ), SubResource( 74 ), SubResource( 75 ), SubResource( 76 ), SubResource( 77 ) ],
 "loop": true,
 "name": "walk",
 "speed": 8.0
-}, {
-"frames": [ ExtResource( 6 ) ],
-"loop": true,
-"name": "hurt",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 32 ) ],
-"loop": true,
-"name": "attack_hold",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 26 ), SubResource( 27 ), SubResource( 28 ) ],
-"loop": true,
-"name": "attack_strike",
-"speed": 4.0
-}, {
-"frames": [ SubResource( 31 ) ],
-"loop": true,
-"name": "attack_prep",
-"speed": 1.0
 } ]
 
 [node name="Archer" type="Node2D"]

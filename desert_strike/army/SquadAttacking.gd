@@ -1,4 +1,5 @@
-extends Node2D
+extends Node
+class_name SquadAttacking
 
 signal defeat
 signal attack(band, lane, damage)
@@ -7,30 +8,30 @@ signal front_line_ready(shared_lane)
 signal creature_death(band, lane)
 signal many_deaths
 
-var ArmyGrid = preload("res://desert_strike/ArmyGrid.gd")
+signal create_projectile(projectile)
+signal create_corpse(corpse)
+
+var ArmyGrid = preload("res://desert_strike/army/ArmyGrid.gd")
 var State = preload("res://desert_strike/State.gd")
 
 var num_deaths = 0
 const DEATH_TRIGGER_NUM = 8
 
 # var creature = preload("res://desert_strike/creature/creature.tscn")
-var Creature
-onready var parallax_engine = get_parent().get_parent().get_node("ParallaxEngine")
-onready var rng = RandomNumberGenerator.new()
+
+var is_initialized = false
+
+# var parallax_engine = null
+var rng = null
 
 var battlefronts = []
 var idle_point = 0
 
-onready var army_grid = ArmyGrid.new()
+var army_grid = null
 var enemy_army_grid
 var use_slow_arrows_on_short_dist = true
 
-var speech_system = null
-
-# TODO Special parallax converter subobject for grid army positions to real positions. 
-
-
-var state = State.Army.IDLE
+# var state = State.Army.IDLE
 
 const BANDS_SPAWNED = 1
 const NUM_LANES = 4
@@ -52,16 +53,63 @@ func set_army_start_offset(new_army_start_offset):
 	army_start_offset = new_army_start_offset
 	idle_point = army_start_offset
 
-func start_army():
-	# Overload this
-	pass
-
-# TODO internal? 
-func initialize_army(): 
+func initialize_squad_from_list(first_squad_start_offset, creatures_in_squad, starting_squad_dir, num_lanes):
+	# parallax_engine = starting_parallax_engine
+	army_grid = ArmyGrid.new()
+	army_grid.initialize(num_lanes)
+	army_dir = starting_squad_dir
+	_add_new_creatures_from_list(creatures_in_squad)
+	set_army_start_offset(first_squad_start_offset)
+	rng = RandomNumberGenerator.new()
 	rng.set_seed(hash("42069"))
-	army_grid.initialize(NUM_LANES)
-	state = State.Army.MARCH
-	
+	# state = State.Army.MARCH
+	is_initialized = true
+
+func initialize_army_from_grid(first_army_start_offset, starting_army_grid, starting_army_dir):
+	# parallax_engine = starting_parallax_engine
+	army_grid = starting_army_grid
+	army_dir = starting_army_dir
+	set_army_start_offset(first_army_start_offset)
+	rng = RandomNumberGenerator.new()
+	rng.set_seed(hash("42069"))
+	# state = State.Army.MARCH
+	# initialize_all_creatures()
+	is_initialized = true
+
+func initialize_all_creatures(): 
+	for creature in army_grid.get_all_creatures():
+		creature.connect("creature_positioned", self, "_on_creature_positioned")
+		creature.connect("attack", self, "_on_creature_attack")
+		creature.connect("get_ranged_target", self, "_on_creature_get_ranged_target")
+		creature.connect("death", self, "_on_creature_death")
+		# creature.connect("disappear", parallax_engine, "_on_object_disappear")
+		creature.connect("ready_to_swap", self, "_on_creature_ready_to_swap")
+		creature.connect("swap_with_booking", self, "_on_creature_swap_with_booking")
+		if creature.is_ranged: 
+			creature.connect("fire_projectile", self, "_on_creature_fire_projectile")
+		creature.set_state(State.Creature.IDLE, army_dir)
+
+# This is for external use, adding creatures when the battle has started
+func reinforce_squad(new_creatures): 
+	_add_new_creatures_from_list(new_creatures)
+	for creature in new_creatures:
+		position_creature(creature)
+
+# This is for internal use, adding the creatures and intializing their signals
+func _add_new_creatures_from_list(new_creatures): 
+	for creature in new_creatures: 
+		army_grid.add_creature_to_smallest_lane(creature)
+		creature.dir = army_dir
+		creature.connect("creature_positioned", self, "_on_creature_positioned")
+		creature.connect("attack", self, "_on_creature_attack")
+		creature.connect("get_ranged_target", self, "_on_creature_get_ranged_target")
+		creature.connect("death", self, "_on_creature_death")
+		# creature.connect("disappear", parallax_engine, "_on_object_disappear")
+		creature.connect("ready_to_swap", self, "_on_creature_ready_to_swap")
+		creature.connect("swap_with_booking", self, "_on_creature_swap_with_booking")
+		if creature.is_ranged: 
+			creature.connect("fire_projectile", self, "_on_creature_fire_projectile")
+
 func _on_creature_attack(attacker): 
 	if attacker.is_ranged and attacker.band != 0:
 		return
@@ -92,97 +140,6 @@ func _on_enemy_projectile_attack(enemy_projectile):
 		return
 	target.take_damage(enemy_projectile.ranged_damage)
 	target.attach_projectile(enemy_projectile)
-	
-func get_pos(): 
-	# TODO optimize this
-	var creatures = army_grid.get_all_creatures()
-	var front_pos
-	if army_dir == State.Dir.RIGHT:
-		# TODO hacky
-		front_pos = -10000000
-		for creature in creatures: 
-			if creature.real_pos.x > front_pos:
-				front_pos = creature.real_pos.x
-	else: 
-		front_pos = 10000000
-		for creature in creatures: 
-			if creature.real_pos.x < front_pos:
-				front_pos = creature.real_pos.x
-	return front_pos	
-
-func get_pos_deprecated():
-	var creatures = army_grid.get_front_creatures()
-	if creatures.empty():
-		return ARMY_HALF_SEP
-
-	var front_pos = creatures[0].real_pos.x
-	if army_dir == State.Dir.RIGHT:
-		for creature in creatures: 
-			if creature.real_pos.x > front_pos:
-				front_pos = creature.real_pos.x
-	else: 
-		for creature in creatures: 
-			if creature.real_pos.x < front_pos:
-				front_pos = creature.real_pos.x
-	return front_pos
-
-func add_new_creatures(CreatureType, num_creatures): 
-	var new_creatures = [] 
-	for i in range(0, num_creatures):
-		create_and_add_creature(new_creatures, CreatureType)
-	if state == State.Army.BATTLE:
-		for creature in new_creatures:
-			position_creature(creature)
-	else:
-		for creature in new_creatures:
-			creature.set_state(State.Creature.MARCH, army_dir)
-	return new_creatures
-
-func create_and_add_creature_to_lane_DEBUG(CreatureType, lane_index): 
-	var creature = CreatureType.instance()
-	army_grid.add_creature_to_lane(creature, lane_index)
-	var z_pos = (creature.lane * DISTANCE_BETWEEN_LANES) + 3 
-	creature.parallax_engine = parallax_engine
-	creature.real_pos.z = z_pos
-	add_child(creature)
-	creature.dir = army_dir
-	creature.real_pos.x = (-army_dir * ARMY_HALF_SEP) \
-			+ (-army_dir * creature.band * STARTING_BAND_SEP) + rng.randf_range(-2, 2)\
-			+ army_start_offset
-	parallax_engine.add_object_to_parallax_world(creature)	
-	creature.connect("creature_positioned", self, "_on_creature_positioned")
-	creature.connect("attack", self, "_on_creature_attack")
-	creature.connect("get_ranged_target", self, "_on_creature_get_ranged_target")
-	creature.connect("death", self, "_on_creature_death")
-	creature.connect("disappear", parallax_engine, "_on_object_disappear")
-	creature.connect("ready_to_swap", self, "_on_creature_ready_to_swap")
-	creature.connect("swap_with_booking", self, "_on_creature_swap_with_booking")
-	if creature.is_ranged: 
-		creature.connect("fire_projectile", self, "_on_creature_fire_projectile")
-	creature.set_state(State.Creature.MARCH, army_dir)
-
-func create_and_add_creature(creatures_arr, CreatureType): 
-	var creature = CreatureType.instance()
-	army_grid.add_creature_to_smallest_lane(creature)
-	var z_pos = (creature.lane * DISTANCE_BETWEEN_LANES) + 3 
-	creature.parallax_engine = parallax_engine
-	creature.real_pos.z = z_pos
-	add_child(creature)
-	creature.dir = army_dir
-	creature.real_pos.x = (-army_dir * ARMY_HALF_SEP) \
-			+ (-army_dir * creature.band * STARTING_BAND_SEP) + rng.randf_range(-2, 2)\
-			+ army_start_offset
-	parallax_engine.add_object_to_parallax_world(creature)	
-	creatures_arr.append(creature)
-	creature.connect("creature_positioned", self, "_on_creature_positioned")
-	creature.connect("attack", self, "_on_creature_attack")
-	creature.connect("get_ranged_target", self, "_on_creature_get_ranged_target")
-	creature.connect("death", self, "_on_creature_death")
-	creature.connect("disappear", parallax_engine, "_on_object_disappear")
-	creature.connect("ready_to_swap", self, "_on_creature_ready_to_swap")
-	creature.connect("swap_with_booking", self, "_on_creature_swap_with_booking")
-	if creature.is_ranged: 
-		creature.connect("fire_projectile", self, "_on_creature_fire_projectile")
 
 func _on_creature_get_ranged_target(creature): 
 	var enemy_creature = enemy_army_grid.get_archery_target(creature.lane, creature.min_attack_range, creature.attack_range)
@@ -228,30 +185,26 @@ func _on_creature_fire_projectile(creature, projectile):
 	projectile.vertical_acc = -2*projectile.vertical_speed / (travel_time)
 	projectile.rot_dist = total_dist / (frames + 1)
 	projectile.is_flying = true
-	
-	add_child(projectile)
-	parallax_engine.add_object_to_parallax_world(projectile)
+	emit_signal("create_projectile", projectile)
 	projectile.connect("attack", self, "_on_projectile_attack")
-	projectile.connect("disappear", parallax_engine, "_on_projectile_disappear")
 
-	
 func _on_projectile_attack(projectile): 
 	emit_signal("projectile_attack", projectile)
 
 func battle(new_battlefronts, new_enemy_army_grid):
-	if state == State.Army.BATTLE: 
-		return
+#	if state == State.Army.BATTLE: 
+#		return
 	if army_dir == State.Dir.RIGHT:
 		print("Battling humans")
 	else:
 		print("Battling glut")	
-	state = State.Army.BATTLE
+#	state = State.Army.BATTLE
 	battlefronts = new_battlefronts
 	enemy_army_grid = new_enemy_army_grid
 	position_army()
 
-func get_state():
-	return state
+#func get_state():
+#	return state
 	
 func _on_creature_ready_to_swap(creature):
 
@@ -338,7 +291,7 @@ func _on_creature_death(dead_creature):
 		print("NO CREATURES!")
 		emit_signal("defeat")
 
-	# TODO hacky
+	# TODO hacky - if we can remove this, this object can become an object not a node
 	yield(get_tree().create_timer(3), "timeout")
 	move_creature_into_empty_slot(band_index, lane_index)
 	
@@ -346,9 +299,7 @@ func create_and_add_corpse(CorpseType, corpse_x, corpse_z):
 	var corpse = CorpseType.instance()
 	corpse.real_pos.x = corpse_x
 	corpse.real_pos.z = corpse_z
-	add_child(corpse)
-	parallax_engine.add_object_to_parallax_world(corpse)
-	corpse.connect("disappear", parallax_engine, "_on_object_disappear")
+	emit_signal("create_corpse", corpse)
 	
 func move_creature_into_empty_slot(band, lane): 
 	# print("Army grid moving creature into empty slot at (" + str(band) + ", " + str(lane) + ")")
@@ -384,38 +335,38 @@ func dude_is_good2(dudeband, dudelane):
 		return false
 	return true
 	
-func idle():
-	if state == State.Army.IDLE:
-		return
-	if army_dir == State.Dir.RIGHT:
-		print("Idling humans")
-	else:
-		print("Idling glut")	
-	idle_point = get_pos()
-	state = State.Army.IDLE
-	for creature in army_grid.get_all_creatures():
-		creature.set_state(State.Creature.IDLE, army_dir)
+#func idle():
+#	if state == State.Army.IDLE:
+#		return
+#	if army_dir == State.Dir.RIGHT:
+#		print("Idling humans")
+#	else:
+#		print("Idling glut")	
+#	idle_point = get_pos()
+#	state = State.Army.IDLE
+#	for creature in army_grid.get_all_creatures():
+#		creature.set_state(State.Creature.IDLE, army_dir)
 
-func march():
-	if state == State.Army.MARCH:
-		return
-	if army_dir == State.Dir.RIGHT:
-		print("Marching humans")
-	else:
-		print("Marching glut")
-	state = State.Army.MARCH
-	for creature in army_grid.get_all_creatures():
-		creature.break_bookings()
-		creature.set_state(State.Creature.MARCH, army_dir)
+#func march():
+#	if state == State.Army.MARCH:
+#		return
+#	if army_dir == State.Dir.RIGHT:
+#		print("Marching humans")
+#	else:
+#		print("Marching glut")
+#	state = State.Army.MARCH
+#	for creature in army_grid.get_all_creatures():
+#		creature.break_bookings()
+#		creature.set_state(State.Creature.MARCH, army_dir)
 
-func die():
-	if state == State.Army.DIE:
-		return
-	if army_dir == State.Dir.RIGHT:
-		print("Killing humans")
-	else:
-		print("Killing glut")
-	state = State.Army.DIE
+#func die():
+#	if state == State.Army.DIE:
+#		return
+#	if army_dir == State.Dir.RIGHT:
+#		print("Killing humans")
+#	else:
+#		print("Killing glut")
+#	state = State.Army.DIE
 
 func position_creature(creature):
 	# TODO this should work differently during battle and during idle time
@@ -427,26 +378,26 @@ func _on_creature_positioned(creature):
 	reconsider_state(creature)
 
 func reconsider_state(creature): 
-	if state == State.Army.BATTLE:
-		if creature.band == 0:
-			if not enemy_army_grid.has_frontline_at_lane(creature.lane): 
-				creature.set_state(State.Creature.AWAIT_FIGHT, army_dir)
-				return
-			var enemy_creature = enemy_army_grid.get_frontline_at_lane(creature.lane)
+#	if state == State.Army.BATTLE:
+	if creature.band == 0:
+		if not enemy_army_grid.has_frontline_at_lane(creature.lane): 
+			creature.set_state(State.Creature.AWAIT_FIGHT, army_dir)
+			return
+		var enemy_creature = enemy_army_grid.get_frontline_at_lane(creature.lane)
 
-			if enemy_creature.state == State.Creature.AWAIT_FIGHT or enemy_creature.state == State.Creature.IDLE:
-				creature_fight(creature)
-			else:
-				creature.set_state(State.Creature.AWAIT_FIGHT, army_dir)
-			emit_signal("front_line_ready", creature.lane)
+		if enemy_creature.state == State.Creature.AWAIT_FIGHT or enemy_creature.state == State.Creature.IDLE:
+			creature_fight(creature)
 		else:
-			if creature.is_ranged: 
-				# TODO wait for enemy to get into position etc. 
-				creature.set_state(State.Creature.FIGHT, army_dir)
-			else: 
-				creature.set_state(State.Creature.IDLE, army_dir)	
-	else: 
-		creature.set_state(State.Creature.IDLE, army_dir)
+			creature.set_state(State.Creature.AWAIT_FIGHT, army_dir)
+		emit_signal("front_line_ready", creature.lane)
+	else:
+		if creature.is_ranged: 
+			# TODO wait for enemy to get into position etc. 
+			creature.set_state(State.Creature.FIGHT, army_dir)
+		else: 
+			creature.set_state(State.Creature.IDLE, army_dir)	
+#	else: 
+#		creature.set_state(State.Creature.IDLE, army_dir)
 		
 		
 func has_creatures(): 
@@ -454,10 +405,10 @@ func has_creatures():
 
 func get_target_x_from_band_lane(band, lane):
 	var lane_offset = FIGHT_SEP + lane*1.0/10
-	if state == State.Army.BATTLE:
-		return battlefronts[lane] - (army_dir * (lane_offset + band * BAND_SEP))
-	else: 
-		return idle_point - (army_dir * (lane_offset + band * BAND_SEP))
+#	if state == State.Army.BATTLE:
+	return battlefronts[lane] - (army_dir * (lane_offset + band * BAND_SEP))
+#	else: 
+#		return idle_point - (army_dir * (lane_offset + band * BAND_SEP))
 		
 func get_target_z_from_band_lane(band, lane):
 	return (lane * DISTANCE_BETWEEN_LANES) + 3 
@@ -499,18 +450,3 @@ func should_creature_1_be_further_back(creature1, creature2):
 		return true
 		
 	return creature1.priority < creature2.priority
-
-func set_speech_system(new_speech_system): 
-	speech_system = new_speech_system
-	speech_system.set_army_grid(army_grid)
-	speech_system.set_rng(rng)
-
-func say(text): 
-	if speech_system == null: 
-		return
-	speech_system.say(text)
-
-func say_with_creature(text, filter): 
-	if speech_system == null: 
-		return
-	speech_system.say_with_creature(text, filter)

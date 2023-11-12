@@ -17,7 +17,7 @@ enum Creature {
 }
 
 enum Army {
-	MARCH,
+	MARCH, # TODO Army should no longer have these states - it should be handled by separate objects
 	BATTLE,
 	CAPTURE,
 	IDLE,
