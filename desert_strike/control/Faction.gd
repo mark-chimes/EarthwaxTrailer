@@ -9,6 +9,8 @@ onready var architect = $Architect
 onready var barracks = $Barracks
 onready var warlord = $Warlord
 
+var marching_squads = []
+
 func _ready():
 	barracks.faction_dir = faction_dir
 	warlord.faction_dir = faction_dir
@@ -22,3 +24,10 @@ func _on_Barracks_creatures_ready(creatures):
 	# (i.e., at which barracks or which base)
 	emit_signal("add_creatures_to_world", creatures)
 	warlord.add_creatures(creatures)
+
+func _on_Warlord_create_marching_squad(squad):
+	marching_squads.append(squad)
+
+func remove_marching_squad(squad): 
+	marching_squads.erase(squad)
+	# TODO MORE CODE

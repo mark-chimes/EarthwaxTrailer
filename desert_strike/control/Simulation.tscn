@@ -18,7 +18,8 @@ script = ExtResource( 3 )
 
 [node name="Barracks" type="Node" parent="HumanFaction"]
 script = ExtResource( 1 )
-spawn_time = 10
+spawn_time = 100
+time_since_spawn = 100
 creature_name = "archer"
 creature_type = ExtResource( 4 )
 
@@ -38,6 +39,8 @@ faction_dir = -1
 
 [node name="Barracks" type="Node" parent="GlutFaction"]
 script = ExtResource( 1 )
+spawn_time = 100
+time_since_spawn = 100
 creature_name = "grub"
 creature_type = ExtResource( 8 )
 
@@ -55,5 +58,7 @@ script = ExtResource( 5 )
 
 [connection signal="add_creatures_to_world" from="HumanFaction" to="." method="_on_Faction_add_creatures_to_world"]
 [connection signal="creatures_ready" from="HumanFaction/Barracks" to="HumanFaction" method="_on_Barracks_creatures_ready"]
+[connection signal="create_marching_squad" from="HumanFaction/Warlord" to="HumanFaction" method="_on_Warlord_create_marching_squad"]
 [connection signal="add_creatures_to_world" from="GlutFaction" to="." method="_on_Faction_add_creatures_to_world"]
 [connection signal="creatures_ready" from="GlutFaction/Barracks" to="GlutFaction" method="_on_Barracks_creatures_ready"]
+[connection signal="create_marching_squad" from="GlutFaction/Warlord" to="GlutFaction" method="_on_Warlord_create_marching_squad"]

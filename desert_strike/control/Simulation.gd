@@ -28,7 +28,9 @@ const TIME_BETWEEN_WAVES = 60
 var wave_timer = 0 
 var wave_num = 1
 
-onready var factions = [$HumanFaction, $GlutFaction]
+#onready var factions = [$HumanFaction, $GlutFaction]
+onready var human_faction = $HumanFaction
+onready var glut_faction = $GlutFaction
 onready var player_faction = $HumanFaction
 
 func _ready():
@@ -50,7 +52,18 @@ func _ready():
 var tick_timer = 1.0
 
 func _process(delta):
-	pass
+	# Check for marching squads
+	for human_squad in human_faction.marching_squads: 
+		for glut_squad in glut_faction.marching_squads: 
+			#print("ENEMY SQUAD POS: "+ str(enemy_squad.get_front_of_squad()))
+			if abs(human_squad.get_front_of_squad() - glut_squad.get_front_of_squad()) < 4: 
+				print("SQUADS NEAR!")
+				human_faction.remove_marching_squad(human_squad)
+				glut_faction.remove_marching_squad(glut_squad)
+				# TODO MORE CODE IN THIS AND THE CALLED FUNCTIONS
+					# TODO Change squads into attack squads
+					# Check if squads are near each other
+
 		
 func create_building_places(): 
 	# TODO Should this function be happening in the entity controller?
