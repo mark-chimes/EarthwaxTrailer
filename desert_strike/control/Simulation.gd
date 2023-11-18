@@ -57,13 +57,44 @@ func _process(delta):
 		for glut_squad in glut_faction.marching_squads: 
 			#print("ENEMY SQUAD POS: "+ str(enemy_squad.get_front_of_squad()))
 			if abs(human_squad.get_front_of_squad() - glut_squad.get_front_of_squad()) < 4: 
-				print("SQUADS NEAR!")
-				human_faction.remove_marching_squad(human_squad)
-				glut_faction.remove_marching_squad(glut_squad)
-				# TODO MORE CODE IN THIS AND THE CALLED FUNCTIONS
-					# TODO Change squads into attack squads
-					# Check if squads are near each other
+				start_battle(human_squad, glut_squad)
 
+var BattleBoss = preload("res://desert_strike/army/BattleBoss.gd")
+
+func start_battle(human_march, glut_march): 
+	print("SQUADS NEAR!")
+	human_faction.remove_marching_squad(human_march)
+	glut_faction.remove_marching_squad(glut_march)
+	var battle_boss = BattleBoss.new()
+	add_child(battle_boss) # TODO is this correct? 
+	
+	var battlefront_pos = 0 # TODO 
+	
+	# TODO This should be neatly packaged
+	var human_squad = human_march.army_grid.get_all_creatures()
+	# human_march.queue_free()
+	var glut_squad = glut_march.army_grid.get_all_creatures()
+	# glut_march.queue_free()
+	
+	var attacker = SquadAttacking.new()
+	add_child(attacker) # TODO Hacky because of timers
+	attacker.initialize_squad_from_list(-2, human_squad, State.Dir.RIGHT, 4)
+
+	var defender = SquadAttacking.new()
+	add_child(defender) # TODO Hacky because of timers
+	defender.initialize_squad_from_list(2, glut_squad, State.Dir.LEFT, 4)
+
+	attacker.connect("create_projectile", self, "add_projectile_to_world")
+	attacker.connect("create_corpse", self, "add_corpse_to_world")
+	defender.connect("create_projectile", self, "add_projectile_to_world")
+	defender.connect("create_corpse", self, "add_corpse_to_world")
+	battle_boss.start_battle_between_armies(attacker, defender, battlefront_pos)
+	battle_boss.connect("attacker_defeat", self, "_human_defeat")
+	battle_boss.connect("defender_defeat", self, "_glut_defeat")
+	
+	# TODO MORE CODE IN THIS AND THE CALLED FUNCTIONS
+		# TODO Change squads into attack squads
+		# Check if squads are near each other
 		
 func create_building_places(): 
 	# TODO Should this function be happening in the entity controller?
@@ -137,7 +168,8 @@ func _on_building_place_structure(building_place):
 	add_child(new_person)
 	
 	parallax_engine.remove_object(building_place)
-	
+
+
 func _on_person_at_hut_destroy_structure(person_at_hut): 
 	create_building_place_at(person_at_hut.real_pos.x)
 	parallax_engine.remove_object(person_at_hut.connected_structure)
