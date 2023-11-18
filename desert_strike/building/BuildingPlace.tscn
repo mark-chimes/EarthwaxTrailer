@@ -1,9 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://entity/creature/human/builder/builder_with_brown_helmet.png" type="Texture" id=1]
 [ext_resource path="res://desert_strike/building/BuildingPlace.gd" type="Script" id=2]
 [ext_resource path="res://entity/creature/human/builder/builder_with_green_helmet.png" type="Texture" id=3]
 [ext_resource path="res://text/font/OpenSans-Regular.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://entity/creature/human/archer/archer_at_hut_black.png" type="Texture" id=5]
+[ext_resource path="res://entity/creature/human/farmer/farmer_at_hut3.png" type="Texture" id=6]
 
 [sub_resource type="DynamicFont" id=1]
 outline_size = 2
@@ -25,12 +27,20 @@ margin_left = -121.0
 margin_top = -336.0
 margin_right = 118.0
 margin_bottom = -206.0
+custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 1 )
 text = "Up/down to switch
 
 Press space to build a farmer hut"
 align = 1
 valign = 2
 autowrap = true
+
+[node name="Archer" type="Sprite" parent="."]
+texture = ExtResource( 5 )
+offset = Vector2( 0, -30 )
+
+[node name="Farmer" type="Sprite" parent="."]
+texture = ExtResource( 6 )
+offset = Vector2( 0, -25 )
