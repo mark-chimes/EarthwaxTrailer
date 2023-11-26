@@ -24,7 +24,6 @@ func create_building_place_at(x_pos):
 	parallax_engine.add_object_to_parallax_world(building_place)
 	building_place.set_parallax_engine(parallax_engine) # TODO this is hacky and wrong
 
-
 func _on_person_at_hut_destroy_structure(person_at_hut): 
 	create_building_place_at(person_at_hut.real_pos.x)
 	parallax_engine.remove_object(person_at_hut.connected_structure)
@@ -32,7 +31,7 @@ func _on_person_at_hut_destroy_structure(person_at_hut):
 
 func _on_building_place_structure(building_place): 
 	var new_building
-	var new_person
+	var new_person = building_place.rep_instance.person_at_hut.instance()
 	if building_place.building_state == "farm": 
 		for i in range(0,3):
 			new_building = Farm.instance()
@@ -40,10 +39,8 @@ func _on_building_place_structure(building_place):
 			new_building.real_pos.x = building_place.real_pos.x
 			add_child(new_building)
 			parallax_engine.add_object_to_parallax_world(new_building)
-		new_person = FarmerAtHut.instance()
 #		$HumanArmy.add_farmers_to_spawn(2)
 	else: 
-		new_person = ArcherAtHut.instance()
 #		$HumanArmy.add_archers_to_spawn(2)
 
 		new_building = ArcheryTargets.instance()

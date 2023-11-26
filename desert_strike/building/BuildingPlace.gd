@@ -5,26 +5,24 @@ signal place_structure(this)
 var parallax_engine
 
 var building_options = [
-	preload("res://desert_strike/building/Archery.tscn"),
-	preload("res://desert_strike/building/Farm.tscn"),
+	preload("res://desert_strike/building/ArcheryRepresentative.tscn"),
+	preload("res://desert_strike/building/FarmRepresentative.tscn"),
 ]
+var option_index = 0
+var rep
+var rep_instance
 
-onready var rep = preload("res://desert_strike/building/ArcheryRepresentative.tscn")
 const SELECTION_WIDTH = 4
 
 var building_state = "archery"
-onready var rep_instance = rep.instance()
-var option_inxed
-var option
 
 func _ready(): 
-	add_child(rep_instance)
+	create_new_rep(0)
 	rep_instance.visible = false
 	$BrownHelm.visible = true
 	$GreenHelm.visible = false
 	$Archer.visible = false
 	$Farmer.visible = false
-	labalize()
 
 # TODO deprecate this and make a buildings controller
 func set_parallax_engine(new_parallax_engine): 
@@ -51,8 +49,21 @@ func _process(delta):
 # TODO Hacky
 func switch_building_state(is_next): 
 	var num_options = building_options.size()
-	var label_name = rep_instance.label_name
-	labalize()
+	if is_next: 
+		option_index += 1
+	else:
+		option_index -= 1
+	option_index = posmod(option_index, num_options)
 
-func labalize():
+	rep_instance.queue_free()
+	create_new_rep(option_index)
+	
+func create_new_rep(index):
+	rep = building_options[option_index]
+	rep_instance = rep.instance()
+	add_child(rep_instance)
+	var label_name = rep_instance.label_name
+	labalize(label_name)
+
+func labalize(label_name):
 	$Label.text = "Q / E to switch.\nW to build " + label_name + " for 2gp."
