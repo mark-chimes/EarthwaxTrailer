@@ -7,7 +7,7 @@ extends Camera2D
 
 var camera_speed = 300
 var camera_top_pos = 90
-var camera_bot_pos = 300
+var camera_bot_pos = 250
 var is_moving_up = false
 
 var camera_target = camera_bot_pos
