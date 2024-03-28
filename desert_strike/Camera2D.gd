@@ -7,6 +7,7 @@ extends Camera2D
 
 var camera_speed = 300
 var camera_top_pos = 90
+var camera_mid_pos = 300
 var camera_bot_pos = 350
 var is_moving_up = false
 
@@ -28,6 +29,10 @@ func _process(delta):
 		is_moving_up = false
 		old_target = position.y
 		camera_target = camera_bot_pos
+		print("Old target: " + str(old_target) + " camera_target: " + str(camera_target))
+	elif Input.is_action_pressed("ui_focus_next"):
+		camera_target = camera_mid_pos
+		position.y = camera_mid_pos
 
 	var mod_speed = 0
 	

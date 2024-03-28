@@ -20,7 +20,7 @@ var checkpoints = [] # TOOD allow for multiple checkpoints
 
 onready var parallax_engine = get_parent().get_node("ParallaxEngine")
 
-const TIME_BETWEEN_WAVES = 60
+const TIME_BETWEEN_WAVES = 30
 
 var wave_timer = 0 
 var wave_num = 1
