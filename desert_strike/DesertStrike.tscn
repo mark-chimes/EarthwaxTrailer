@@ -119,11 +119,11 @@ text = "9999"
 align = 1
 valign = 1
 
-[node name="FPSCounter" type="Node2D" parent="."]
-position = Vector2( 534, 239 )
+[node name="FPSCounter" type="Node2D" parent="Camera2D"]
+position = Vector2( 27, 21 )
 script = ExtResource( 2 )
 
-[node name="Label" type="Label" parent="FPSCounter"]
+[node name="Label" type="Label" parent="Camera2D/FPSCounter"]
 margin_right = 40.0
 margin_bottom = 14.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
