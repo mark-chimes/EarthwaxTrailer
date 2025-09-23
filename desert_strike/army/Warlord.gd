@@ -1,3 +1,0 @@
-# Controls armies
-
-extends Node
